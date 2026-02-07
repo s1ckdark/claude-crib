@@ -138,6 +138,16 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 
    Use the Markdown Template below for formatting.
 
+10. **Save to Project Docs**
+    Also save the markdown transcript to `docs/ai-cypher/` for project documentation:
+    ```
+    docs/ai-cypher/YYYY-MM-DD-HH-MM-topic-slug.md
+    ```
+
+    - Create `docs/ai-cypher/` directory if it doesn't exist
+    - Use the same Markdown Template as step 9
+    - This makes cypher conclusions accessible as project documentation
+
 ## Model CLI Commands Reference
 
 Use these CLI patterns to invoke models (actual commands from config):

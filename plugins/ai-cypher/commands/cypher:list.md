@@ -65,12 +65,21 @@ cat cyphers/<filename>.json
 cyphers/<filename>.md
 ```
 
+3.5. Also save to project docs:
+```bash
+# Also save to docs directory
+mkdir -p docs/ai-cypher
+cp cyphers/<filename>.md docs/ai-cypher/<filename>.md
+```
+
 4. Confirm:
 ```
 ✓ Exported: cyphers/2026-02-06-monolith-vs-microservices.md
+✓ Copied to: docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
 
 View with:
   cat cyphers/2026-02-06-monolith-vs-microservices.md
+  cat docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
   # or open in your editor
 ```
 

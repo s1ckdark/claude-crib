@@ -167,6 +167,11 @@ After all rounds complete:
    - Structure conclusion for ralph-loop review
    - Include confidence assessment
 
+4. **Save to Project Docs**
+   - Create `docs/ai-cypher/` directory if it doesn't exist (`mkdir -p docs/ai-cypher`)
+   - Save the full markdown transcript to `docs/ai-cypher/YYYY-MM-DD-HH-MM-topic-slug.md`
+   - This mirrors the `cyphers/` output but places it in the project's documentation directory
+
 ## Output Format
 
 Display progress to user in real-time:
