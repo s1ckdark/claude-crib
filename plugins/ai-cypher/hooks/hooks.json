@@ -5,8 +5,8 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "SILENT CHECK: Look for cypher JSON files in cyphers/ directory that have 'transcript' but no 'validated' field. If found, trigger ralph-loop validation. If NOT found or conditions not met, output ONLY 'Success' with no explanation - do not describe why conditions weren't met."
+            "type": "command",
+            "command": "found=$(find cyphers/ -name '*.json' -exec sh -c 'grep -q '\"'\"'transcript'\"'\"' \"$1\" && ! grep -q '\"'\"'validated'\"'\"' \"$1\" && echo \"$1\"' _ {} \\; 2>/dev/null | head -1); if [ -n \"$found\" ]; then echo \"[MAGIC KEYWORD: ralph-loop] Cypher needs validation: $found\"; fi"
           }
         ]
       }
