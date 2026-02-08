@@ -1,0 +1,9 @@
+{
+  "name": "the-plug",
+  "version": "0.1.0",
+  "description": "Yo session recap plug - tells you what went down last time you were here",
+  "author": {
+    "name": "dave"
+  },
+  "keywords": ["session", "recap", "memory", "productivity"]
+}
