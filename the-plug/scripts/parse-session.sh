@@ -78,19 +78,32 @@ if summary_only:
 user_messages = []
 for e in entries:
     if e.get('type') == 'user' and e.get('message', {}).get('role') == 'user':
+        # Skip meta entries (skill loads, system injections)
+        if e.get('isMeta'):
+            continue
         content = e['message'].get('content', '')
         if isinstance(content, str):
             # Skip meta/system messages
-            if '<command-message>' in content or '<system-reminder>' in content:
+            if any(tag in content for tag in ['<command-message>', '<system-reminder>', '<local-command-', '<command-name>', '<task-notification>']):
                 continue
             text = content[:200]
         elif isinstance(content, list):
-            texts = [c.get('text', '')[:200] for c in content if c.get('type') == 'text']
+            skip_tags = ['<command-message>', '<system-reminder>', '<local-command-', '<command-name>', '<task-notification>']
+            texts = []
+            for c in content:
+                if c.get('type') == 'text':
+                    t = c.get('text', '')
+                    if not any(tag in t for tag in skip_tags):
+                        texts.append(t[:200])
             text = ' '.join(texts)[:200]
         else:
             continue
         if text.strip():
-            user_messages.append(text.strip())
+            # Strip remaining system-reminder blocks from text
+            import re
+            clean = re.sub(r'<system-reminder>.*?</system-reminder>', '', text, flags=re.DOTALL).strip()
+            if clean:
+                user_messages.append(clean)
 
 # Extract tools used
 tools_used = set()
