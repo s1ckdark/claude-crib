@@ -110,7 +110,7 @@ version: 1.0
 |---------|----------|
 | v0 | https://api.v0.dev |
 | Gemini | https://generativelanguage.googleapis.com |
-| Z.ai | https://api.z.ai |
+| Z.ai | https://api.z.ai/api/paas/v4 |
 
 ## Rate Limits
 
@@ -181,7 +181,7 @@ curl -s "https://generativelanguage.googleapis.com/v1/models?key=$GOOGLE_API_KEY
 
 # Test Z.ai
 curl -s -H "Authorization: Bearer $ZAI_API_KEY" \
-  https://api.z.ai/v1/models
+  https://api.z.ai/api/paas/v4/models
 ```
 
 ### 7. Output Format

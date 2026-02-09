@@ -83,7 +83,7 @@ async def invoke_gemini(prompt: str, image_path: str = None) -> dict:
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(
-                f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={api_key}",
+                f"https://generativelanguage.googleapis.com/v1/models/gemini-3-flash:generateContent?key={api_key}",
                 headers={"Content-Type": "application/json"},
                 json={"contents": [{"parts": parts}]},
                 timeout=120.0,
@@ -117,13 +117,13 @@ async def invoke_zai(prompt: str) -> dict:
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(
-                "https://api.z.ai/v1/chat/completions",
+                "https://api.z.ai/api/paas/v4/chat/completions",
                 headers={
                     "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": "glm-4.5",
+                    "model": "glm-4.7",
                     "messages": [{"role": "user", "content": prompt}],
                 },
                 timeout=120.0,

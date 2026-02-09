@@ -89,7 +89,7 @@ test_zai() {
 
     RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
         -H "Authorization: Bearer $ZAI_API_KEY" \
-        "https://api.z.ai/v1/models" 2>/dev/null || echo "000")
+        "https://api.z.ai/api/paas/v4/models" 2>/dev/null || echo "000")
 
     if [ "$RESPONSE" = "200" ]; then
         echo -e "${GREEN}✅ Connected${NC}"

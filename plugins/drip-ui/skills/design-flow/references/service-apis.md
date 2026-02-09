@@ -93,7 +93,7 @@ gemini auth status
 
 # Use in code - automatic token management
 import google.generativeai as genai
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-3-flash')
 ```
 
 OAuth provides:
@@ -122,7 +122,7 @@ API Key provides:
 ```python
 import google.generativeai as genai
 
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-3-flash')
 
 response = model.generate_content(
     "Create a React component for a user profile card"
@@ -137,7 +137,7 @@ print(response.text)
 import google.generativeai as genai
 from PIL import Image
 
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-3-flash')
 
 # Load image
 image = Image.open('mockup.png')
@@ -154,7 +154,7 @@ print(response.text)
 
 ```bash
 # Text generation
-curl "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=$GOOGLE_API_KEY" \
+curl "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash:generateContent?key=$GOOGLE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "contents": [{
@@ -167,9 +167,8 @@ curl "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:gener
 
 | Model | Best For | Context |
 |-------|----------|---------|
-| gemini-2.0-flash | Fast generation | 1M tokens |
-| gemini-2.5-pro | Complex reasoning | 2M tokens |
-| gemini-2.0-flash-thinking | Step-by-step | 1M tokens |
+| gemini-3-flash | Fast generation | 1M tokens |
+| gemini-3-pro | Complex reasoning | 2M tokens |
 
 ---
 
@@ -186,7 +185,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ['ZAI_API_KEY'],
-    base_url="https://api.z.ai/v1"
+    base_url="https://api.z.ai/api/paas/v4"
 )
 ```
 
@@ -205,14 +204,16 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ['ZAI_API_KEY'],
-    base_url="https://api.z.ai/v1"
+    base_url="https://api.z.ai/api/paas/v4"
 )
 
 response = client.chat.completions.create(
-    model="glm-4.5",
+    model="glm-4.7",
     messages=[
         {"role": "user", "content": "Create a React navbar component"}
-    ]
+    ],
+    thinking={"type": "enabled"},
+    max_tokens=4096
 )
 
 print(response.choices[0].message.content)
@@ -222,7 +223,7 @@ print(response.choices[0].message.content)
 
 ```python
 stream = client.chat.completions.create(
-    model="glm-4.5",
+    model="glm-4.7",
     messages=[{"role": "user", "content": "Create a form component"}],
     stream=True
 )
@@ -234,14 +235,16 @@ for chunk in stream:
 ### REST API
 
 ```bash
-curl https://api.z.ai/v1/chat/completions \
+curl https://api.z.ai/api/paas/v4/chat/completions \
   -H "Authorization: Bearer $ZAI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "glm-4.5",
+    "model": "glm-4.7",
     "messages": [
       {"role": "user", "content": "Create a React card component"}
-    ]
+    ],
+    "thinking": {"type": "enabled"},
+    "max_tokens": 4096
   }'
 ```
 
@@ -249,8 +252,8 @@ curl https://api.z.ai/v1/chat/completions \
 
 | Model | Best For | Notes |
 |-------|----------|-------|
-| glm-4.5 | General coding | Latest, recommended |
-| glm-4.7 | Complex tasks | More capable |
+| glm-4.7 | Complex tasks, thinking mode | Latest, recommended |
+| glm-4.5 | General coding | Fast, cost-effective |
 
 ### Pricing
 
@@ -285,7 +288,7 @@ async def generate_ui(
 
     elif service == 'gemini':
         import google.generativeai as genai
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('gemini-3-flash')
 
         if image_path:
             from PIL import Image
@@ -300,10 +303,10 @@ async def generate_ui(
         from openai import OpenAI
         client = OpenAI(
             api_key=os.environ['ZAI_API_KEY'],
-            base_url="https://api.z.ai/v1"
+            base_url="https://api.z.ai/api/paas/v4"
         )
         response = client.chat.completions.create(
-            model="glm-4.5",
+            model="glm-4.7",
             messages=[{"role": "user", "content": prompt}]
         )
         return response.choices[0].message.content
@@ -326,15 +329,15 @@ case "$SERVICE" in
       -d "{\"messages\": [{\"role\": \"user\", \"content\": \"$PROMPT\"}]}"
     ;;
   gemini)
-    curl -s "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=$GOOGLE_API_KEY" \
+    curl -s "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash:generateContent?key=$GOOGLE_API_KEY" \
       -H "Content-Type: application/json" \
       -d "{\"contents\": [{\"parts\": [{\"text\": \"$PROMPT\"}]}]}"
     ;;
   zai)
-    curl -s https://api.z.ai/v1/chat/completions \
+    curl -s https://api.z.ai/api/paas/v4/chat/completions \
       -H "Authorization: Bearer $ZAI_API_KEY" \
       -H "Content-Type: application/json" \
-      -d "{\"model\": \"glm-4.5\", \"messages\": [{\"role\": \"user\", \"content\": \"$PROMPT\"}]}"
+      -d "{\"model\": \"glm-4.7\", \"messages\": [{\"role\": \"user\", \"content\": \"$PROMPT\"}]}"
     ;;
 esac
 ```
