@@ -63,6 +63,18 @@ check_gemini() {
     fi
 }
 
+check_zai() {
+    if [[ -n "${ZAI_API_KEY:-}" ]]; then
+        echo "  zai: available (API key configured, glm-4.7 Coding Plan)"
+        echo "  zai-free: available (API key configured, glm-4.7-flash Free)"
+        return 0
+    else
+        echo "  zai: NOT AVAILABLE - set ZAI_API_KEY"
+        echo "  zai-free: NOT AVAILABLE - set ZAI_API_KEY"
+        return 1
+    fi
+}
+
 echo "=== AI Cypher - Crew Availability Check ==="
 echo ""
 
@@ -76,6 +88,7 @@ case "$MODEL" in
         check_openai || true
         check_ollama || true
         check_gemini || true
+        check_zai || true
         ;;
     claude)
         check_claude
@@ -89,9 +102,12 @@ case "$MODEL" in
     gemini)
         check_gemini
         ;;
+    zai|zai-free)
+        check_zai
+        ;;
     *)
         echo "Unknown model: $MODEL"
-        echo "Known models: claude, openai/gpt, ollama, gemini"
+        echo "Known models: claude, openai/gpt, ollama, gemini, zai, zai-free"
         exit 1
         ;;
 esac

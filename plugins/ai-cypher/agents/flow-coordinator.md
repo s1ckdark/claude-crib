@@ -120,6 +120,26 @@ ollama run llama3.2 "prompt text"
 # Returns plain text, may include thinking tokens
 ```
 
+### Z.ai (Coding Plan - glm-4.7)
+```bash
+curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" \
+  -H "Authorization: Bearer $ZAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"glm-4.7","messages":[{"role":"user","content":"prompt text"}]}' | \
+  jq -r '.choices[0].message.content'
+# Returns JSON, extract content via jq
+```
+
+### Z.ai Free (glm-4.7-flash)
+```bash
+curl -s "https://api.z.ai/api/paas/v4/chat/completions" \
+  -H "Authorization: Bearer $ZAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"prompt text"}]}' | \
+  jq -r '.choices[0].message.content'
+# Returns JSON, extract content via jq
+```
+
 ### Generic HTTP API (via curl)
 ```bash
 curl -s https://api.example.com/v1/chat \
@@ -185,6 +205,9 @@ openai api models.list 2>/dev/null | head -1 && echo "available"
 
 # Ollama
 ollama list 2>/dev/null && echo "available"
+
+# Z.ai (zai / zai-free)
+[ -n "$ZAI_API_KEY" ] && echo "available" || echo "ZAI_API_KEY not set"
 ```
 
 ## Quality Standards
