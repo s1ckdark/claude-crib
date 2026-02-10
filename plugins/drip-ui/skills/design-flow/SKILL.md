@@ -63,7 +63,7 @@ Design Flow orchestrates v0.dev, Google Gemini, and Z.ai to generate high-qualit
 - Rapid prototyping
 - Alternative implementations
 
-**Auth:** `ZAI_API_KEY`
+**Auth:** `Z_AI_API_KEY`
 
 ## Prompt Engineering
 

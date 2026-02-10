@@ -81,14 +81,14 @@ test_gemini() {
 
 test_zai() {
     echo -n "Testing Z.ai... "
-    if [ -z "${ZAI_API_KEY:-}" ]; then
-        echo -e "${RED}❌ ZAI_API_KEY not set${NC}"
+    if [ -z "${Z_AI_API_KEY:-}" ]; then
+        echo -e "${RED}❌ Z_AI_API_KEY not set${NC}"
         echo "   Get your key from: https://z.ai/subscribe"
         return 1
     fi
 
     RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
-        -H "Authorization: Bearer $ZAI_API_KEY" \
+        -H "Authorization: Bearer $Z_AI_API_KEY" \
         "https://api.z.ai/api/paas/v4/models" 2>/dev/null || echo "000")
 
     if [ "$RESPONSE" = "200" ]; then

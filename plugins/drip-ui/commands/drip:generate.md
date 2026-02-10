@@ -34,7 +34,7 @@ Description: $ARGUMENTS
    Verify required credentials:
    - v0: `V0_API_KEY` environment variable
    - gemini: OAuth status or `GOOGLE_API_KEY`
-   - zai: `ZAI_API_KEY` environment variable
+   - zai: `Z_AI_API_KEY` environment variable
 
 4. **Prepare Prompt**
    Format the design description for optimal results:

@@ -74,7 +74,7 @@ You are the Design Coordinator, an expert at orchestrating multiple AI services 
 
 ### Z.ai (GLM)
 - **Best for**: Alternative implementations, cost-effective
-- **Auth**: `ZAI_API_KEY` environment variable
+- **Auth**: `Z_AI_API_KEY` environment variable
 - **Strengths**: OpenAI-compatible, fast responses
 - **API**: OpenAI-compatible REST
 
@@ -189,9 +189,9 @@ fi
 
 ### Z.ai
 ```bash
-# Check ZAI_API_KEY
-if [ -z "$ZAI_API_KEY" ]; then
-  echo "Set ZAI_API_KEY or run /drip:config"
+# Check Z_AI_API_KEY
+if [ -z "$Z_AI_API_KEY" ]; then
+  echo "Set Z_AI_API_KEY or run /drip:config"
 fi
 ```
 

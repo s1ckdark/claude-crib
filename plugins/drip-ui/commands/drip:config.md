@@ -74,7 +74,7 @@ export GOOGLE_API_KEY="your-api-key"
 #### Z.ai (API Key)
 ```bash
 # Set environment variable
-export ZAI_API_KEY="your-api-key"
+export Z_AI_API_KEY="your-api-key"
 
 # Get key from: https://z.ai/subscribe
 # OpenAI-compatible API
@@ -163,7 +163,7 @@ When running `setup`:
    Get your API key from: https://z.ai/subscribe
    Plans start at $3/month.
 
-   Enter your ZAI_API_KEY (or press Enter to skip):
+   Enter your Z_AI_API_KEY (or press Enter to skip):
    ```
 
 ### 6. Test Connectivity
@@ -180,7 +180,7 @@ gemini models list
 curl -s "https://generativelanguage.googleapis.com/v1/models?key=$GOOGLE_API_KEY"
 
 # Test Z.ai
-curl -s -H "Authorization: Bearer $ZAI_API_KEY" \
+curl -s -H "Authorization: Bearer $Z_AI_API_KEY" \
   https://api.z.ai/api/paas/v4/models
 ```
 

@@ -70,7 +70,7 @@ export GOOGLE_API_KEY="AIza..."
 ### Z.ai
 ```bash
 # $3/month starter plan
-export ZAI_API_KEY="zai_..."
+export Z_AI_API_KEY="zai_..."
 # Get from: https://z.ai/subscribe
 ```
 

@@ -178,13 +178,13 @@ curl "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash:generat
 
 ```bash
 # Environment variable
-export ZAI_API_KEY="zai_..."
+export Z_AI_API_KEY="zai_..."
 
 # In code
 from openai import OpenAI
 
 client = OpenAI(
-    api_key=os.environ['ZAI_API_KEY'],
+    api_key=os.environ['Z_AI_API_KEY'],
     base_url="https://api.z.ai/api/paas/v4"
 )
 ```
@@ -203,7 +203,7 @@ pip install openai
 from openai import OpenAI
 
 client = OpenAI(
-    api_key=os.environ['ZAI_API_KEY'],
+    api_key=os.environ['Z_AI_API_KEY'],
     base_url="https://api.z.ai/api/paas/v4"
 )
 
@@ -236,7 +236,7 @@ for chunk in stream:
 
 ```bash
 curl https://api.z.ai/api/paas/v4/chat/completions \
-  -H "Authorization: Bearer $ZAI_API_KEY" \
+  -H "Authorization: Bearer $Z_AI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "glm-4.7",
@@ -302,7 +302,7 @@ async def generate_ui(
     elif service == 'zai':
         from openai import OpenAI
         client = OpenAI(
-            api_key=os.environ['ZAI_API_KEY'],
+            api_key=os.environ['Z_AI_API_KEY'],
             base_url="https://api.z.ai/api/paas/v4"
         )
         response = client.chat.completions.create(
@@ -335,7 +335,7 @@ case "$SERVICE" in
     ;;
   zai)
     curl -s https://api.z.ai/api/paas/v4/chat/completions \
-      -H "Authorization: Bearer $ZAI_API_KEY" \
+      -H "Authorization: Bearer $Z_AI_API_KEY" \
       -H "Content-Type: application/json" \
       -d "{\"model\": \"glm-4.7\", \"messages\": [{\"role\": \"user\", \"content\": \"$PROMPT\"}]}"
     ;;

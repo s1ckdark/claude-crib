@@ -25,7 +25,7 @@ Description: $ARGUMENTS
    Verify credentials for all three services:
    - v0: `V0_API_KEY`
    - gemini: OAuth or `GOOGLE_API_KEY`
-   - zai: `ZAI_API_KEY`
+   - zai: `Z_AI_API_KEY`
 
    Skip unavailable services, warn user.
 
