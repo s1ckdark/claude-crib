@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "zai": {
+      "command": "./scripts/.venv/bin/python3",
+      "args": ["./scripts/zai-mcp-server.py"],
+      "env": {
+        "Z_AI_API_KEY": "${Z_AI_API_KEY}"
+      },
+      "disabled": false
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "zai",
+  "version": "0.1.0",
+  "description": "Z.AI integration for Claude Code - GLM model access via MCP server",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": ["zai", "glm", "mcp", "ai-delegation", "thinking-mode"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}
