@@ -2,6 +2,7 @@
 .claude/
 .sisyphus/
 .rag-docs/
+.omc/
 
 # Debug logs
 *-debug.log
