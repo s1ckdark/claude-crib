@@ -81,8 +81,8 @@ Consensus reached: Start with modular monolith, plan for microservices.
 | ollama | `ollama run llama3.2 "$PROMPT"` | Local Ollama |
 | gemini | `gemini -p "$PROMPT"` | Google Gemini |
 | codex | `codex exec "$PROMPT"` | OpenAI Codex CLI |
-| zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
-| zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (무료) |
+| zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
+| zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (무료) |
 
 ## Defaults
 
@@ -161,7 +161,7 @@ ai-cypher/
   - Ollama (`ollama serve`) 로컬 서버
   - Gemini CLI (`gemini`) + `GOOGLE_API_KEY`
   - Codex CLI (`npm i -g @openai/codex`) + `OPENAI_API_KEY`
-  - Z.ai (`ZAI_API_KEY`) - Coding Plan: `api.z.ai/api/coding/paas/v4`, 무료: `api.z.ai/api/paas/v4`
+  - Z.ai (`Z_AI_API_KEY`) - Coding Plan: `api.z.ai/api/coding/paas/v4`, 무료: `api.z.ai/api/paas/v4`
 
 ## License
 

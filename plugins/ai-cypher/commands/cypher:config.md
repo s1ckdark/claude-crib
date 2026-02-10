@@ -65,8 +65,8 @@ version: 1.0
 | gpt | `openai api chat.completions.create -m gpt-4o -g user "$PROMPT"` | OpenAI GPT-4 |
 | ollama | `ollama run llama3.2 "$PROMPT"` | Local Ollama model |
 | gemini | `# API call via curl` | Google Gemini |
-| zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
-| zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (Free) |
+| zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
+| zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (Free) |
 
 ## Defaults
 
@@ -81,7 +81,7 @@ Add any API-specific notes or environment variable requirements here.
 - OPENAI_API_KEY required for GPT
 - Ollama must be running locally
 - GOOGLE_API_KEY for Gemini
-- ZAI_API_KEY for Z.ai (both zai and zai-free)
+- Z_AI_API_KEY for Z.ai (both zai and zai-free)
 ```
 
 ### 4. Interactive Model Addition

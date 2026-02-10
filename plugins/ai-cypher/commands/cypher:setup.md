@@ -18,7 +18,7 @@ which claude && claude --version 2>/dev/null || echo "NOT_FOUND: claude"
 which codex && codex --version 2>/dev/null || echo "NOT_FOUND: codex"
 which ollama && ollama --version 2>/dev/null || echo "NOT_FOUND: ollama"
 which gemini && gemini --version 2>/dev/null || echo "NOT_FOUND: gemini"
-[ -n "$ZAI_API_KEY" ] && echo "zai:OK (API key set)" || echo "NOT_FOUND: zai (ZAI_API_KEY not set)"
+[ -n "$Z_AI_API_KEY" ] && echo "zai:OK (API key set)" || echo "NOT_FOUND: zai (Z_AI_API_KEY not set)"
 which openai || echo "NOT_FOUND: openai"
 ```
 
@@ -29,7 +29,7 @@ which openai || echo "NOT_FOUND: openai"
 [ -n "$OPENAI_API_KEY" ] && echo "✓ OPENAI_API_KEY set" || echo "✗ OPENAI_API_KEY not set"
 [ -n "$ANTHROPIC_API_KEY" ] && echo "✓ ANTHROPIC_API_KEY set" || echo "✗ ANTHROPIC_API_KEY not set"
 [ -n "$GOOGLE_API_KEY" ] && echo "✓ GOOGLE_API_KEY set" || echo "✗ GOOGLE_API_KEY not set"
-[ -n "$ZAI_API_KEY" ] && echo "✓ ZAI_API_KEY set" || echo "✗ ZAI_API_KEY not set"
+[ -n "$Z_AI_API_KEY" ] && echo "✓ Z_AI_API_KEY set" || echo "✗ Z_AI_API_KEY not set"
 ```
 
 ### 3. Display Status Report
@@ -48,7 +48,7 @@ Model Status:
 API Keys:
   ✓ OPENAI_API_KEY
   ✗ GOOGLE_API_KEY
-  ✗ ZAI_API_KEY
+  ✗ Z_AI_API_KEY
 ```
 
 ### 4. Installation Instructions
@@ -98,7 +98,7 @@ pip install openai
 # Two endpoints available:
 #   zai      → api.z.ai/api/coding/paas/v4 (Coding Plan, glm-4.7)
 #   zai-free → api.z.ai/api/paas/v4 (Free, glm-4.7-flash)
-export ZAI_API_KEY="your-key-here"
+export Z_AI_API_KEY="your-key-here"
 ```
 
 ### 5. Create Config File

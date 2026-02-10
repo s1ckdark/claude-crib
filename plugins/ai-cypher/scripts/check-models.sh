@@ -64,13 +64,13 @@ check_gemini() {
 }
 
 check_zai() {
-    if [[ -n "${ZAI_API_KEY:-}" ]]; then
+    if [[ -n "${Z_AI_API_KEY:-}" ]]; then
         echo "  zai: available (API key configured, glm-4.7 Coding Plan)"
         echo "  zai-free: available (API key configured, glm-4.7-flash Free)"
         return 0
     else
-        echo "  zai: NOT AVAILABLE - set ZAI_API_KEY"
-        echo "  zai-free: NOT AVAILABLE - set ZAI_API_KEY"
+        echo "  zai: NOT AVAILABLE - set Z_AI_API_KEY"
+        echo "  zai-free: NOT AVAILABLE - set Z_AI_API_KEY"
         return 1
     fi
 }
