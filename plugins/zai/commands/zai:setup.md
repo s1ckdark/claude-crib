@@ -124,9 +124,9 @@ version: 1.0
 ## Usage Examples
 
 ```
-/zai:ask "How should I structure this service?"
-/zai:ask --role code-reviewer --files src/api.ts "Review this"
-/zai:ask --model glm-4-flash "Quick question about TypeScript generics"
+/zai:ask-zai "How should I structure this service?"
+/zai:ask-zai --role code-reviewer --files src/api.ts "Review this"
+/zai:ask-zai --model glm-4-flash "Quick question about TypeScript generics"
 ```
 ```
 
@@ -143,8 +143,8 @@ Thinking Mode: {enabled|disabled}
 Config saved to: .claude/zai.local.md
 
 Quick Start:
-  /zai:ask "Your question here"
-  /zai:ask --role architect "Design question"
+  /zai:ask-zai "Your question here"
+  /zai:ask-zai --role architect "Design question"
   /zai:config                    # View/change settings
 
 MCP Tools Available:

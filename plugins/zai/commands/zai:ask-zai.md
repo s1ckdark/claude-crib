@@ -1,5 +1,5 @@
 ---
-name: ask
+name: ask-zai
 description: Ask Z.AI a question directly - delegates to GLM model with optional role and context
 user_invocable: true
 allowed_tools:
@@ -9,16 +9,16 @@ allowed_tools:
   - Glob
 ---
 
-# /zai:ask - Ask Z.AI
+# /zai:ask-zai - Ask Z.AI
 
 Ask Z.AI's GLM model a question with optional role context.
 
 ## Usage
 
 ```
-/zai:ask <question>
-/zai:ask --role architect "How should I structure this service?"
-/zai:ask --files src/auth.ts,src/middleware.ts "Review this auth flow"
+/zai:ask-zai <question>
+/zai:ask-zai --role architect "How should I structure this service?"
+/zai:ask-zai --files src/auth.ts,src/middleware.ts "Review this auth flow"
 ```
 
 ## Behavior
@@ -41,7 +41,7 @@ Parse the arguments:
 
 ## Example Flow
 
-User: `/zai:ask --role code-reviewer --files src/api.ts "Review this API for issues"`
+User: `/zai:ask-zai --role code-reviewer --files src/api.ts "Review this API for issues"`
 
 1. Set agent_role = "code-reviewer"
 2. Set context_files = ["src/api.ts"]
