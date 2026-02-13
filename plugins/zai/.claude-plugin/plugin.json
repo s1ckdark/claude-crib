@@ -1,6 +1,6 @@
 {
   "name": "zai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Z.AI integration for Claude Code - GLM model access via MCP server",
   "author": {
     "name": "Dave"
