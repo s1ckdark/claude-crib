@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "zai": {
-      "command": "./scripts/.venv/bin/python3",
-      "args": ["./scripts/zai-mcp-server.py"],
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/.venv/bin/python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/zai-mcp-server.py"],
       "env": {
         "Z_AI_API_KEY": "${Z_AI_API_KEY}"
       },
