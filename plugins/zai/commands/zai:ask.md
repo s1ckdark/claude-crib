@@ -1,5 +1,5 @@
 ---
-name: zai:ask
+name: ask
 description: Ask Z.AI a question directly - delegates to GLM model with optional role and context
 user_invocable: true
 allowed_tools:

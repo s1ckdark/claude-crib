@@ -1,5 +1,5 @@
 ---
-name: zai:config
+name: config
 description: Configure Z.AI plugin settings - API key, default model, thinking mode
 user_invocable: true
 allowed_tools:

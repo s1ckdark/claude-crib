@@ -8,7 +8,6 @@
   "keywords": ["zai", "glm", "mcp", "ai-delegation", "thinking-mode"],
   "commands": "./commands",
   "skills": "./skills",
-  "agents": "./agents",
   "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }

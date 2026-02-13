@@ -22,17 +22,23 @@ from mcp.server.fastmcp import FastMCP
 
 # ── Constants ──────────────────────────────────────────────
 
-ZAI_API_URL = "https://api.z.ai/api/paas/v4/chat/completions"
-DEFAULT_MODEL = "glm-4.7"
+ZAI_API_URL = "https://api.z.ai/api/anthropic/v1/messages"
+DEFAULT_MODEL = "glm-5"
 DEFAULT_TIMEOUT = 300
 MAX_TOKENS = 4096
 
 AVAILABLE_MODELS = {
-    "glm-4.7": "GLM-4.7 - Latest flagship model with thinking support",
-    "glm-4-plus": "GLM-4 Plus - Enhanced model",
-    "glm-4-air": "GLM-4 Air - Fast and lightweight",
-    "glm-4-airx": "GLM-4 AirX - Extended context",
-    "glm-4-flash": "GLM-4 Flash - Fastest inference",
+    "glm-5": "GLM-5 - Latest flagship model, most capable",
+    "glm-4.7-flash": "GLM-4.7 Flash - Fast inference, free on coding plan",
+    "glm-4.7": "GLM-4.7 - Flagship with thinking support",
+    "glm-4.6": "GLM-4.6 - Unified reasoning, coding, and agentic",
+    "glm-4.6v": "GLM-4.6V - Vision-language model",
+    "glm-4.5": "GLM-4.5 - Standard model",
+    "glm-4.5-flash": "GLM-4.5 Flash - Fast inference, free on coding plan",
+    "glm-4.5-air": "GLM-4.5 Air - Lightweight and fast",
+    "glm-4.5v": "GLM-4.5V - Vision-language model",
+    "glm-5-code": "GLM-5 Code - Code-specialized model",
+    "glm-4-plus": "GLM-4 Plus - Legacy enhanced model",
 }
 
 ROLE_SYSTEM_PROMPTS = {
@@ -65,17 +71,17 @@ def _get_api_key() -> str:
     return key
 
 
-def _build_messages(
+def _build_request(
     prompt: str,
     agent_role: str = "default",
     context_files: list[str] | None = None,
-) -> list[dict]:
-    """Build message array with system prompt, context, and user prompt."""
-    messages = []
+) -> tuple[str, list[dict]]:
+    """Build system prompt and messages for Anthropic-compatible API.
 
-    # System prompt from role
+    Returns (system_prompt, messages) tuple.
+    """
     system_prompt = ROLE_SYSTEM_PROMPTS.get(agent_role, ROLE_SYSTEM_PROMPTS["default"])
-    messages.append({"role": "system", "content": system_prompt})
+    messages = []
 
     # Attach context files content
     if context_files:
@@ -99,34 +105,36 @@ def _build_messages(
             })
 
     messages.append({"role": "user", "content": prompt})
-    return messages
+    return system_prompt, messages
 
 
 async def _call_zai(
+    system_prompt: str,
     messages: list[dict],
     model: str = DEFAULT_MODEL,
     thinking: bool = True,
     temperature: float = 1.0,
     max_tokens: int = MAX_TOKENS,
 ) -> dict:
-    """Make the actual API call to Z.AI."""
+    """Make the actual API call to Z.AI via Anthropic-compatible endpoint."""
     api_key = _get_api_key()
 
     body: dict = {
         "model": model,
+        "system": system_prompt,
         "messages": messages,
         "max_tokens": max_tokens,
-        "temperature": temperature,
     }
     if thinking:
-        body["thinking"] = {"type": "enabled"}
+        body["thinking"] = {"type": "enabled", "budget_tokens": max_tokens}
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
             ZAI_API_URL,
             headers={
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}",
+                "x-api-key": api_key,
+                "anthropic-version": "2023-06-01",
             },
             json=body,
             timeout=DEFAULT_TIMEOUT,
@@ -136,25 +144,27 @@ async def _call_zai(
 
 
 def _extract_content(data: dict) -> str:
-    """Extract text content from Z.AI response."""
-    if "choices" not in data or not data["choices"]:
+    """Extract text content from Anthropic-format Z.AI response."""
+    content_blocks = data.get("content", [])
+    if not content_blocks:
         return "(no response)"
-    choice = data["choices"][0]
-    return choice.get("message", {}).get("content", "(empty)")
+    text_parts = [b["text"] for b in content_blocks if b.get("type") == "text"]
+    return "\n".join(text_parts) if text_parts else "(empty)"
 
 
 def _extract_usage(data: dict) -> str:
-    """Extract token usage info."""
+    """Extract token usage info from Anthropic-format response."""
     usage = data.get("usage", {})
     if not usage:
         return ""
     parts = []
-    if "prompt_tokens" in usage:
-        parts.append(f"prompt: {usage['prompt_tokens']}")
-    if "completion_tokens" in usage:
-        parts.append(f"completion: {usage['completion_tokens']}")
-    if "total_tokens" in usage:
-        parts.append(f"total: {usage['total_tokens']}")
+    if "input_tokens" in usage:
+        parts.append(f"input: {usage['input_tokens']}")
+    if "output_tokens" in usage:
+        parts.append(f"output: {usage['output_tokens']}")
+    cached = usage.get("cache_read_input_tokens", 0)
+    if cached:
+        parts.append(f"cached: {cached}")
     return f"[tokens: {', '.join(parts)}]" if parts else ""
 
 
@@ -197,7 +207,7 @@ async def ask_zai(
         output_file: Path to write the response to. If empty, returns directly.
         agent_role: Perspective role (architect, code-reviewer, analyst, planner, critic, writer, designer, security-reviewer, tdd-guide, default).
         context_files: List of file paths to include as context.
-        model: Z.AI model to use (glm-4.7, glm-4-plus, glm-4-air, glm-4-airx, glm-4-flash).
+        model: Z.AI model to use (glm-5, glm-4.7-flash, glm-4.7, glm-4.6, glm-4.5-flash, etc).
         thinking: Enable thinking/reasoning mode (default: true).
         background: Run in background and return job ID (default: false).
     """
@@ -225,8 +235,8 @@ async def ask_zai(
 
         async def _run_bg():
             try:
-                messages = _build_messages(actual_prompt, agent_role, context_files)
-                data = await _call_zai(messages, model=model, thinking=thinking)
+                system_prompt, messages = _build_request(actual_prompt, agent_role, context_files)
+                data = await _call_zai(system_prompt, messages, model=model, thinking=thinking)
                 content = _extract_content(data)
                 usage = _extract_usage(data)
                 result = _format_output(content, agent_role, model, usage)
@@ -260,8 +270,8 @@ async def ask_zai(
 
     # Synchronous execution
     try:
-        messages = _build_messages(actual_prompt, agent_role, context_files)
-        data = await _call_zai(messages, model=model, thinking=thinking)
+        system_prompt, messages = _build_request(actual_prompt, agent_role, context_files)
+        data = await _call_zai(system_prompt, messages, model=model, thinking=thinking)
         content = _extract_content(data)
         usage = _extract_usage(data)
         result = _format_output(content, agent_role, model, usage)
