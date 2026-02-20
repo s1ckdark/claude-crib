@@ -1,0 +1,361 @@
+/* ============================================================
+   The Crib Board — Dark Mode Dashboard Stylesheet
+   ============================================================ */
+
+/* Reset
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+/* Header
+   ============================================================ */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #334155;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.status-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.live-indicator {
+  color: #4ade80;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+.clock {
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #334155;
+  border: 1px solid #475569;
+  color: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: #475569;
+  border-color: #64748b;
+  transform: scale(1.05);
+}
+
+.theme-toggle.hood {
+  background: linear-gradient(135deg, #6b21a8, #1a1a1a);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+/* Main
+   ============================================================ */
+main {
+  padding: 1rem;
+}
+
+.mode-banner {
+  background: #1e293b;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mode-name {
+  font-weight: bold;
+  color: #c084fc;
+}
+
+.mode-phase {
+  color: #94a3b8;
+}
+
+/* Agent Grid
+   ============================================================ */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: #64748b;
+  padding: 3rem;
+}
+
+.empty-state .hint {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Agent Card — Base
+   ============================================================ */
+.agent-card {
+  position: relative;
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 1rem;
+  border-left: 4px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.agent-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.char-svg {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 0.25rem;
+}
+
+.agent-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.agent-role {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: -2px;
+}
+
+.agent-status {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.agent-task {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Agent Card — State: working
+   ============================================================ */
+.agent-card.working {
+  border-left-color: #4ade80;
+}
+
+.agent-card.working .agent-status {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.agent-card.working .char-svg {
+  animation: working 0.8s ease-in-out infinite;
+}
+
+/* Agent Card — State: pending
+   ============================================================ */
+.agent-card.pending {
+  border-left-color: #fbbf24;
+}
+
+.agent-card.pending .agent-status {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.agent-card.pending .char-svg {
+  animation: pending 2s ease-in-out infinite;
+}
+
+/* Agent Card — State: idle
+   ============================================================ */
+.agent-card.idle {
+  border-left-color: #64748b;
+}
+
+.agent-card.idle .agent-status {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+.agent-card.idle .char-svg {
+  animation: idle 3s ease-in-out infinite;
+}
+
+/* Agent Card — State: completed
+   ============================================================ */
+.agent-card.completed {
+  border-left-color: #22d3ee;
+}
+
+.agent-card.completed .agent-status {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+}
+
+.agent-card.completed .char-svg {
+  animation: completed 0.6s ease-out forwards;
+}
+
+/* Agent Card — State: error
+   ============================================================ */
+.agent-card.error {
+  border-left-color: #f87171;
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.2);
+}
+
+.agent-card.error .agent-status {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.agent-card.error .char-svg {
+  animation: error 0.5s ease-in-out infinite;
+}
+
+/* Zzz Bubble — Idle State
+   ============================================================ */
+.agent-card.idle .zzz {
+  position: absolute;
+  top: -5px;
+  right: 5px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  animation: zzzFloat 2s ease-in-out infinite;
+}
+
+/* Card Enter / Exit Transitions
+   ============================================================ */
+.agent-card.entering {
+  animation: cardEnter 0.4s ease-out forwards;
+}
+
+.agent-card.exiting {
+  animation: cardExit 0.3s ease-in forwards;
+}
+
+/* Footer
+   ============================================================ */
+footer {
+  border-top: 1px solid #334155;
+  padding: 0.75rem 1rem;
+}
+
+.summary {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* @keyframes — State Animations
+   ============================================================ */
+@keyframes working {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%       { transform: translateY(-4px) rotate(-5deg); }
+  50%       { transform: translateY(0) rotate(0deg); }
+  75%       { transform: translateY(-4px) rotate(5deg); }
+}
+
+@keyframes pending {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.95); }
+}
+
+@keyframes idle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+
+@keyframes completed {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.2); }
+  50%  { transform: scale(0.95); }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes error {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  40%       { transform: translateX(4px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+/* @keyframes — UI Animations
+   ============================================================ */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cardExit {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.8); }
+}
+
+@keyframes zzzFloat {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50%       { opacity: 1; transform: translateY(-8px); }
+}
+
+/* Responsive
+   ============================================================ */
+@media (max-width: 600px) {
+  .agent-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .agent-grid {
+    grid-template-columns: 1fr;
+  }
+}
