@@ -1,5 +1,5 @@
 /* ============================================================
-   The Crib Board — Browser App Logic
+   The Crib Hood — Browser App Logic
    Pure vanilla JS, no external dependencies
    ============================================================ */
 
@@ -9,7 +9,7 @@
 // Constants
 // ------------------------------------------------------------
 // Character theme management
-let currentTheme = localStorage.getItem('crib-board-theme') || 'original';
+let currentTheme = localStorage.getItem('crib-hood-theme') || 'original';
 
 function getActiveCharacters() {
   return currentTheme === 'hood' && window.CHARACTERS_HOOD
@@ -345,7 +345,7 @@ function connectSSE() {
     try {
       render(JSON.parse(e.data));
     } catch (err) {
-      console.warn('[crib-board] Failed to parse SSE message:', err);
+      console.warn('[crib-hood] Failed to parse SSE message:', err);
     }
   };
 
@@ -394,7 +394,7 @@ function applyTheme() {
 
 function toggleTheme() {
   currentTheme = currentTheme === 'hood' ? 'original' : 'hood';
-  localStorage.setItem('crib-board-theme', currentTheme);
+  localStorage.setItem('crib-hood-theme', currentTheme);
   applyTheme();
 }
 
@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fetch('/api/state')
     .then((res) => res.json())
     .then((state) => { lastState = state; render(state); })
-    .catch((err) => console.warn('[crib-board] Initial fetch failed:', err));
+    .catch((err) => console.warn('[crib-hood] Initial fetch failed:', err));
 
   connectSSE();
 });

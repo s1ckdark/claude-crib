@@ -1,5 +1,5 @@
 ---
-name: crib-board-status
+name: crib-hood-status
 description: Show agent dashboard status in terminal
 ---
 
@@ -12,7 +12,7 @@ Read the current OMC agent state and display a formatted terminal summary.
 3. Format the output as:
 
 ```
-🏠 The Crib Board
+🏠 The Crib Hood
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [emoji] [agent-name]   [status]   [task-info]
 ...

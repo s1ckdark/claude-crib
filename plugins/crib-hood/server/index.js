@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const PORT = parseInt(process.env.CRIB_BOARD_PORT || '4567', 10);
+const PORT = parseInt(process.env.CRIB_HOOD_PORT || process.env.CRIB_BOARD_PORT || '4567', 10);
 
 // MIME types for static file serving
 const MIME_TYPES = {
@@ -262,7 +262,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`🏠 The Crib Board running at http://localhost:${PORT}`);
+  console.log(`🏠 The Crib Hood running at http://localhost:${PORT}`);
   console.log(`📡 Watching: ${STATE_DIR}`);
 });
 

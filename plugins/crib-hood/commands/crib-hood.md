@@ -1,9 +1,9 @@
 ---
-name: crib-board
-description: Launch the Crib Board agent dashboard in browser
+name: crib-hood
+description: Launch the Crib Hood agent dashboard in browser
 ---
 
-Launch the Crib Board dashboard to visualize OMC agent states in real-time.
+Launch the Crib Hood dashboard to visualize OMC agent states in real-time.
 
 ## Steps
 
@@ -19,6 +19,6 @@ sleep 1 && open http://localhost:4567
 
 3. Report to the user:
 
-"🏠 The Crib Board is running at http://localhost:4567
+"🏠 The Crib Hood is running at http://localhost:4567
 📡 Watching .omc/state/ for agent updates
 To stop the server: `kill $(lsof -ti:4567)` or press Ctrl+C in the terminal"
