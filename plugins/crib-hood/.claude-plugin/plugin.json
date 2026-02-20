@@ -6,6 +6,6 @@
     "name": "Dave"
   },
   "keywords": ["dashboard", "agents", "visualization", "animation", "monitoring"],
-  "commands": "../commands",
-  "skills": "../skills"
+  "commands": "./commands",
+  "skills": "./skills"
 }
