@@ -1,7 +1,7 @@
 ---
 description: Compare UI generation results from v0, Gemini, and Z.ai side by side
 argument-hint: "<description>" [--framework react|vue|svelte]
-allowed-tools: Bash, Read, Write, WebFetch, Task
+allowed-tools: Bash, Read, Write, WebFetch, AskUserQuestion
 ---
 
 <!--
@@ -15,6 +15,10 @@ Usage examples:
 
 Description: $ARGUMENTS
 
+## IMPORTANT: Service Invocation
+
+**ALWAYS use `invoke-service.py` via Bash to call AI services. NEVER use MCP tools (ask_zai, etc.) directly.**
+
 ## Instructions
 
 1. **Parse Arguments**
@@ -22,18 +26,18 @@ Description: $ARGUMENTS
    - Extract --framework (default: react)
 
 2. **Check All Services**
-   Verify credentials for all three services:
-   - v0: `V0_API_KEY`
-   - gemini: OAuth or `GOOGLE_API_KEY`
-   - zai: `Z_AI_API_KEY`
-
+   ```bash
+   echo "V0: $([ -n "$V0_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   echo "GEMINI: $([ -n "$GOOGLE_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   echo "ZAI: $([ -n "$Z_AI_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   ```
    Skip unavailable services, warn user.
 
-3. **Parallel Generation**
-   Use Task tool with design-coordinator to:
-   - Send same prompt to all available services
-   - Run in parallel for efficiency
-   - Collect responses with timing data
+3. **Parallel Generation via Script**
+   ```bash
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/invoke-service.py all "<formatted_prompt>" --json
+   ```
+   The script runs all available services in parallel and returns JSON results.
 
 4. **Analyze Results**
    For each result, evaluate:

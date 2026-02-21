@@ -1,7 +1,7 @@
 ---
 description: Generate frontend UI components from text description or design image
 argument-hint: "<description>" [--service v0|gemini|zai|all] [--from-image path] [--framework react|vue|svelte]
-allowed-tools: Bash, Read, Write, WebFetch, Task
+allowed-tools: Bash, Read, Write, WebFetch, AskUserQuestion
 ---
 
 <!--
@@ -16,28 +16,30 @@ Usage examples:
 
 Description: $ARGUMENTS
 
+## IMPORTANT: Service Invocation
+
+**ALWAYS use `invoke-service.py` via Bash to call AI services. NEVER use MCP tools (ask_zai, etc.) directly.**
+
 ## Instructions
 
 1. **Parse Arguments**
    - Extract design description (quoted string)
-   - Extract --service (default: first available)
+   - Extract --service (default: first available by priority)
    - Extract --from-image for design file input
    - Extract --framework (default: react)
 
-2. **Load Configuration**
-   Check `.claude/drip-ui.local.md` for:
-   - API keys and auth status
-   - Default service preferences
-   - Output preferences (TypeScript, CSS framework)
+2. **Determine Service**
+   Check available services and select one:
+   ```bash
+   echo "V0: $([ -n "$V0_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   echo "GEMINI: $([ -n "$GOOGLE_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   echo "ZAI: $([ -n "$Z_AI_API_KEY" ] && echo 'available' || echo 'unavailable')"
+   ```
 
-3. **Check Authentication**
-   Verify required credentials:
-   - v0: `V0_API_KEY` environment variable
-   - gemini: OAuth status or `GOOGLE_API_KEY`
-   - zai: `Z_AI_API_KEY` environment variable
+   Priority order (when --service not specified): **v0 > gemini > zai**
 
-4. **Prepare Prompt**
-   Format the design description for optimal results:
+3. **Prepare Prompt**
+   Format the design description for the selected service:
    ```
    Create a [FRAMEWORK] component with the following specifications:
 
@@ -51,28 +53,29 @@ Description: $ARGUMENTS
    - Use semantic HTML
    ```
 
-5. **Execute Generation**
+4. **Execute Generation via Script**
 
    **For text-to-UI:**
-   - Use Task tool with design-coordinator agent
-   - Pass formatted prompt and service selection
-   - Handle streaming responses if supported
+   ```bash
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/invoke-service.py <service> "<formatted_prompt>" --json
+   ```
 
    **For image-to-code (--from-image):**
-   - Only Gemini supports multimodal
-   - Read image and encode for API
-   - Include vision-specific prompt
+   ```bash
+   # Only Gemini supports multimodal
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/invoke-service.py gemini "<prompt>" --image <path> --json
+   ```
 
-6. **Process Output**
-   - Extract code blocks from response
+5. **Process Output**
+   - Parse JSON response from script
+   - Extract code blocks from content
    - Validate syntax
    - Format with proper indentation
-   - Add file extension hints
 
-7. **Save and Display**
+6. **Save and Display**
    - Optionally save to file (ask user)
    - Display formatted code with syntax highlighting
-   - Show quality metrics
+   - Show service used, tokens, and timing
 
 ## Service-Specific Prompts
 
