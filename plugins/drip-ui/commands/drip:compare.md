@@ -1,7 +1,7 @@
 ---
-description: Compare UI generation results from v0, Gemini, and Z.ai side by side
+description: Compare UI generation results from v0, Gemini, and Z.ai using parallel team agents
 argument-hint: "<description>" [--framework react|vue|svelte]
-allowed-tools: Bash, Read, Write, WebFetch, AskUserQuestion
+allowed-tools: Bash, Read, Write, Task, TeamCreate, TeamDelete, SendMessage, TaskCreate, TaskList, TaskUpdate, AskUserQuestion
 ---
 
 <!--
@@ -11,141 +11,101 @@ Usage examples:
   /drip:compare "Data table with sorting and pagination"
 -->
 
-# Drip UI - Compare Services
+# Drip UI - Compare Services (Team Mode)
 
 Description: $ARGUMENTS
 
-## IMPORTANT: Service Invocation
-
-**ALWAYS use `invoke-service.py` via Bash to call AI services. NEVER use MCP tools (ask_zai, etc.) directly.**
-
 ## Instructions
 
-1. **Parse Arguments**
-   - Extract design description
-   - Extract --framework (default: react)
+### 1. Parse Arguments
+- Extract design description (quoted string)
+- Extract --framework (default: react)
 
-2. **Check All Services**
-   ```bash
-   echo "V0: $([ -n "$V0_API_KEY" ] && echo 'available' || echo 'unavailable')"
-   echo "GEMINI: $([ -n "$GOOGLE_API_KEY" ] && echo 'available' || echo 'unavailable')"
-   echo "ZAI: $([ -n "$Z_AI_API_KEY" ] && echo 'available' || echo 'unavailable')"
-   ```
-   Skip unavailable services, warn user.
-
-3. **Parallel Generation via Script**
-   ```bash
-   python ${CLAUDE_PLUGIN_ROOT}/scripts/invoke-service.py all "<formatted_prompt>" --json
-   ```
-   The script runs all available services in parallel and returns JSON results.
-
-4. **Analyze Results**
-   For each result, evaluate:
-
-   | Criteria | Weight | How to Assess |
-   |----------|--------|---------------|
-   | Code Quality | 25% | Syntax, structure, best practices |
-   | Design Match | 25% | Adherence to description |
-   | Accessibility | 20% | ARIA, semantic HTML, keyboard nav |
-   | Responsiveness | 15% | Mobile support, breakpoints |
-   | Performance | 15% | Code size, efficiency |
-
-5. **Generate Comparison Report**
-   - Side-by-side code snippets (truncated for display)
-   - Scores for each criterion
-   - Overall ranking
-   - Recommendation based on use case
-
-6. **Offer Actions**
-   - View full code for any service
-   - Save winner to file
-   - Merge best parts (advanced)
-
-## Comparison Metrics
-
-### Code Quality Assessment
+### 2. Check Available Services
+```bash
+echo "V0: $([ -n "$V0_API_KEY" ] && echo 'available' || echo 'unavailable')"
+echo "GEMINI: $([ -n "$GOOGLE_API_KEY" ] && echo 'available' || echo 'unavailable')"
+echo "ZAI: $([ -n "$Z_AI_API_KEY" ] && echo 'available' || echo 'unavailable')"
 ```
-Check for:
-- Proper component structure
-- Type safety (TypeScript)
-- Error handling
-- Code comments
-- Naming conventions
+Only spawn agents for available services. Warn user about unavailable ones.
+
+### 3. Prepare the Design Prompt
+
+Format for each service:
+```
+Create a [FRAMEWORK] component with the following specifications:
+
+Design: [USER_DESCRIPTION]
+
+Requirements:
+- Use Tailwind CSS for styling
+- Include TypeScript types
+- Add accessibility attributes (ARIA)
+- Make it responsive (mobile-first)
+- Use semantic HTML
 ```
 
-### Design Fidelity Assessment
+### 4. Create Team and Spawn Agents
+
 ```
-Check for:
-- All requested elements present
-- Proper layout/positioning
-- Correct styling approach
-- Theme consistency
+TeamCreate: drip-compare
 ```
 
-### Accessibility Assessment
-```
-Check for:
-- ARIA labels and roles
-- Keyboard navigation
-- Focus management
-- Color contrast hints
-- Screen reader support
-```
+Create one task per available service, then spawn the matching agent:
 
-## Output Format
+- **v0-agent** → `drip-ui:v0-generator` agent type — calls v0.dev API
+- **gemini-agent** → `drip-ui:gemini-generator` agent type — calls Gemini API
+- **zai-agent** → `drip-ui:zai-generator` agent type — calls Z.ai API
+
+Each agent receives the formatted prompt and:
+1. Optimizes it for their service's strengths
+2. Calls `invoke-service.py` via Bash (NEVER MCP tools)
+3. Analyzes the generated code quality
+4. Reports back with code + score + analysis
+
+**Spawn agents in parallel** using multiple Task calls in a single message.
+
+### 5. Collect Results
+
+Wait for all agents to complete their tasks. Each agent sends back:
+- SERVICE name
+- SCORE (0-100)
+- STRENGTHS list
+- WEAKNESSES list
+- Generated CODE
+
+### 6. Generate Comparison Report
+
+After all agents report, compile the comparison:
 
 ```
 +===================================================================+
 |  DRIP COMPARE: [DESCRIPTION]                                      |
 +===================================================================+
-|  Services: v0, Gemini, Z.ai  |  Framework: React                  |
+|  Services: [available]  |  Framework: [FRAMEWORK]                  |
 +===================================================================+
 
 === v0.dev ===
-Tokens: 1,234  |  Time: 2.1s  |  Score: 87/100
-
-export function Component() {
-  return (
-    <div className="...">
-      // Preview (first 10 lines)
-    </div>
-  );
-}
-
-Strengths: Production-ready, shadcn/ui integration
-Weaknesses: Less flexible styling
+Score: XX/100
+[Code preview - first 10 lines]
+Strengths: ...
+Weaknesses: ...
 
 ---
 
 === Gemini ===
-Tokens: 1,456  |  Time: 3.2s  |  Score: 82/100
-
-export const Component: React.FC = () => {
-  return (
-    <div style={{...}}>
-      // Preview (first 10 lines)
-    </div>
-  );
-}
-
-Strengths: Detailed comments, flexible
-Weaknesses: Requires more cleanup
+Score: XX/100
+[Code preview - first 10 lines]
+Strengths: ...
+Weaknesses: ...
 
 ---
 
 === Z.ai ===
-Tokens: 1,100  |  Time: 1.8s  |  Score: 79/100
-
-function Component() {
-  return (
-    <div className="...">
-      // Preview (first 10 lines)
-    </div>
-  );
-}
-
-Strengths: Fast, cost-effective
-Weaknesses: Less polished output
+Score: XX/100
+[Code preview - first 10 lines]
+Strengths: ...
+Weaknesses: ...
 
 +===================================================================+
 |  COMPARISON SUMMARY                                               |
@@ -159,21 +119,28 @@ Weaknesses: Less polished output
 | Responsiveness | ★★★★☆ | ★★★★☆  | ★★★☆☆ |
 | Performance    | ★★★★☆ | ★★★☆☆  | ★★★★★ |
 
-WINNER: v0.dev (Best for production use)
+WINNER: [best service] ([reason])
 
 RECOMMENDATIONS:
 - Production deployment: v0.dev
 - Learning/customization: Gemini
 - Budget projects: Z.ai
-
 +===================================================================+
+```
 
-Actions:
-[1] View full v0 code
-[2] View full Gemini code
-[3] View full Z.ai code
-[4] Save winner to file
-[5] Create hybrid (advanced)
+### 7. Offer Actions
+
+Ask user what to do next:
+- View full code for any service
+- Save winner to file
+- Create hybrid (merge best parts from each)
+
+### 8. Cleanup
+
+Send shutdown requests to all agents and delete the team:
+```
+SendMessage: shutdown_request to each agent
+TeamDelete: drip-compare
 ```
 
 ## Hybrid Generation (Advanced)
