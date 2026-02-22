@@ -22,6 +22,9 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 // SSE clients set
 const clients = new Set();
 
+// Server start time for uptime reporting
+const SERVER_START = Date.now();
+
 // ------------------------------------------------------------
 // Find .omc/state/ directory by walking up from cwd
 // ------------------------------------------------------------
@@ -273,6 +276,21 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
 
+  // GET /health
+  if (req.method === 'GET' && pathname === '/health') {
+    const health = {
+      status: 'ok',
+      uptime: process.uptime(),
+      port: PORT,
+      clients: clients.size,
+      stateDir: STATE_DIR,
+      timestamp: Date.now(),
+    };
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(health));
+    return;
+  }
+
   // GET /api/state
   if (req.method === 'GET' && pathname === '/api/state') {
     const state = readAllState();
@@ -324,9 +342,23 @@ const server = http.createServer((req, res) => {
   });
 });
 
+// ------------------------------------------------------------
+// Port-in-use and server error handling
+// ------------------------------------------------------------
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[crib-hood] Port ${PORT} is already in use.`);
+    console.error(`[crib-hood] Set CRIB_HOOD_PORT to use a different port.`);
+    process.exit(1);
+  } else {
+    console.error('[crib-hood] Server error:', err);
+    process.exit(1);
+  }
+});
+
 server.listen(PORT, () => {
-  console.log(`🏠 The Crib Hood running at http://localhost:${PORT}`);
-  console.log(`📡 Watching: ${STATE_DIR}`);
+  console.log(`Crib Hood running at http://localhost:${PORT}`);
+  console.log(`Watching: ${STATE_DIR}`);
 });
 
 // ------------------------------------------------------------
@@ -346,3 +378,16 @@ function shutdown() {
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+
+// ------------------------------------------------------------
+// Uncaught exception and unhandled rejection handlers
+// ------------------------------------------------------------
+process.on('uncaughtException', (err) => {
+  console.error('[crib-hood] Uncaught exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[crib-hood] Unhandled promise rejection:', reason);
+  process.exit(1);
+});
