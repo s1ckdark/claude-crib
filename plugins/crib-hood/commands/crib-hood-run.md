@@ -1,8 +1,7 @@
 ---
-name: crib-hood-run
+name: run
 description: Run the Crib Hood orchestrator - analyzes your request, builds an agent team, and executes autonomously
 argument-hint: "<description>" [--max-agents N]
-allowed-tools: Bash, Task, Read
 ---
 
 # Crib Hood — Run Orchestrator

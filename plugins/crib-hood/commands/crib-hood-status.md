@@ -1,5 +1,5 @@
 ---
-name: crib-hood-status
+name: status
 description: Show agent dashboard status in terminal
 ---
 

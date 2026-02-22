@@ -1,7 +1,6 @@
 ---
-name: crib-hood-stop
+name: stop
 description: Stop the running Crib Hood orchestrator and shut down all agents
-allowed-tools: Bash, Read, TaskList, TaskUpdate, SendMessage, TeamDelete
 ---
 
 # Crib Hood — Stop Orchestrator
