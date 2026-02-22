@@ -1,8 +1,5 @@
 {
   "name": "crib-hood",
   "version": "0.1.0",
-  "description": "Autonomous agent orchestrator dashboard for Crib Hood",
-  "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents"
+  "description": "Autonomous agent orchestrator dashboard for Crib Hood"
 }
