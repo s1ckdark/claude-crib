@@ -5,5 +5,8 @@
   "author": {
     "name": "Dave"
   },
-  "keywords": ["dashboard", "agents", "visualization", "animation", "monitoring"]
+  "keywords": ["dashboard", "agents", "visualization", "animation", "monitoring"],
+  "commands": "../commands",
+  "skills": "../skills",
+  "agents": "../agents"
 }

@@ -1,1 +1,0 @@
-/Users/dave/iWorks/claude-crib/plugins/crib-hood/commands/crib-hood-run.md

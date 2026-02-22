@@ -1,1 +1,0 @@
-/Users/dave/iWorks/claude-crib/plugins/crib-hood/agents/crib-hood-coordinator.md
