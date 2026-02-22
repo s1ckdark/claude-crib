@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/drip-ui/agents/zai-generator.md

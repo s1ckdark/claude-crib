@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:list.md

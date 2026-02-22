@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/drip-ui/commands/drip:config.md

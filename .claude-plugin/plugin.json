@@ -18,9 +18,9 @@
     "productivity",
     "codebase-analysis"
   ],
-  "commands": "./plugins/code-crib/commands",
-  "skills": "./plugins/code-crib/skills",
-  "agents": "./plugins/code-crib/agents",
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
   "hooks": "./plugins/code-crib/hooks/hooks.json",
   "mcpServers": "./plugins/code-crib/.mcp.json"
 }

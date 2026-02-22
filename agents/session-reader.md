@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/the-plug/agents/session-reader.md

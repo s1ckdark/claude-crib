@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/ai-cypher/commands/cypher:setup.md

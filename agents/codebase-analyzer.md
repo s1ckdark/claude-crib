@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/code-crib/agents/codebase-analyzer.md
