@@ -111,7 +111,7 @@ function getRoleName(agentName) {
 // Create a brand-new agent card DOM element
 // ------------------------------------------------------------
 function createCard(agent) {
-  const { name, status, task } = agent;
+  const { name, status, task, team } = agent;
   const key = getCharacterKey(name);
   const safeStatus = STATUS_CLASSES.includes(status) ? status : 'idle';
 
@@ -120,6 +120,7 @@ function createCard(agent) {
   card.id = `agent-${CSS.escape(name)}`;
   card.dataset.status = safeStatus;
   card.dataset.name = name;
+  if (team) card.dataset.team = team;
 
   // SVG comes exclusively from window.CHARACTERS, a static authored file
   // (characters.js bundled with this plugin). It is not user-supplied data.
@@ -137,6 +138,14 @@ function createCard(agent) {
   const roleEl = document.createElement('div');
   roleEl.className = 'agent-role';
   roleEl.textContent = getRoleName(name);
+
+  // Team badge
+  if (team) {
+    const teamEl = document.createElement('div');
+    teamEl.className = 'agent-team-badge';
+    teamEl.textContent = team;
+    card.appendChild(teamEl);
+  }
 
   const statusEl = document.createElement('div');
   statusEl.className = 'agent-status';
@@ -262,6 +271,7 @@ function updateModeBanner(mode) {
 // ------------------------------------------------------------
 function render(state) {
   const agents     = Array.isArray(state.agents) ? state.agents : [];
+  const teams      = Array.isArray(state.teams) ? state.teams : [];
   const grid       = document.getElementById('agent-grid');
   const emptyState = document.getElementById('empty-state');
 
@@ -282,29 +292,91 @@ function render(state) {
     }
   }
 
-  // Collect currently rendered cards by agent name
-  const rendered = new Map();
+  // Group agents by team
+  const teamGroups = new Map();  // teamName -> [agent, ...]
+  const ungrouped = [];          // agents without a team
+  for (const [, agent] of incoming) {
+    if (agent.team) {
+      if (!teamGroups.has(agent.team)) teamGroups.set(agent.team, []);
+      teamGroups.get(agent.team).push(agent);
+    } else {
+      ungrouped.push(agent);
+    }
+  }
+
+  // Clear existing team sections (but keep agent-cards for reuse)
+  const existingCards = new Map();
   for (const card of grid.querySelectorAll('.agent-card[data-name]')) {
-    rendered.set(card.dataset.name, card);
+    existingCards.set(card.dataset.name, card);
+    // Detach from DOM temporarily
+    card.remove();
+  }
+  // Remove old team sections and separators
+  for (const el of grid.querySelectorAll('.team-section')) {
+    el.remove();
+  }
+
+  // Helper: render an agent card (reuse or create)
+  function renderAgent(agent, container) {
+    if (existingCards.has(agent.name)) {
+      const card = existingCards.get(agent.name);
+      updateCard(card, agent);
+      container.appendChild(card);
+      existingCards.delete(agent.name);
+    } else {
+      container.appendChild(createCard(agent));
+    }
+  }
+
+  // Render team groups
+  for (const [teamName, teamAgents] of teamGroups) {
+    const section = document.createElement('div');
+    section.className = 'team-section';
+
+    const header = document.createElement('div');
+    header.className = 'team-header';
+    header.textContent = teamName;
+    section.appendChild(header);
+
+    const teamGrid = document.createElement('div');
+    teamGrid.className = 'team-grid';
+    for (const agent of teamAgents) {
+      renderAgent(agent, teamGrid);
+    }
+    section.appendChild(teamGrid);
+    grid.appendChild(section);
+  }
+
+  // Render ungrouped agents (OMC workflow agents)
+  if (ungrouped.length > 0 && teamGroups.size > 0) {
+    const section = document.createElement('div');
+    section.className = 'team-section';
+
+    const header = document.createElement('div');
+    header.className = 'team-header';
+    header.textContent = 'OMC Workflow';
+    section.appendChild(header);
+
+    const omcGrid = document.createElement('div');
+    omcGrid.className = 'team-grid';
+    for (const agent of ungrouped) {
+      renderAgent(agent, omcGrid);
+    }
+    section.appendChild(omcGrid);
+    grid.appendChild(section);
+  } else {
+    // No teams — render flat (original behavior)
+    for (const agent of ungrouped) {
+      renderAgent(agent, grid);
+    }
   }
 
   // Remove stale cards (agents no longer in state)
-  for (const [name, card] of rendered) {
-    if (!incoming.has(name)) {
-      card.classList.add('exiting');
-      setTimeout(() => {
-        if (card.parentNode) card.parentNode.removeChild(card);
-      }, 300);
-    }
-  }
-
-  // Update existing cards or create new ones
-  for (const [name, agent] of incoming) {
-    if (rendered.has(name)) {
-      updateCard(rendered.get(name), agent);
-    } else {
-      grid.appendChild(createCard(agent));
-    }
+  for (const [, card] of existingCards) {
+    card.classList.add('exiting');
+    setTimeout(() => {
+      if (card.parentNode) card.parentNode.removeChild(card);
+    }, 300);
   }
 
   // Show/hide empty state placeholder

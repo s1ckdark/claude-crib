@@ -45,6 +45,7 @@ function findOmcStateDir() {
 
 const STATE_DIR = findOmcStateDir();
 const TASKS_DIR = path.join(os.homedir(), '.claude', 'tasks');
+const TEAMS_DIR = path.join(os.homedir(), '.claude', 'teams');
 
 // ------------------------------------------------------------
 // Read all state
@@ -52,6 +53,7 @@ const TASKS_DIR = path.join(os.homedir(), '.claude', 'tasks');
 function readAllState() {
   const result = {
     agents: [],
+    teams: [],
     mode: null,
     timestamp: Date.now(),
   };
@@ -140,6 +142,58 @@ function readAllState() {
     }
   }
 
+  // Read team configs from ~/.claude/teams/*/config.json
+  if (fs.existsSync(TEAMS_DIR)) {
+    let teamDirs;
+    try {
+      teamDirs = fs.readdirSync(TEAMS_DIR);
+    } catch (_) {
+      teamDirs = [];
+    }
+    for (const teamName of teamDirs) {
+      const configPath = path.join(TEAMS_DIR, teamName, 'config.json');
+      if (!fs.existsSync(configPath)) continue;
+      try {
+        const raw = fs.readFileSync(configPath, 'utf8');
+        const config = JSON.parse(raw);
+        const members = Array.isArray(config.members) ? config.members : [];
+        if (members.length === 0) continue;
+
+        const teamInfo = {
+          name: teamName,
+          members: members.map((m) => m.name || m.agentId),
+        };
+        result.teams.push(teamInfo);
+
+        // Add team members as agents if not already tracked via tasks
+        const knownAgents = new Set(result.agents.map((a) => a.name));
+        for (const member of members) {
+          const memberName = member.name || member.agentId;
+          if (knownAgents.has(memberName)) {
+            // Enrich existing agent with team info
+            const existing = result.agents.find((a) => a.name === memberName);
+            if (existing && !existing.team) {
+              existing.team = teamName;
+              existing.agentType = member.agentType || null;
+            }
+          } else {
+            // Add as idle agent (team member without a task yet)
+            result.agents.push({
+              name: memberName,
+              status: 'idle',
+              task: null,
+              team: teamName,
+              agentType: member.agentType || null,
+              taskId: null,
+            });
+          }
+        }
+      } catch (_) {
+        // Skip unreadable/malformed config files
+      }
+    }
+  }
+
   return result;
 }
 
@@ -181,6 +235,15 @@ try {
 if (fs.existsSync(TASKS_DIR)) {
   try {
     fs.watch(TASKS_DIR, { recursive: true }, scheduleUpdate);
+  } catch (_) {
+    // Ignore watch failures
+  }
+}
+
+// Watch ~/.claude/teams/ directory
+if (fs.existsSync(TEAMS_DIR)) {
+  try {
+    fs.watch(TEAMS_DIR, { recursive: true }, scheduleUpdate);
   } catch (_) {
     // Ignore watch failures
   }
