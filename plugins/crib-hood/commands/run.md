@@ -1,6 +1,7 @@
 ---
 name: run
 description: Run the Crib Hood orchestrator - analyzes your request, builds an agent team, and executes autonomously
+user_invocable: true
 argument-hint: "<description>" [--max-agents N]
 ---
 
@@ -27,7 +28,7 @@ Request: $ARGUMENTS
 
 3. **Spawn Coordinator**
    Use the Task tool to spawn the crib-hood-coordinator agent:
-   - subagent_type: `crib-hood:crib-hood-coordinator`
+   - subagent_type: `crib-hood:coordinator`
    - prompt: Include the user's request description and max-agents limit
 
    The coordinator handles everything autonomously from here.

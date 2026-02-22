@@ -1,6 +1,7 @@
 ---
 name: crib-hood
 description: Launch the Crib Hood agent dashboard in browser
+user_invocable: true
 ---
 
 Launch the Crib Hood dashboard to visualize OMC agent states in real-time.

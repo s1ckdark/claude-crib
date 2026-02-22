@@ -1,5 +1,5 @@
 ---
-name: crib-hood-coordinator
+name: coordinator
 description: |
   Autonomous agent orchestrator for Crib Hood. Analyzes user requests, decomposes into tasks,
   assigns appropriate agent teams, and monitors execution with auto-intervention.

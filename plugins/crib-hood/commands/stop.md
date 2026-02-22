@@ -1,6 +1,7 @@
 ---
 name: stop
 description: Stop the running Crib Hood orchestrator and shut down all agents
+user_invocable: true
 ---
 
 # Crib Hood — Stop Orchestrator

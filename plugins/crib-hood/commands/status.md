@@ -1,6 +1,7 @@
 ---
 name: status
 description: Show agent dashboard status in terminal
+user_invocable: true
 ---
 
 Read the current OMC agent state and agent team state, then display a formatted terminal summary.
