@@ -11,7 +11,7 @@ The Crib Hood is an agent visualization dashboard AND autonomous orchestrator.
 Run the `/crib-hood` command to start the server and open the dashboard.
 
 ### Terminal summary:
-Run the `/crib-hood-status` command to display agent states in the terminal.
+Run the `/crib-hood:status` command to display agent states in the terminal.
 
 ## Orchestrator (autonomous execution)
 

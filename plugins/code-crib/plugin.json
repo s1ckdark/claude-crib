@@ -1,0 +1,10 @@
+{
+  "name": "code-crib",
+  "version": "2.0.2",
+  "description": "Knowledge stash, RAG search, and codebase analysis for Claude Code",
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}

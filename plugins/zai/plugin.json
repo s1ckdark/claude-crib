@@ -1,0 +1,10 @@
+{
+  "name": "zai",
+  "version": "0.2.0",
+  "description": "Z.AI GLM model integration for analysis, review, and generation",
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}
