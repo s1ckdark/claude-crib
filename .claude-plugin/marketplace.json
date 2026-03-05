@@ -23,8 +23,8 @@
       "category": "productivity"
     },
     {
-      "name": "ai-cypher",
-      "source": "./plugins/ai-cypher",
+      "name": "cypher",
+      "source": "./plugins/cypher",
       "description": "AI Cypher - Multi-model freestyle debates where AI crews spit knowledge and build consensus",
       "version": "0.1.0",
       "author": {
