@@ -19,7 +19,6 @@
     "codebase-analysis"
   ],
   "commands": "./commands",
-  "skills": "./skills",
   "agents": "./agents",
   "hooks": "./plugins/code-crib/hooks/hooks.json",
   "mcpServers": "./plugins/code-crib/.mcp.json"

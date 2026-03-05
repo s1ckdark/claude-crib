@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/ai-cypher/commands/cypher:config.md
+/Users/dave/iWorks/claude-crib/plugins/cypher/commands/config.md

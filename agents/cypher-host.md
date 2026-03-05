@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/ai-cypher/agents/cypher-host.md
+/Users/dave/iWorks/claude-crib/plugins/cypher/agents/cypher-host.md

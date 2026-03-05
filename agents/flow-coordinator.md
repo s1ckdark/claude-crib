@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/ai-cypher/agents/flow-coordinator.md
+/Users/dave/iWorks/claude-crib/plugins/cypher/agents/flow-coordinator.md

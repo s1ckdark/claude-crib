@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/zai/commands/zai:config.md
+/Users/dave/iWorks/claude-crib/plugins/zai/commands/config.md
