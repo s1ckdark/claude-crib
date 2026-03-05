@@ -6,9 +6,9 @@ allowed-tools: Bash, Read, Write, Glob
 
 <!--
 Usage:
-  /ai-cypher:list                    # List all cyphers
-  /ai-cypher:list --export latest    # Export the most recent cypher to markdown
-  /ai-cypher:list --export <id>      # Export specific cypher by filename
+  /cypher:list                    # List all cyphers
+  /cypher:list --export latest    # Export the most recent cypher to markdown
+  /cypher:list --export <id>      # Export specific cypher by filename
 -->
 
 # AI Cypher List
@@ -37,8 +37,8 @@ Display as formatted table:
 Total: 3 cyphers
 
 Commands:
-  /ai-cypher:list --export latest    # Export most recent
-  /ai-cypher:list --export 1         # Export by number
+  /cypher:list --export latest    # Export most recent
+  /cypher:list --export 1         # Export by number
 ```
 
 ### 2. Export to Markdown
@@ -68,18 +68,18 @@ cat .cyphers/<filename>.json
 3.5. Also save to project docs:
 ```bash
 # Also save to docs directory
-mkdir -p docs/ai-cypher
-cp .cyphers/<filename>.md docs/ai-cypher/<filename>.md
+mkdir -p docs/cypher
+cp .cyphers/<filename>.md docs/cypher/<filename>.md
 ```
 
 4. Confirm:
 ```
 ✓ Exported: .cyphers/2026-02-06-monolith-vs-microservices.md
-✓ Copied to: docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
+✓ Copied to: docs/cypher/2026-02-06-monolith-vs-microservices.md
 
 View with:
   cat .cyphers/2026-02-06-monolith-vs-microservices.md
-  cat docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
+  cat docs/cypher/2026-02-06-monolith-vs-microservices.md
   # or open in your editor
 ```
 
@@ -93,7 +93,7 @@ If no cyphers exist:
 No cyphers found yet.
 
 Start your first cypher:
-  /ai-cypher:start "Your topic here"
+  /cypher:start "Your topic here"
 ```
 
 ## Markdown Export Format

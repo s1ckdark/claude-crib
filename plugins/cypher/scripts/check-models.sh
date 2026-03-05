@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-CONFIG_PATH="${CYPHER_CONFIG_PATH:-.claude/ai-cypher.local.md}"
+CONFIG_PATH="${CYPHER_CONFIG_PATH:-.claude/cypher.local.md}"
 
 check_claude() {
     if command -v claude &>/dev/null; then
@@ -113,4 +113,4 @@ case "$MODEL" in
 esac
 
 echo ""
-echo "To configure models, run: /ai-cypher:config add-model"
+echo "To configure models, run: /cypher:config add-model"

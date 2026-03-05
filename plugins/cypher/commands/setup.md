@@ -1,7 +1,7 @@
 <!--
 Usage:
-  /ai-cypher:setup              # Run interactive setup wizard
-  /ai-cypher:setup --check      # Only check model availability
+  /cypher:setup              # Run interactive setup wizard
+  /cypher:setup --check      # Only check model availability
 -->
 
 # AI Cypher Setup Wizard
@@ -103,7 +103,7 @@ export Z_AI_API_KEY="your-key-here"
 
 ### 5. Create Config File
 
-If `.claude/ai-cypher.local.md` doesn't exist, create it with detected models.
+If `.claude/cypher.local.md` doesn't exist, create it with detected models.
 
 ### 6. Interactive Model Selection
 
@@ -140,10 +140,10 @@ ollama run llama3.2 "Say 'ready' if you can hear me"
 Your default crew: claude, codex, gemini, ollama
 
 To start a cypher:
-  /ai-cypher:start "Your topic here"
+  /cypher:start "Your topic here"
 
 To add more models later:
-  /ai-cypher:config add-model
+  /cypher:config add-model
 
-Configuration saved to: .claude/ai-cypher.local.md
+Configuration saved to: .claude/cypher.local.md
 ```

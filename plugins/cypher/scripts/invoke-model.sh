@@ -4,7 +4,7 @@
 #
 # Usage: invoke-model.sh <model-name> <prompt>
 #
-# This script reads model configurations from .claude/ai-cypher.local.md
+# This script reads model configurations from .claude/cypher.local.md
 # and invokes the specified model with the given prompt.
 #
 # Environment variables:
@@ -23,13 +23,13 @@ if [[ -z "$MODEL_NAME" || -z "$PROMPT" ]]; then
 fi
 
 # Configuration file path
-CONFIG_PATH="${CYPHER_CONFIG_PATH:-.claude/ai-cypher.local.md}"
+CONFIG_PATH="${CYPHER_CONFIG_PATH:-.claude/cypher.local.md}"
 TIMEOUT_SECONDS="${CYPHER_TIMEOUT:-120}"
 
 # Check if config exists
 if [[ ! -f "$CONFIG_PATH" ]]; then
     echo "Error: Configuration file not found at $CONFIG_PATH" >&2
-    echo "Run /ai-cypher:config to set up model configurations." >&2
+    echo "Run /cypher:config to set up model configurations." >&2
     exit 1
 fi
 

@@ -6,9 +6,9 @@ allowed-tools: Bash, Read, Write, Task
 
 <!--
 Usage examples:
-  /ai-cypher:start "REST vs GraphQL for mobile apps"
-  /ai-cypher:start "Best testing strategy for microservices" --crew claude,gpt,ollama
-  /ai-cypher:start "Database choice for real-time app" --mc claude --crew gpt,gemini,ollama
+  /cypher:start "REST vs GraphQL for mobile apps"
+  /cypher:start "Best testing strategy for microservices" --crew claude,gpt,ollama
+  /cypher:start "Database choice for real-time app" --mc claude --crew gpt,gemini,ollama
 -->
 
 # AI Cypher Session
@@ -23,12 +23,12 @@ Before starting, verify setup is complete:
 
 ```bash
 # Check if config exists
-[ -f ".claude/ai-cypher.local.md" ] && echo "CONFIG_EXISTS" || echo "NO_CONFIG"
+[ -f ".claude/cypher.local.md" ] && echo "CONFIG_EXISTS" || echo "NO_CONFIG"
 ```
 
 **If NO_CONFIG:**
 - Display message: "AI Cypher not configured yet. Running setup..."
-- Invoke `/ai-cypher:setup` first
+- Invoke `/cypher:setup` first
 - Return after setup completes
 
 **If CONFIG_EXISTS:**
@@ -48,7 +48,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 ```
 
 **If any requested crew member is MISSING:**
-- Warn user: "Model [X] is not installed. Run /ai-cypher:setup to install."
+- Warn user: "Model [X] is not installed. Run /cypher:setup to install."
 - Ask if they want to continue with available models only
 - Or offer to run setup
 
@@ -61,7 +61,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
    - If no crew specified, use default: claude, gpt, ollama
 
 2. **Load Configuration**
-   Check for user settings at `.claude/ai-cypher.local.md` for:
+   Check for user settings at `.claude/cypher.local.md` for:
    - API configurations
    - Default crew members
    - Custom model commands
@@ -139,12 +139,12 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
    Use the Markdown Template below for formatting.
 
 10. **Save to Project Docs**
-    Also save the markdown transcript to `docs/ai-cypher/` for project documentation:
+    Also save the markdown transcript to `docs/cypher/` for project documentation:
     ```
-    docs/ai-cypher/YYYY-MM-DD-HH-MM-topic-slug.md
+    docs/cypher/YYYY-MM-DD-HH-MM-topic-slug.md
     ```
 
-    - Create `docs/ai-cypher/` directory if it doesn't exist
+    - Create `docs/cypher/` directory if it doesn't exist
     - Use the same Markdown Template as step 9
     - This makes cypher conclusions accessible as project documentation
 
@@ -162,7 +162,7 @@ Use these CLI patterns to invoke models (actual commands from config):
 | **zai** | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |
 | **zai-free** | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |
 
-Check `.claude/ai-cypher.local.md` for user's specific configurations and customizations.
+Check `.claude/cypher.local.md` for user's specific configurations and customizations.
 
 ## Output Format
 

@@ -117,7 +117,7 @@ The session reveals a classic "plugin development inner loop" problem. When deve
 - [ ] Add hookify rule for plugin.json/hooks.json validation
 - [ ] Start using `/smart-commit` or `/commit` skills for git workflows
 - [ ] Uninstall or configure sonatype-guide plugin
-- [ ] Update ai-cypher.local.md ZAI config to use new Anthropic-compatible API format
+- [ ] Update cypher.local.md ZAI config to use new Anthropic-compatible API format
 
 ---
 

@@ -44,7 +44,7 @@ You are the Flow Coordinator, a technical specialist responsible for invoking an
    - Manage timeouts and retries
 
 2. **Configuration Management**
-   - Read model configurations from `.claude/ai-cypher.local.md`
+   - Read model configurations from `.claude/cypher.local.md`
    - Verify model availability
    - Report configuration issues
 
@@ -62,7 +62,7 @@ You are the Flow Coordinator, a technical specialist responsible for invoking an
 
 ### Step 1: Load Configuration
 
-Read `.claude/ai-cypher.local.md` to get model CLI commands:
+Read `.claude/cypher.local.md` to get model CLI commands:
 
 ```markdown
 | Name | CLI Command |
@@ -159,7 +159,7 @@ Action: Return partial response if available, mark as timeout
 ### Model Not Found
 ```
 Error: Model not configured
-Action: Return error, suggest /ai-cypher:config add-model
+Action: Return error, suggest /cypher:config add-model
 ```
 
 ### API Error
