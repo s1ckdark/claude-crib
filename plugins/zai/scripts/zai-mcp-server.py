@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,6 +27,9 @@ ZAI_API_URL = "https://api.z.ai/api/anthropic/v1/messages"
 DEFAULT_MODEL = "glm-5"
 DEFAULT_TIMEOUT = 300
 MAX_TOKENS = 4096
+THINKING_BUDGET_TOKENS = 2048
+MAX_JOBS = 100
+JOB_TTL_SECONDS = 3600
 
 AVAILABLE_MODELS = {
     "glm-5": "GLM-5 - Latest flagship model, most capable",
@@ -57,7 +61,39 @@ ROLE_SYSTEM_PROMPTS = {
 # ── Background jobs storage ────────────────────────────────
 
 _jobs: dict[str, dict] = {}
-_job_counter = 0
+
+
+def _generate_job_id() -> str:
+    return f"zai-{uuid.uuid4().hex[:8]}"
+
+
+def _cleanup_old_jobs() -> None:
+    """Remove completed/failed jobs older than TTL and cap total size."""
+    now = time.time()
+    to_delete = [
+        jid for jid, j in _jobs.items()
+        if j.get("status") in ("completed", "failed")
+        and now - j.get("started", now) > JOB_TTL_SECONDS
+    ]
+    for jid in to_delete:
+        del _jobs[jid]
+    # Hard cap: remove oldest if too many
+    if len(_jobs) > MAX_JOBS:
+        oldest = sorted(_jobs, key=lambda k: _jobs[k].get("started", 0))
+        for jid in oldest[: len(_jobs) - MAX_JOBS]:
+            del _jobs[jid]
+
+
+def _validate_model(model: str) -> str:
+    if model not in AVAILABLE_MODELS:
+        raise ValueError(f"Unknown model: {model}. Available: {', '.join(AVAILABLE_MODELS)}")
+    return model
+
+
+def _validate_role(role: str) -> str:
+    if role not in ROLE_SYSTEM_PROMPTS:
+        raise ValueError(f"Unknown role: {role}. Available: {', '.join(ROLE_SYSTEM_PROMPTS)}")
+    return role
 
 # ── Server setup ───────────────────────────────────────────
 
@@ -126,7 +162,7 @@ async def _call_zai(
         "max_tokens": max_tokens,
     }
     if thinking:
-        body["thinking"] = {"type": "enabled", "budget_tokens": max_tokens}
+        body["thinking"] = {"type": "enabled", "budget_tokens": THINKING_BUDGET_TOKENS}
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
@@ -211,6 +247,13 @@ async def ask_zai(
         thinking: Enable thinking/reasoning mode (default: true).
         background: Run in background and return job ID (default: false).
     """
+    # Validate inputs
+    try:
+        _validate_model(model)
+        _validate_role(agent_role)
+    except ValueError as e:
+        return f"Error: {e}"
+
     # Resolve prompt
     actual_prompt = prompt
     if prompt_file:
@@ -228,9 +271,8 @@ async def ask_zai(
         if not output_file:
             return "Error: output_file is required for background mode."
 
-        global _job_counter
-        _job_counter += 1
-        job_id = f"zai-{_job_counter}-{int(time.time())}"
+        _cleanup_old_jobs()
+        job_id = _generate_job_id()
         _jobs[job_id] = {"status": "running", "started": time.time(), "output_file": output_file}
 
         async def _run_bg():
