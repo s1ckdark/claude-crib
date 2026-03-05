@@ -159,7 +159,7 @@ Action: Return partial response if available, mark as timeout
 ### Model Not Found
 ```
 Error: Model not configured
-Action: Return error, suggest /cypher:config add-model
+Action: Return error, suggest /ai-cypher:config add-model
 ```
 
 ### API Error

@@ -113,4 +113,4 @@ case "$MODEL" in
 esac
 
 echo ""
-echo "To configure models, run: /cypher:config add-model"
+echo "To configure models, run: /ai-cypher:config add-model"

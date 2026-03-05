@@ -6,9 +6,9 @@ allowed-tools: Bash, Read, Write, Task
 
 <!--
 Usage examples:
-  /cypher:start "REST vs GraphQL for mobile apps"
-  /cypher:start "Best testing strategy for microservices" --crew claude,gpt,ollama
-  /cypher:start "Database choice for real-time app" --mc claude --crew gpt,gemini,ollama
+  /ai-cypher:start "REST vs GraphQL for mobile apps"
+  /ai-cypher:start "Best testing strategy for microservices" --crew claude,gpt,ollama
+  /ai-cypher:start "Database choice for real-time app" --mc claude --crew gpt,gemini,ollama
 -->
 
 # AI Cypher Session
@@ -28,7 +28,7 @@ Before starting, verify setup is complete:
 
 **If NO_CONFIG:**
 - Display message: "AI Cypher not configured yet. Running setup..."
-- Invoke `/cypher:setup` first
+- Invoke `/ai-cypher:setup` first
 - Return after setup completes
 
 **If CONFIG_EXISTS:**
@@ -48,7 +48,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 ```
 
 **If any requested crew member is MISSING:**
-- Warn user: "Model [X] is not installed. Run /cypher:setup to install."
+- Warn user: "Model [X] is not installed. Run /ai-cypher:setup to install."
 - Ask if they want to continue with available models only
 - Or offer to run setup
 

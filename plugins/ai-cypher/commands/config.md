@@ -6,12 +6,12 @@ allowed-tools: Read, Write, AskUserQuestion
 
 <!--
 Usage:
-  /cypher:config                    # Show current config
-  /cypher:config show               # Show current config
-  /cypher:config add-model          # Add a new model (interactive)
-  /cypher:config remove-model gpt   # Remove a model
-  /cypher:config set-default crew claude,gpt,ollama
-  /cypher:config set-default mc claude
+  /ai-cypher:config                    # Show current config
+  /ai-cypher:config show               # Show current config
+  /ai-cypher:config add-model          # Add a new model (interactive)
+  /ai-cypher:config remove-model gpt   # Remove a model
+  /ai-cypher:config set-default crew claude,gpt,ollama
+  /ai-cypher:config set-default mc claude
 -->
 
 # AI Cypher Configuration

@@ -29,7 +29,7 @@ TIMEOUT_SECONDS="${CYPHER_TIMEOUT:-120}"
 # Check if config exists
 if [[ ! -f "$CONFIG_PATH" ]]; then
     echo "Error: Configuration file not found at $CONFIG_PATH" >&2
-    echo "Run /cypher:config to set up model configurations." >&2
+    echo "Run /ai-cypher:config to set up model configurations." >&2
     exit 1
 fi
 

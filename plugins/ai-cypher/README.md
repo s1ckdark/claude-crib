@@ -16,29 +16,29 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 
 ```bash
 # 1. 먼저 설정 (최초 1회)
-/cypher:setup
+/ai-cypher:setup
 
 # 2. 기본 사이퍼 시작
-/cypher:start "REST vs GraphQL for mobile apps"
+/ai-cypher:start "REST vs GraphQL for mobile apps"
 
 # 3. 특정 크루로 사이퍼
-/cypher:start "Best database for real-time app" --crew claude,codex,zai
+/ai-cypher:start "Best database for real-time app" --crew claude,codex,zai
 
 # 4. MC 지정
-/cypher:start "Microservices vs Monolith" --mc claude --crew gpt,gemini,ollama
+/ai-cypher:start "Microservices vs Monolith" --mc claude --crew gpt,gemini,ollama
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/cypher:setup` | **최초 설정** - 모델 설치 및 설정 마법사 |
-| `/cypher:start <topic>` | AI 사이퍼 시작 |
-| `/cypher:list` | 모든 사이퍼 기록 보기 |
-| `/cypher:list --export latest` | 최근 사이퍼를 마크다운으로 내보내기 |
-| `/cypher:config` | 설정 확인 및 관리 |
-| `/cypher:config add-model` | 새 모델 추가 |
-| `/cypher:config set-default crew <models>` | 기본 크루 설정 |
+| `/ai-cypher:setup` | **최초 설정** - 모델 설치 및 설정 마법사 |
+| `/ai-cypher:start <topic>` | AI 사이퍼 시작 |
+| `/ai-cypher:list` | 모든 사이퍼 기록 보기 |
+| `/ai-cypher:list --export latest` | 최근 사이퍼를 마크다운으로 내보내기 |
+| `/ai-cypher:config` | 설정 확인 및 관리 |
+| `/ai-cypher:config add-model` | 새 모델 추가 |
+| `/ai-cypher:config set-default crew <models>` | 기본 크루 설정 |
 
 ## Cypher Flow
 
@@ -109,10 +109,10 @@ Consensus reached: Start with modular monolith, plan for microservices.
 
 ```bash
 # 사이퍼 기록 보기
-/cypher:list
+/ai-cypher:list
 
 # 최근 사이퍼 마크다운으로 내보내기
-/cypher:list --export latest
+/ai-cypher:list --export latest
 
 # 직접 파일 열기
 cat .cyphers/2026-02-06-12-30-monolith-vs-microservices.md

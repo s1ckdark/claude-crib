@@ -4,8 +4,8 @@ description: |
   Use this agent to orchestrate AI model cyphers, manage turn-taking, synthesize viewpoints, and draft conclusions. This agent acts as the MC and facilitator of multi-model freestyle debates.
 
   <example>
-  Context: User has started a cypher using the /cypher:start command and the system needs to coordinate multiple AI models.
-  user: "/cypher:start 'Should we use microservices or monolith for our startup?'"
+  Context: User has started a cypher using the /ai-cypher:start command and the system needs to coordinate multiple AI models.
+  user: "/ai-cypher:start 'Should we use microservices or monolith for our startup?'"
   assistant: "I'll use the cypher-host agent to orchestrate this debate between the AI crew."
   <commentary>
   The cypher-host agent is needed to manage the multi-model cypher flow, coordinate responses, and synthesize the final conclusion.
@@ -218,7 +218,7 @@ Submitting to Ralph Loop for validation...
 - **Model unavailable**: Skip model for this round, note in transcript
 - **Timeout**: Use partial response if available, or mark as timeout
 - **Invalid response**: Retry once, then use best effort interpretation
-- **Configuration missing**: Prompt user to run `/cypher:config add-model`
+- **Configuration missing**: Prompt user to run `/ai-cypher:config add-model`
 
 ## Quality Standards
 

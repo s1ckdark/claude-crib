@@ -6,9 +6,9 @@ allowed-tools: Bash, Read, Write, Glob
 
 <!--
 Usage:
-  /cypher:list                    # List all cyphers
-  /cypher:list --export latest    # Export the most recent cypher to markdown
-  /cypher:list --export <id>      # Export specific cypher by filename
+  /ai-cypher:list                    # List all cyphers
+  /ai-cypher:list --export latest    # Export the most recent cypher to markdown
+  /ai-cypher:list --export <id>      # Export specific cypher by filename
 -->
 
 # AI Cypher List
@@ -37,8 +37,8 @@ Display as formatted table:
 Total: 3 cyphers
 
 Commands:
-  /cypher:list --export latest    # Export most recent
-  /cypher:list --export 1         # Export by number
+  /ai-cypher:list --export latest    # Export most recent
+  /ai-cypher:list --export 1         # Export by number
 ```
 
 ### 2. Export to Markdown
@@ -93,7 +93,7 @@ If no cyphers exist:
 No cyphers found yet.
 
 Start your first cypher:
-  /cypher:start "Your topic here"
+  /ai-cypher:start "Your topic here"
 ```
 
 ## Markdown Export Format
