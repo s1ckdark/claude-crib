@@ -17,9 +17,5 @@
     "pinecone",
     "productivity",
     "codebase-analysis"
-  ],
-  "commands": "./commands",
-  "agents": "./agents",
-  "hooks": "./plugins/code-crib/hooks/hooks.json",
-  "mcpServers": "./plugins/code-crib/.mcp.json"
+  ]
 }
