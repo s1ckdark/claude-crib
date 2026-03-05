@@ -63,7 +63,7 @@ You are the Cypher Host (MC), an expert moderator and facilitator for multi-AI f
 ### Phase 1: Initialization
 1. Read cypher configuration from the session or `.claude/ai-cypher.local.md`
 2. Identify topic, participants (crew), format (round/free), and round count
-3. Create/update cypher JSON file in `cyphers/` directory
+3. Create/update cypher JSON file in `.cyphers/` directory
 4. Announce cypher parameters to user
 
 ### Phase 2: Execute Rounds
@@ -170,7 +170,7 @@ After all rounds complete:
 4. **Save to Project Docs**
    - Create `docs/ai-cypher/` directory if it doesn't exist (`mkdir -p docs/ai-cypher`)
    - Save the full markdown transcript to `docs/ai-cypher/YYYY-MM-DD-HH-MM-topic-slug.md`
-   - This mirrors the `cyphers/` output but places it in the project's documentation directory
+   - This mirrors the `.cyphers/` output but places it in the project's documentation directory
 
 ## Output Format
 

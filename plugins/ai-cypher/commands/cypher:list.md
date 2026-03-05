@@ -20,7 +20,7 @@ Usage:
 Find all cypher files:
 
 ```bash
-ls -la cyphers/*.json 2>/dev/null | head -20
+ls -la .cyphers/*.json 2>/dev/null | head -20
 ```
 
 Display as formatted table:
@@ -54,7 +54,7 @@ If `--export` flag provided:
 
 1. Read the JSON:
 ```bash
-cat cyphers/<filename>.json
+cat .cyphers/<filename>.json
 ```
 
 2. Parse and format using the Markdown Template (from cypher:start.md)
@@ -62,23 +62,23 @@ cat cyphers/<filename>.json
 3. Save to same directory with .md extension:
 ```bash
 # Save as markdown
-cyphers/<filename>.md
+.cyphers/<filename>.md
 ```
 
 3.5. Also save to project docs:
 ```bash
 # Also save to docs directory
 mkdir -p docs/ai-cypher
-cp cyphers/<filename>.md docs/ai-cypher/<filename>.md
+cp .cyphers/<filename>.md docs/ai-cypher/<filename>.md
 ```
 
 4. Confirm:
 ```
-✓ Exported: cyphers/2026-02-06-monolith-vs-microservices.md
+✓ Exported: .cyphers/2026-02-06-monolith-vs-microservices.md
 ✓ Copied to: docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
 
 View with:
-  cat cyphers/2026-02-06-monolith-vs-microservices.md
+  cat .cyphers/2026-02-06-monolith-vs-microservices.md
   cat docs/ai-cypher/2026-02-06-monolith-vs-microservices.md
   # or open in your editor
 ```

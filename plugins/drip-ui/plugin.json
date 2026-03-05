@@ -1,9 +1,0 @@
-{
-  "name": "drip-ui",
-  "version": "0.1.0",
-  "description": "Multi-service UI generation orchestrator (v0, Gemini, Z.ai)",
-  "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents",
-  "hooks": "./hooks/hooks.json"
-}

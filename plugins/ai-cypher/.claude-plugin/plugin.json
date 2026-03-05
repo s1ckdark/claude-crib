@@ -5,5 +5,9 @@
   "author": {
     "name": "Dave"
   },
-  "keywords": ["cypher", "debate", "ai-models", "consensus", "freestyle", "crew-talk", "ralph-loop"]
+  "keywords": ["cypher", "debate", "ai-models", "consensus", "freestyle", "crew-talk", "ralph-loop"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
 }

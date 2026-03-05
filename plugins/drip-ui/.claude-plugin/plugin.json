@@ -5,5 +5,9 @@
   "author": {
     "name": "Dave"
   },
-  "keywords": ["frontend", "ui", "design", "v0", "gemini", "zai", "react", "nextjs", "code-generation", "drip"]
+  "keywords": ["frontend", "ui", "design", "v0", "gemini", "zai", "react", "nextjs", "code-generation", "drip"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
 }

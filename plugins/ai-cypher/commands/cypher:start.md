@@ -88,7 +88,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 5. **Initialize Cypher**
    Create cypher record:
    ```
-   cyphers/YYYY-MM-DD-HH-MM-topic-slug.json
+   .cyphers/YYYY-MM-DD-HH-MM-topic-slug.json
    ```
 
    Structure:
@@ -133,7 +133,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 9. **Save Markdown Transcript** (NEW)
    Save human-readable transcript alongside JSON:
    ```
-   cyphers/YYYY-MM-DD-HH-MM-topic-slug.md
+   .cyphers/YYYY-MM-DD-HH-MM-topic-slug.md
    ```
 
    Use the Markdown Template below for formatting.
@@ -195,7 +195,7 @@ Logic: [Consistent/Issues found]
 
 ## Markdown Template
 
-Save the following format to `cyphers/YYYY-MM-DD-HH-MM-topic-slug.md`:
+Save the following format to `.cyphers/YYYY-MM-DD-HH-MM-topic-slug.md`:
 
 ```markdown
 ---

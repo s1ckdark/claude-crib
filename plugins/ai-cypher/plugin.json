@@ -1,9 +1,0 @@
-{
-  "name": "ai-cypher",
-  "version": "0.1.0",
-  "description": "AI Cypher - multi-model orchestration with strategic flow coordination",
-  "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents",
-  "hooks": "./hooks/hooks.json"
-}

@@ -94,10 +94,10 @@ Consensus reached: Start with modular monolith, plan for microservices.
 
 ## Transcript Files
 
-모든 사이퍼는 `cyphers/` 디렉토리에 저장됩니다:
+모든 사이퍼는 `.cyphers/` 디렉토리에 저장됩니다:
 
 ```
-cyphers/
+.cyphers/
 ├── 2026-02-06-12-30-monolith-vs-microservices.json  # 데이터 (기계용)
 ├── 2026-02-06-12-30-monolith-vs-microservices.md    # 문서 (사람용)
 ├── 2026-02-05-15-45-rest-vs-graphql.json
@@ -115,7 +115,7 @@ cyphers/
 /cypher:list --export latest
 
 # 직접 파일 열기
-cat cyphers/2026-02-06-12-30-monolith-vs-microservices.md
+cat .cyphers/2026-02-06-12-30-monolith-vs-microservices.md
 ```
 
 ## Terminology

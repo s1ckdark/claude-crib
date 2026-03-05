@@ -1,9 +1,0 @@
-{
-  "name": "the-plug",
-  "version": "0.1.0",
-  "description": "Session recap and configuration utilities",
-  "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents",
-  "hooks": "./hooks/hooks.json"
-}

@@ -5,5 +5,9 @@
   "author": {
     "name": "dave"
   },
-  "keywords": ["session", "recap", "memory", "productivity"]
+  "keywords": ["session", "recap", "memory", "productivity"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
 }

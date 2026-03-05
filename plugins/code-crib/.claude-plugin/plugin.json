@@ -17,5 +17,10 @@
     "productivity",
     "codebase-analysis",
     "code-crib"
-  ]
+  ],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
 }

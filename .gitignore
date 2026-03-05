@@ -3,6 +3,7 @@
 .sisyphus/
 .rag-docs/
 .omc/
+.cyphers/
 
 # Debug logs
 *-debug.log
