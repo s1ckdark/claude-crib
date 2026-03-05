@@ -37,7 +37,7 @@ Make a minimal API call to verify the key works:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}" \
-  -X POST "https://api.z.ai/api/paas/v4/chat/completions" \
+  -X POST "https://api.z.ai/api/coding/paas/v4/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $Z_AI_API_KEY" \
   -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"ping"}],"max_tokens":5}'

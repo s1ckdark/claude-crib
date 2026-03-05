@@ -38,7 +38,7 @@ Test with a minimal request to verify the key works:
 
 ```bash
 HTTP_STATUS=$(curl -s -o /tmp/zai-test-response.json -w "%{http_code}" \
-  -X POST "https://api.z.ai/api/paas/v4/chat/completions" \
+  -X POST "https://api.z.ai/api/coding/paas/v4/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $Z_AI_API_KEY" \
   -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"ping"}],"max_tokens":5}')
@@ -95,7 +95,7 @@ version: 1.0
 
 - **Default Model**: {selected_model}
 - **Thinking Mode**: {enabled|disabled}
-- **API Endpoint**: https://api.z.ai/api/paas/v4/chat/completions
+- **API Endpoint**: https://api.z.ai/api/coding/paas/v4/chat/completions
 
 ## Available Models
 

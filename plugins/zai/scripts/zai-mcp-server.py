@@ -22,7 +22,7 @@ from mcp.server.fastmcp import FastMCP
 
 # ── Constants ──────────────────────────────────────────────
 
-ZAI_API_URL = "https://api.z.ai/api/anthropic/v1/messages"
+ZAI_API_URL = "https://api.z.ai/api/coding/anthropic/v1/messages"
 DEFAULT_MODEL = "glm-5"
 DEFAULT_TIMEOUT = 300
 MAX_TOKENS = 4096
