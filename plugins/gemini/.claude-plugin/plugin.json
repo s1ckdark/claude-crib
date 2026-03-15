@@ -1,0 +1,13 @@
+{
+  "name": "gemini",
+  "version": "0.1.0",
+  "description": "Gemini CLI integration for Claude Code - ask questions, generate code, review, and run parallel workers via Google Gemini.",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": ["gemini", "google", "code-generation", "code-review", "worker", "tmux"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
+}
