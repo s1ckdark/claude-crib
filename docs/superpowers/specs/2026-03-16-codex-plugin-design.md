@@ -33,7 +33,7 @@ plugins/codex/
 │   └── codex-worker.md      # tmux 워커 관리
 ├── skills/
 │   └── codex-flow/
-│       └── SKILL.md         # Codex 커맨드 사용 가이드
+│       └── SKILL.md         # Codex 워크플로우 가이드
 ├── hooks/
 │   └── hooks.json           # 이벤트 훅 (초기에는 빈 구조)
 └── README.md
@@ -52,7 +52,6 @@ plugins/codex/
   "keywords": ["codex", "openai", "code-generation", "code-review", "worker", "tmux"],
   "commands": "./commands",
   "skills": "./skills",
-  "agents": "./agents",
   "hooks": "./hooks/hooks.json"
 }
 ```
@@ -71,9 +70,17 @@ allowed-tools: Bash, Read
 ```
 
 - **용도**: Codex에게 질문하고 답변만 받기
-- **실행**: `codex exec "질문"` (단발성)
 - **권한**: suggest only — 파일 수정 없음
-- **예시**: `/codex:ask "이 에러 메시지가 뭘 의미해?"`, `/codex:ask "Redis pub/sub vs Kafka 비교"`
+
+**Command Body (instruction steps):**
+1. `~/.claude/codex.local.md`에서 설정 로드 (codex_path, default_model, timeout)
+2. Pre-flight: `which {codex_path}` 확인. 실패 시 `/codex:setup` 안내 후 중단
+3. 인자에서 질문 텍스트 파싱
+4. 실행: `{codex_path} exec -m {default_model} "{question}"` (timeout 적용)
+5. exit code 확인: 0이 아니면 stderr 표시
+6. Codex 응답을 사용자에게 그대로 전달 (파일 수정 금지)
+
+**예시**: `/codex:ask "이 에러 메시지가 뭘 의미해?"`, `/codex:ask "Redis pub/sub vs Kafka 비교"`
 
 ### `/codex:code "지시"`
 
@@ -87,10 +94,20 @@ allowed-tools: Bash, Read, Glob
 ```
 
 - **용도**: Codex에게 코드 작성/수정 위임
-- **실행**: `codex exec --full-auto "지시"`
 - **권한**: full-auto — 파일 직접 수정 가능
-- **안전장치**: 실행 전 사용자에게 full-auto 모드 확인, 실행 후 변경된 파일 목록 표시
-- **예시**: `/codex:code "utils.ts에 debounce 함수 추가"`
+
+**Command Body (instruction steps):**
+1. `~/.claude/codex.local.md`에서 설정 로드
+2. Pre-flight: `which {codex_path}` 확인. 실패 시 중단
+3. 인자에서 instruction 텍스트와 `--model` 옵션 파싱 (없으면 default_model 사용)
+4. `confirm_full_auto: true`이면 사용자에게 "Codex가 full-auto 모드로 파일을 직접 수정합니다. 계속할까요?" 확인
+5. `git status --short` 실행하여 실행 전 상태 기록
+6. 실행: `{codex_path} exec --full-auto -m {model} "{instruction}"` (timeout 적용)
+7. exit code 확인: 0이 아니면 stderr 표시
+8. `git diff --stat` 실행하여 변경된 파일 목록 사용자에게 표시
+9. Codex 출력 결과 요약 전달
+
+**예시**: `/codex:code "utils.ts에 debounce 함수 추가"`, `/codex:code "테스트 수정" --model o3`
 
 ### `/codex:review`
 
@@ -104,13 +121,22 @@ allowed-tools: Bash, Read, Grep
 ```
 
 - **용도**: 현재 변경사항 또는 지정 파일을 Codex로 리뷰
-- **실행**: git diff 또는 파일 내용을 Codex에게 전달
 - **권한**: suggest only
-- **인자 동작**:
-  - 인자 없음: `git diff` (unstaged changes) 전달
-  - `--staged`: `git diff --staged` 전달
-  - 파일 경로: 해당 파일 내용 전달
-- **예시**: `/codex:review`, `/codex:review src/auth.ts`, `/codex:review --staged`
+
+**Command Body (instruction steps):**
+1. `~/.claude/codex.local.md`에서 설정 로드
+2. Pre-flight: `which {codex_path}` 확인. 실패 시 중단
+3. 인자 파싱:
+   - 인자 없음 → `git diff` 실행하여 diff 텍스트 수집
+   - `--staged` → `git diff --staged` 실행
+   - 파일 경로 → Read 도구로 파일 내용 읽기
+4. diff/파일 내용이 비어있으면 "리뷰할 변경사항이 없습니다" 안내 후 중단
+5. 리뷰 프롬프트 구성: "Review the following code for bugs, performance issues, security vulnerabilities, and readability. Provide actionable feedback.\n\n{code_content}"
+6. 실행: `{codex_path} exec -m {default_model} "{review_prompt}"` (timeout 적용)
+7. exit code 확인: 0이 아니면 stderr 표시
+8. Codex 리뷰 결과를 사용자에게 전달 (파일 수정 금지)
+
+**예시**: `/codex:review`, `/codex:review src/auth.ts`, `/codex:review --staged`
 
 ### `/codex:worker "작업"`
 
@@ -124,15 +150,28 @@ allowed-tools: Bash, Read
 ```
 
 - **용도**: tmux 세션에서 Codex를 장시간 워커로 띄움
-- **tmux 프로토콜**:
-  1. **세션 생성**: `tmux new-session -d -s codex-worker-{timestamp}`
-  2. **Codex 실행**: `tmux send-keys -t {session} 'codex' Enter`
-  3. **작업 전송**: `tmux send-keys -t {session} '작업 내용' Enter`
-  4. **상태 확인**: `tmux capture-pane -t {session} -p` 로 출력 캡처
-  5. **완료 감지**: 캡처된 출력에서 프롬프트 복귀 여부 확인
-  6. **종료**: `tmux kill-session -t {session}`
-- **`--stop` 플래그**: 실행 중인 워커 세션 종료
-- **예시**: `/codex:worker "전체 테스트 수정"`, `/codex:worker --stop`
+
+**Command Body (instruction steps):**
+1. `~/.claude/codex.local.md`에서 설정 로드
+2. Pre-flight: `which codex` 및 `which tmux` 확인. 실패 시 안내 후 중단
+3. 인자 파싱: `--stop` 플래그 또는 작업 설명 텍스트
+4. `--stop`인 경우:
+   - `tmux ls | grep {worker_session_prefix}` 로 활성 세션 탐색
+   - 세션 있으면 `tmux kill-session -t {session}`, 없으면 "활성 워커 없음" 안내
+   - 중단
+5. 작업 시작:
+   - 세션명 생성: `{worker_session_prefix}-{YYYYMMDD-HHMMSS}`
+   - `tmux new-session -d -s {session_name}`
+   - `tmux send-keys -t {session_name} 'codex --full-auto' Enter`
+   - 3초 대기 후 `tmux send-keys -t {session_name} '{task_description}' Enter`
+6. 상태 모니터링:
+   - `tmux capture-pane -t {session_name} -p -S -50` 로 최근 50줄 캡처
+   - 완료 감지: 마지막 줄이 `❯` 또는 `>` 프롬프트 패턴(정규식 `^[❯>]\s*$`)과 매칭되면 완료로 판단
+   - 대안: 출력이 10초간 변화 없으면 완료로 판단 (2회 캡처 비교)
+7. 완료 시 전체 출력을 캡처하여 사용자에게 전달
+8. 세션 종료: `tmux kill-session -t {session_name}`
+
+**예시**: `/codex:worker "전체 테스트 수정"`, `/codex:worker --stop`
 
 ### `/codex:setup`
 
@@ -145,11 +184,18 @@ allowed-tools: Bash, Read, Write, AskUserQuestion
 ```
 
 - **용도**: Codex CLI 설치 확인, API 키 검증, 설정 파일 생성
-- **흐름**:
-  1. `which codex` — 미설치 시 `npm install -g @openai/codex` 안내
-  2. `echo $OPENAI_API_KEY` — 미설정 시 안내
-  3. `codex exec "Say hello"` — 실제 동작 확인
-  4. `~/.claude/codex.local.md` 생성/업데이트
+
+**Command Body (instruction steps):**
+1. **CLI 확인**: `which codex` 실행
+   - 성공 → 버전 출력: `codex --version`
+   - 실패 → "Codex CLI가 설치되지 않았습니다. `npm install -g @openai/codex`로 설치하세요." 안내
+2. **API 키 확인**: `echo $OPENAI_API_KEY | head -c 8` 로 존재 여부 확인 (전체 키 노출 금지)
+   - 미설정 → "OPENAI_API_KEY 환경변수를 설정하세요." 안내
+3. **연결 테스트**: `codex exec "Say hello"` 실행
+   - 성공 → "Codex CLI 연결 확인 완료" 표시
+   - 실패 → stderr 내용 표시
+4. **설정 파일 생성**: `~/.claude/codex.local.md`가 없으면 기본값으로 생성, 있으면 현재 설정 표시
+5. 결과 요약: CLI 상태, API 키 상태, 연결 상태, 설정 파일 경로를 표로 출력
 
 ## Agents
 
@@ -305,6 +351,26 @@ timeout: 120000
 ```
 
 향후 추가 가능: Stop 훅으로 실행 중인 worker 세션 감지 및 정리.
+
+## SKILL.md Content Outline (codex-flow)
+
+```yaml
+---
+name: codex-flow
+description: This skill should be used when the user asks to "use codex", "run codex", "ask codex", "codex review", "codex worker", or needs guidance on which codex command to use for their task. Provides workflow guidance for the codex plugin.
+---
+```
+
+**Content sections:**
+1. **Command Selection Guide** — 상황별 어떤 커맨드를 사용할지 의사결정 트리
+   - 질문/설명 필요 → `/codex:ask`
+   - 코드 작성/수정 필요 → `/codex:code`
+   - 코드 리뷰 필요 → `/codex:review`
+   - 장시간 복잡한 작업 → `/codex:worker`
+2. **Common Workflows** — 일반적인 사용 패턴 예시
+   - 버그 수정: ask로 원인 분석 → code로 수정 → review로 검증
+   - 리팩토링: review로 현상 분석 → code로 적용
+3. **Tips** — 효과적인 프롬프트 작성법, 모델 선택 가이드
 
 ## Design Decisions
 
