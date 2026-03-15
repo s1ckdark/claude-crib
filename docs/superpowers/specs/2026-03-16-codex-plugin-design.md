@@ -52,6 +52,7 @@ plugins/codex/
   "keywords": ["codex", "openai", "code-generation", "code-review", "worker", "tmux"],
   "commands": "./commands",
   "skills": "./skills",
+  "agents": "./agents",
   "hooks": "./hooks/hooks.json"
 }
 ```
