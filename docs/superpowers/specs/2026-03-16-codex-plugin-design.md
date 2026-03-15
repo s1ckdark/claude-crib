@@ -346,7 +346,7 @@ timeout: 120000
 
 ```json
 {
-  "hooks": []
+  "hooks": {}
 }
 ```
 
