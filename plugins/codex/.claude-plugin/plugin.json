@@ -1,0 +1,13 @@
+{
+  "name": "codex",
+  "version": "0.1.0",
+  "description": "Codex CLI integration for Claude Code - ask questions, generate code, review, and run parallel workers via OpenAI Codex.",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": ["codex", "openai", "code-generation", "code-review", "worker", "tmux"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
+}
