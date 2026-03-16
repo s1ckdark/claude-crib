@@ -1,4 +1,5 @@
 ---
+name: config
 description: Configure AI Cypher settings (models, API keys, defaults)
 argument-hint: [show|add-model|remove-model|set-default] [options]
 allowed-tools: Read, Write, AskUserQuestion

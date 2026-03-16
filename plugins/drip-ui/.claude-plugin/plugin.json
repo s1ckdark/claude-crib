@@ -7,7 +7,5 @@
   },
   "keywords": ["frontend", "ui", "design", "v0", "gemini", "zai", "react", "nextjs", "code-generation", "drip"],
   "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills"
 }

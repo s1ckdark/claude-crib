@@ -7,7 +7,5 @@
   },
   "keywords": ["session", "recap", "memory", "productivity"],
   "commands": "./commands",
-  "skills": "./skills",
-  "agents": "./agents",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills"
 }

@@ -1,4 +1,5 @@
 ---
+name: drip:compare
 description: Compare UI generation results from v0, Gemini, and Z.ai using parallel team agents
 argument-hint: "<description>" [--framework react|vue|svelte]
 allowed-tools: Bash, Read, Write, Task, TeamCreate, TeamDelete, SendMessage, TaskCreate, TaskList, TaskUpdate, AskUserQuestion

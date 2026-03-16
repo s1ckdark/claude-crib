@@ -1,3 +1,11 @@
+---
+name: setup
+description: Interactive AI Cypher setup wizard - check model availability and configure defaults
+user_invocable: true
+argument-hint: [--check]
+allowed-tools: Bash, Read, Write, AskUserQuestion
+---
+
 <!--
 Usage:
   /cypher:setup              # Run interactive setup wizard

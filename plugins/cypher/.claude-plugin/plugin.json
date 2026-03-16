@@ -7,6 +7,5 @@
   },
   "keywords": ["cypher", "debate", "ai-models", "consensus", "freestyle", "crew-talk", "ralph-loop"],
   "commands": "./commands",
-  "skills": "./skills",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills"
 }

@@ -1,4 +1,5 @@
 ---
+name: recap
 description: Get a recap of your last session - what went down while you were away
 argument-hint: Optional number of sessions to recap (default: 1)
 allowed-tools: ["Read", "Grep", "Glob", "Bash", "Task"]

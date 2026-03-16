@@ -1,4 +1,5 @@
 ---
+name: list
 description: List all cyphers or export a specific cypher to markdown
 argument-hint: [--export <cypher-id>]
 allowed-tools: Bash, Read, Write, Glob

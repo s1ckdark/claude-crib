@@ -1,3 +1,9 @@
+---
+name: auto-rag
+description: Automatically searches knowledge stash and injects relevant context before responding
+event: UserPromptSubmit
+---
+
 # Auto-RAG Hook
 
 Automatically searches knowledge stash and injects relevant context before responding.

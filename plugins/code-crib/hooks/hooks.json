@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "SILENT CHECK: If this session had significant work (code edits, bug fixes, new features, architecture decisions), auto-save via /stash command. If NO significant work detected (only file reads, config changes, questions/answers, exploration), respond with ONLY this exact JSON: {\"decision\": \"skip\"}. Do not add any explanation or extra text."
+            "prompt": "SILENT CHECK: Evaluate if this session had significant work (code edits, bug fixes, new features, architecture decisions). Respond with ONLY valid JSON, no extra text. If significant work: {\"decision\": \"stash\"}. If no significant work (only file reads, config changes, questions/answers, exploration): {\"decision\": \"skip\"}."
           }
         ]
       }

@@ -1,4 +1,5 @@
 ---
+name: start
 description: Start an AI cypher - multi-model freestyle debate on a topic
 argument-hint: "<topic>" [--crew model1,model2,...] [--mc model]
 allowed-tools: Bash, Read, Write, Task

@@ -1,4 +1,5 @@
 ---
+name: config
 description: Configure The Plug settings - auto-recap timing, enable/disable
 allowed-tools: ["Read", "Write", "Edit", "Glob", "AskUserQuestion"]
 ---

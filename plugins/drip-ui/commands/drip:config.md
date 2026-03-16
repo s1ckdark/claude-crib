@@ -1,4 +1,5 @@
 ---
+name: drip:config
 description: Configure Drip UI services (v0, Gemini, Z.ai API keys and preferences)
 argument-hint: [show|setup|test] [service]
 allowed-tools: Bash, Read, Write, AskUserQuestion

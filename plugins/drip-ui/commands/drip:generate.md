@@ -1,4 +1,5 @@
 ---
+name: drip:generate
 description: Generate frontend UI components from text description or design image
 argument-hint: "<description>" [--service v0|gemini|zai|all] [--from-image path] [--framework react|vue|svelte]
 allowed-tools: Bash, Read, Write, WebFetch, AskUserQuestion
