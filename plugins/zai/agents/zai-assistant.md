@@ -56,5 +56,5 @@ Use these roles to shape Z.AI's perspective:
 
 - Always include relevant source files as context
 - Use thinking mode for complex analytical tasks
-- Use `glm-4-flash` for simple/fast tasks, `glm-4.7` for complex analysis
+- Use `glm-4.7-flash` for simple/fast tasks, `glm-5-turbo` for standard tasks, `glm-5` for complex analysis
 - Write clear, structured prompts with explicit deliverables

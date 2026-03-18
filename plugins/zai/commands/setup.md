@@ -41,7 +41,7 @@ HTTP_STATUS=$(curl -s -o /tmp/zai-test-response.json -w "%{http_code}" \
   -X POST "https://api.z.ai/api/coding/paas/v4/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $Z_AI_API_KEY" \
-  -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"ping"}],"max_tokens":5}')
+  -d '{"model":"glm-5-turbo","messages":[{"role":"user","content":"ping"}],"max_tokens":5}')
 echo "HTTP Status: $HTTP_STATUS"
 cat /tmp/zai-test-response.json 2>/dev/null | python3 -m json.tool 2>/dev/null || true
 rm -f /tmp/zai-test-response.json
@@ -57,14 +57,14 @@ Use AskUserQuestion to let user pick a default model:
 question: "Which Z.AI model should be your default?"
 header: "Model"
 options:
-  - label: "glm-4.7 (Recommended)"
-    description: "Latest flagship model with thinking support - best for complex analysis"
-  - label: "glm-4-flash"
-    description: "Fastest inference - best for quick questions and simple tasks"
-  - label: "glm-4-plus"
-    description: "Enhanced model - balanced between speed and quality"
-  - label: "glm-4-air"
-    description: "Fast and lightweight - good for routine tasks"
+  - label: "glm-5-turbo (Recommended)"
+    description: "Fast flagship with reasoning support - best balance of speed and quality"
+  - label: "glm-5"
+    description: "Latest flagship model - most capable for complex analysis"
+  - label: "glm-5-code"
+    description: "Code-specialized model - best for code generation tasks"
+  - label: "glm-4.7-flash"
+    description: "Fast inference - best for quick questions and simple tasks"
 ```
 
 ### 4. Select Default Thinking Mode
@@ -101,11 +101,11 @@ version: 1.0
 
 | Model | Description | Best For |
 |-------|-------------|----------|
-| glm-4.7 | Latest flagship with thinking | Complex analysis, architecture |
-| glm-4-plus | Enhanced model | Balanced tasks |
-| glm-4-air | Fast and lightweight | Routine tasks |
-| glm-4-airx | Extended context | Large codebases |
-| glm-4-flash | Fastest inference | Quick questions |
+| glm-5-turbo | Fast flagship with reasoning | Balanced tasks (default) |
+| glm-5 | Latest flagship | Complex analysis, architecture |
+| glm-5-code | Code-specialized | Code generation |
+| glm-4.7-flash | Fast inference | Quick questions |
+| glm-4.7 | Flagship with thinking | Deep analysis |
 
 ## Agent Roles
 
@@ -142,12 +142,10 @@ Thinking Mode: {enabled|disabled}
 
 Config saved to: .claude/zai.local.md
 
-Quick Start:
-  /zai:ask "Your question here"
-  /zai:ask --role architect "Design question"
-  /zai:config                    # View/change settings
-
-MCP Tools Available:
-  ask_zai          - Ask Z.AI with role and context
-  list_zai_models  - List available models
+Available commands:
+  /zai:ask "question"       - Ask Z.AI a question
+  /zai:code "instruction"   - Generate/modify code
+  /zai:review [file]        - Code review
+  /zai:worker "task"        - Launch tmux worker
+  /zai:config               - View/change settings
 ```

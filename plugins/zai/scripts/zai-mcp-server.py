@@ -24,7 +24,7 @@ from mcp.server.fastmcp import FastMCP
 # ── Constants ──────────────────────────────────────────────
 
 ZAI_API_URL = "https://api.z.ai/api/anthropic/v1/messages"
-DEFAULT_MODEL = "glm-5"
+DEFAULT_MODEL = "glm-5-turbo"
 DEFAULT_TIMEOUT = 300
 MAX_TOKENS = 4096
 THINKING_BUDGET_TOKENS = 2048
@@ -33,6 +33,7 @@ JOB_TTL_SECONDS = 3600
 
 AVAILABLE_MODELS = {
     "glm-5": "GLM-5 - Latest flagship model, most capable",
+    "glm-5-turbo": "GLM-5 Turbo - Fast flagship with reasoning support",
     "glm-4.7-flash": "GLM-4.7 Flash - Fast inference, free on coding plan",
     "glm-4.7": "GLM-4.7 - Flagship with thinking support",
     "glm-4.6": "GLM-4.6 - Unified reasoning, coding, and agentic",

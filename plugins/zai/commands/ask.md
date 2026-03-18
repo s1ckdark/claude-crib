@@ -36,7 +36,7 @@ The arguments string follows the format: `[--role <role>] [--files <file1,file2,
 Parse the arguments:
 - `--role`: One of architect, code-reviewer, analyst, planner, critic, writer, designer, security-reviewer, tdd-guide
 - `--files`: Comma-separated list of file paths to include as context
-- `--model`: Model to use (default: glm-4.7)
+- `--model`: Model to use (default: glm-5-turbo)
 - Everything else is the question/prompt
 
 ## Example Flow

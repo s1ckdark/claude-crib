@@ -40,7 +40,7 @@ curl -s -o /dev/null -w "%{http_code}" \
   -X POST "https://api.z.ai/api/coding/paas/v4/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $Z_AI_API_KEY" \
-  -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"ping"}],"max_tokens":5}'
+  -d '{"model":"glm-5-turbo","messages":[{"role":"user","content":"ping"}],"max_tokens":5}'
 ```
 
 ### Display Status
