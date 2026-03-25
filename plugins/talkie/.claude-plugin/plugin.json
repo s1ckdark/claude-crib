@@ -1,0 +1,8 @@
+{
+  "name": "talkie",
+  "version": "0.1.0",
+  "description": "TTS voice feedback using macOS say",
+  "author": { "name": "dave", "url": "https://github.com/s1ckdark" },
+  "keywords": ["tts", "voice", "say", "accessibility"],
+  "commands": "./commands"
+}

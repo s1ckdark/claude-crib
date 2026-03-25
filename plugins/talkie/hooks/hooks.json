@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "SILENT CHECK: Use OMC state_read with key 'talkie' to get current mode. If mode is 'off' or state doesn't exist, respond with just 'hook success: Success' and do nothing else. If mode is 'on': summarize your most recent response in 2-3 sentences (match the language of the response - Korean or English), then run $CLAUDE_PLUGIN_ROOT/scripts/say.sh with the summary text. If mode is 'report': determine if the current task has just been completed (look for completion signals like 'done', 'complete', test results, final output). If NOT complete, respond with just 'hook success: Success'. If complete, summarize the result in 2-3 sentences and run $CLAUDE_PLUGIN_ROOT/scripts/say.sh with the summary. Always end with 'hook success: Success'."
+          }
+        ]
+      }
+    ]
+  }
+}
