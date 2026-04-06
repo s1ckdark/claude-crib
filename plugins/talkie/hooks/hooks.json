@@ -1,13 +1,12 @@
 {
   "hooks": {
-    "PostToolUse": [
+    "Stop": [
       {
-        "matcher": "*",
         "hooks": [
           {
-            "type": "command",
-            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/check-talkie.sh",
-            "timeout": 5
+            "type": "agent",
+            "prompt": "You are the Talkie TTS voice feedback agent. Use the Bash tool to run: bash $CLAUDE_PLUGIN_ROOT/hooks/check-talkie.sh\n\nIf output is empty, do nothing.\nIf output starts with [TALKIE: on], summarize the assistant's most recent response in 2-3 sentences (match the language), then use the Bash tool to run the say.sh command shown in the output with your summary as the argument.\nIf output starts with [TALKIE: report], summarize the final result in 1-2 sentences, then run say.sh with the summary.\n\nAlways end with 'hook success: Success'.",
+            "timeout": 30
           }
         ]
       }

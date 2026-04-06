@@ -1,5 +1,7 @@
 #!/bin/bash
-STATE_FILE="$CLAUDE_PLUGIN_ROOT/state.json"
+# Resolve plugin root: env var > script location fallback
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+STATE_FILE="$PLUGIN_ROOT/state.json"
 
 # Fast exit: no state file means talkie is off (common case)
 [ -f "$STATE_FILE" ] || exit 0
@@ -10,7 +12,7 @@ read -r LINE < "$STATE_FILE"
 MODE="${LINE##*\"mode\":\"}"
 MODE="${MODE%%\"*}"
 
-SAY_SCRIPT="$CLAUDE_PLUGIN_ROOT/scripts/say.sh"
+SAY_SCRIPT="$PLUGIN_ROOT/scripts/say.sh"
 
 case "$MODE" in
   "on")
