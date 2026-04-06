@@ -23,5 +23,8 @@ __pycache__/
 # Node
 node_modules/
 
+# Plugin runtime state
+**/plugins/*/state.json
+
 # Local development
 *.local.md
