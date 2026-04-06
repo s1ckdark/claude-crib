@@ -14,6 +14,7 @@ Configure permissions so that `say.sh` runs without approval prompts.
 1. Read `.claude/settings.local.json` (create if it doesn't exist)
 2. Add the following permission rules to the `permissions.allow` array if not already present:
    - `Bash(/Users/dave/.claude/plugins/marketplaces/claude-crib/plugins/talkie/scripts/say.sh:*)`
+   - `Bash(/Users/dave/.claude/plugins/cache/claude-crib/talkie/*/scripts/say.sh:*)`
    - `Bash(./plugins/talkie/scripts/say.sh:*)`
 3. Also add `Bash(killall say:*)` for the overlap prevention in say.sh
 4. Write the updated settings file
