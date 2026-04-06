@@ -5,8 +5,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "You are the Talkie TTS plugin hook. You MUST use the Bash tool to complete this task.\n\nStep 1: Use the Bash tool to run: cat $CLAUDE_PLUGIN_ROOT/state.json 2>/dev/null || echo '{\"mode\":\"off\"}'\nStep 2: Check the mode value from the JSON output:\n- If mode is 'off': respond with just 'hook success: Success' and stop.\n- If mode is 'on': write a 2-3 sentence summary of the most recent assistant response (match the response language - Korean or English). Then use the Bash tool to run: $CLAUDE_PLUGIN_ROOT/scripts/say.sh \"<your summary here>\". Then respond with 'hook success: Success'.\n- If mode is 'report': determine if the current task just completed (look for signals like 'done', 'complete', test results, final output). If NOT complete, respond with just 'hook success: Success'. If complete, write a 2-3 sentence summary, then use the Bash tool to run: $CLAUDE_PLUGIN_ROOT/scripts/say.sh \"<your summary here>\". Then respond with 'hook success: Success'."
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/check-talkie.sh",
+            "timeout": 5
           }
         ]
       }
