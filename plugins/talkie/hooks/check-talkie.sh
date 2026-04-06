@@ -13,7 +13,10 @@ MODE="${LINE##*\"mode\":\"}"
 MODE="${MODE%%\"*}"
 
 case "$MODE" in
-  "on"|"report")
+  "on")
+    "$SAY_SCRIPT" "응답이 준비되었습니다."
+    ;;
+  "report")
     "$SAY_SCRIPT" "작업이 완료되었습니다."
     ;;
 esac
