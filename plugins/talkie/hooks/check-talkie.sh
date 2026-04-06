@@ -17,6 +17,6 @@ case "$MODE" in
     echo "[TALKIE: on] Summarize your most recent response in 2-3 sentences (match the response language), then run: $SAY_SCRIPT \"<summary>\""
     ;;
   "report")
-    echo "[TALKIE: report] If the current task just completed, summarize the result in 2-3 sentences and run: $SAY_SCRIPT \"<summary>\". If not complete, do nothing."
+    echo "[TALKIE: report] Check if your most recent response is a result, confirmation, or status update (e.g. 'done', 'complete', 'pushed', commit results, error reports, or any short completion message). If so, summarize it in 1-2 sentences and run: $SAY_SCRIPT \"<summary>\". If you're still mid-task with more work to do, do nothing."
     ;;
 esac
