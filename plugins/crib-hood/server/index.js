@@ -384,10 +384,12 @@ process.on('SIGINT', shutdown);
 // ------------------------------------------------------------
 process.on('uncaughtException', (err) => {
   console.error('[crib-hood] Uncaught exception:', err);
+  for (const res of clients) {
+    try { res.end(); } catch (_) {}
+  }
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason) => {
-  console.error('[crib-hood] Unhandled promise rejection:', reason);
-  process.exit(1);
+  console.error('[crib-hood] Unhandled rejection (continuing):', reason);
 });

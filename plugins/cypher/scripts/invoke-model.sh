@@ -46,15 +46,15 @@ if [[ -z "$CLI_COMMAND" ]]; then
     exit 1
 fi
 
-# Escape prompt for shell
-ESCAPED_PROMPT=$(printf '%s' "$PROMPT" | sed "s/'/'\\\\''/g")
-
-# Replace $PROMPT placeholder with actual prompt
-FINAL_COMMAND=$(echo "$CLI_COMMAND" | sed "s/\\\$PROMPT/'$ESCAPED_PROMPT'/g")
+# Replace the $PROMPT placeholder with a quoted positional reference "$1".
+# Two passes so users may write either "$PROMPT" or bare $PROMPT in templates;
+# both collapse to a single quoted "$1". The actual prompt is passed as a
+# positional argument to bash -c, so untrusted text never enters the shell parser.
+FINAL_TEMPLATE=$(printf '%s' "$CLI_COMMAND" | sed -e 's/"\$PROMPT"/"$1"/g' -e 's/\$PROMPT/"$1"/g')
 
 # Execute with timeout
 echo "Invoking $MODEL_NAME..." >&2
-if timeout "$TIMEOUT_SECONDS" bash -c "$FINAL_COMMAND" 2>/dev/null; then
+if timeout "$TIMEOUT_SECONDS" bash -c "$FINAL_TEMPLATE" _ "$PROMPT"; then
     exit 0
 else
     EXIT_CODE=$?
