@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:list.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/list.md

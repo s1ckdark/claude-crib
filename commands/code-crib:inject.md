@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:inject.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/inject.md

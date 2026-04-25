@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:toggle-rag.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/toggle-rag.md

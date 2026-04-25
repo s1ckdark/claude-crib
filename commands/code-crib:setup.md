@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:setup.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/setup.md

@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:stash.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/stash.md

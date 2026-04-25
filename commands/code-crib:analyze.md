@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:analyze.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/analyze.md

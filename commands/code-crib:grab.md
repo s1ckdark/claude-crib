@@ -1,1 +1,1 @@
-/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/code-crib:grab.md
+/Users/dave/iWorks/claude-crib/plugins/code-crib/commands/grab.md
