@@ -6,27 +6,20 @@ SAY_SCRIPT="$PLUGIN_ROOT/scripts/say.sh"
 # Fast exit: no state file means talkie is off
 [ -f "$STATE_FILE" ] || exit 0
 
-read -r LINE < "$STATE_FILE"
-MODE="${LINE##*\"mode\":\"}"
-MODE="${MODE%%\"*}"
+# Need jq for robust JSON parsing — assistant messages routinely contain
+# escaped quotes and newlines that grep/${var//} parsing breaks on.
+command -v jq >/dev/null 2>&1 || exit 0
 
+MODE=$(jq -r '.mode // "off"' "$STATE_FILE" 2>/dev/null)
 [ "$MODE" = "off" ] && exit 0
+[ -z "$MODE" ] && exit 0
 
-# Read stdin JSON to extract last_assistant_message
-STDIN_DATA=$(timeout 1 cat)
-MSG=$(echo "$STDIN_DATA" | grep -o '"last_assistant_message":"[^"]*"' | head -1 | cut -d'"' -f4)
-
-# Nothing to say
+MSG=$(timeout 1 cat | jq -r '.last_assistant_message // empty' 2>/dev/null)
 [ -z "$MSG" ] && exit 0
 
 # Truncate to ~200 chars for TTS
 MSG="${MSG:0:200}"
 
 case "$MODE" in
-  "on")
-    "$SAY_SCRIPT" "$MSG"
-    ;;
-  "report")
-    "$SAY_SCRIPT" "$MSG"
-    ;;
+  "on"|"report") "$SAY_SCRIPT" "$MSG" ;;
 esac
