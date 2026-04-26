@@ -28,3 +28,6 @@ node_modules/
 
 # Local development
 *.local.md
+
+# Playwright MCP runtime artifacts
+.playwright-mcp/
