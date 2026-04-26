@@ -5,8 +5,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "SILENT CHECK: Evaluate if this session had significant work (code edits, bug fixes, new features, architecture decisions). Respond with ONLY valid JSON, no extra text. If significant work: {\"decision\": \"stash\"}. If no significant work (only file reads, config changes, questions/answers, exploration): {\"decision\": \"skip\"}."
+            "type": "command",
+            "command": "bash $CLAUDE_PLUGIN_ROOT/hooks/scripts/check-significance.sh",
+            "timeout": 5
           }
         ]
       }
