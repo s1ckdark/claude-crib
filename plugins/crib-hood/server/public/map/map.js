@@ -84,6 +84,53 @@ window.initMap = function initMap() {
     });
   }
 
+  let trailEnabled = false;
+  const trailToggle = document.getElementById('trail-toggle');
+  trailToggle?.addEventListener('click', () => {
+    trailEnabled = !trailEnabled;
+    trailToggle.classList.toggle('on', trailEnabled);
+    if (!trailEnabled) {
+      trail?.clear();
+      removeActivityEdges();
+    }
+  });
+
+  function removeActivityEdges() {
+    if (cy) cy.edges('.kind-activity').remove();
+  }
+
+  const activityWeights = new Map(); // "from->to" → weight
+  function synthesizeActivity() {
+    if (!cy || !trail || !trailEnabled) return;
+    for (const [from, to] of trail.recentPairs()) {
+      const key = `${from}->${to}`;
+      const w = Math.min(1, (activityWeights.get(key) || 0) + 0.1);
+      activityWeights.set(key, w);
+    }
+    removeActivityEdges();
+    let i = 0;
+    for (const [key, w] of activityWeights) {
+      const [from, to] = key.split('->');
+      cy.add({
+        group: 'edges',
+        data: { id: `act-${i++}`, source: from, target: to, kind: 'activity', weight: w, evidence: 'recent agent traffic' },
+        classes: 'kind-activity',
+      });
+    }
+    applyLayerVisibility();
+  }
+
+  // Decay loop
+  setInterval(() => {
+    if (!trailEnabled) return;
+    for (const [k, w] of activityWeights) {
+      const decayed = w * 0.8;
+      if (decayed < 0.1) activityWeights.delete(k);
+      else activityWeights.set(k, decayed);
+    }
+    synthesizeActivity();
+  }, 30000);
+
   function onStateSnapshot(state) {
     metaMode.textContent = state.mode ? state.mode.name : '—';
     metaAgents.textContent = `${state.agents.length} agents`;
@@ -93,6 +140,7 @@ window.initMap = function initMap() {
     if (cy) cy.getElementById(msg.module).addClass('busy');
     animals?.placeAgent(msg.agent, msg.module, msg.character);
     trail?.push(msg.agent, msg.module);
+    synthesizeActivity();
   }
 
   function onAgentLeftModule(msg) {
