@@ -14,6 +14,7 @@ function mergeSources(sources) {
         if (Array.isArray(n.tags) && n.tags.length && !(existing.tags || []).length) {
           existing.tags = [...n.tags];
         }
+        if (n.path && !existing.path) existing.path = n.path;
       }
     }
     for (const e of src.edges || []) {
