@@ -94,7 +94,7 @@ test('test runner sanity', () => {
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "node --test tests/"
+    "test": "node --test tests/**/*.test.js"
   }
 }
 ```

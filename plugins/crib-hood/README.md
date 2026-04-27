@@ -4,7 +4,7 @@ A real-time agent dashboard for oh-my-claudecode (OMC). Visualizes active agent 
 
 ## What It Does
 
-crib-hood starts a lightweight Node.js server that watches your OMC state files and streams updates to a browser-based dashboard via Server-Sent Events. Each agent role is represented by a distinct animal character. The dashboard updates automatically as agents start, finish, or change tasks — no page refresh required.
+crib-hood now renders a force-directed module graph for your codebase ("Crib Hood Map") and overlays live OMC agent characters on top — animals "sit on" the module they are currently working in. Edges come from two sources: a regex-based AST scan of `<repo>/plugins/*/` (structural) and the optional code-crib stash (semantic, via Claude). A layer toggle bar lets you switch structural / semantic / activity edges on or off independently.
 
 It also ships a full autonomous orchestrator (the Crib Hood Coordinator) that can receive a plain-language task description, decompose it into atomic sub-tasks, assemble a team of specialized agents, monitor execution, handle failures, and report results.
 
@@ -19,6 +19,21 @@ Launch the dashboard server and open it in the browser.
 ```
 
 Starts the server on port 4567 (configurable via `CRIB_HOOD_PORT`) and opens `http://localhost:4567`.
+
+---
+
+### `/crib-hood:build-map`
+
+Build the GraphRAG module graph for the current repo.
+
+```
+/crib-hood:build-map [--repo PATH] [--no-llm]
+```
+
+- `--repo PATH` — target repo (default: current directory)
+- `--no-llm` — skip code-crib semantic extraction; AST structural edges only
+
+Writes `~/.claude/crib-hood/<repoHash>/graph.json`. If the dashboard server is running, it picks up the rebuild automatically. Run this once before opening the dashboard, and again whenever the codebase changes substantially.
 
 ---
 
@@ -71,6 +86,27 @@ Open `http://localhost:4567` after starting the server. The dashboard shows:
 
 The browser connects to `GET /events` and receives a live stream. No polling. Updates arrive within 300 ms of a state file change.
 
+## Map View
+
+The dashboard opens directly into the Crib Hood Map. Layout:
+
+- **Header bar** — title, mode/module/agent counts, source badge (`AST-only` / `Hybrid` / `code-crib`), layer toggle pills.
+- **Map stage** — Cytoscape force-directed graph of module nodes with structural / semantic / activity edges.
+- **Animal overlay** — DOM characters that sit on the module each agent is currently working in.
+
+### Layer Toggle Pills
+
+| Pill | What it shows |
+|------|---------------|
+| 구조 | Structural edges (AST imports). On by default. |
+| 의미 | Semantic edges (LLM-extracted from code-crib docs). Off by default. |
+| 활동 | Activity edges synthesized from recent agent module visits. Off by default. |
+| 자취 | Walk Trail toggle — when on, animals walk between recent modules and a virtual activity edge graph forms. |
+
+### Empty State
+
+If `graph.json` has not been built yet, the Map area shows a "Build the map first" message and the `/crib-hood:build-map` command as a hint.
+
 ## Agent Role Characters
 
 | Role | Character |
@@ -99,11 +135,22 @@ The browser connects to `GET /events` and receives a live stream. No polling. Up
 plugins/crib-hood/
   server/
     index.js        — Node.js HTTP + SSE server
+    graph/                 — graph builder + sources
+      builder.js
+      ast-source.js
+      code-crib-source.js
+      merge.js
+      activity-mapper.js
     public/
       index.html    — Dashboard shell
       app.js        — Frontend state management and rendering
       style.css     — Layout and animations
       characters.js — Animal character definitions and emoji map
+      map/                 — map view (Cytoscape + animal overlay + walk trail)
+        map.js
+        map.css
+        animal-renderer.js
+        trail.js
   commands/
     crib-hood.md    — Launch dashboard command
     run.md          — Orchestrator run command
@@ -113,6 +160,9 @@ plugins/crib-hood/
     coordinator.md  — Crib Hood Coordinator agent definition
   skills/
     (reserved)
+  scripts/
+    build-map.js           — CLI entry for /crib-hood:build-map
+  tests/                   — node --test suites + fixtures
   .claude-plugin/
     plugin.json     — Plugin manifest
 ```
@@ -132,7 +182,9 @@ Changes trigger a debounced broadcast (300 ms) to all connected SSE clients.
 | GET | `/` | Dashboard HTML |
 | GET | `/health` | Server health: status, uptime, port, active SSE client count, state directory |
 | GET | `/api/state` | Full state snapshot as JSON |
-| GET | `/events` | SSE stream; sends full state on connect, then diffs on change |
+| GET | `/api/graph` | Current graph.json (`{ exists: false }` if not built) |
+| POST | `/api/graph/rebuild` | Reload graph.json from disk + broadcast SSE `graph-rebuilt` |
+| GET | `/events` | SSE stream; sends state-snapshot on connect, then diffs on change (events: state-snapshot, graph-rebuilt, agent-on-module, agent-left-module) |
 | GET | `/*` | Static files from `server/public/` |
 
 ### Health response example

@@ -7,44 +7,37 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🏠 The Crib Hood</h1>
-    <div class="status-bar">
-      <button class="theme-toggle" id="theme-toggle" title="Switch character style">
-        <span id="theme-icon">🎮</span>
-        <span id="theme-label">Original</span>
-      </button>
-      <span class="live-indicator">● Live</span>
-      <span class="clock" id="clock"></span>
+  <div id="header">
+    <div id="title">🌌 Crib Hood Map</div>
+    <div id="meta">
+      <span id="meta-mode">—</span>
+      <span id="meta-count">0 modules</span>
+      <span id="meta-agents">0 agents</span>
+      <span id="meta-source" data-source="">—</span>
     </div>
-  </header>
-
-  <main>
-    <section class="mode-banner" id="mode-banner" hidden>
-      <span class="mode-name" id="mode-name"></span>
-      <span class="mode-phase" id="mode-phase"></span>
-    </section>
-
-    <section class="agent-grid" id="agent-grid">
-      <div class="empty-state" id="empty-state">
-        <p>No agents running</p>
-        <p class="hint">Start an OMC workflow or agent team to see agents here</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="summary" id="summary">
-      <span class="stat working">Working: <strong id="count-working">0</strong></span>
-      <span class="stat pending">Pending: <strong id="count-pending">0</strong></span>
-      <span class="stat idle">Idle: <strong id="count-idle">0</strong></span>
-      <span class="stat completed">Completed: <strong id="count-completed">0</strong></span>
-      <span class="stat error">Error: <strong id="count-error">0</strong></span>
-      <span class="stat total">Total: <strong id="count-total">0</strong></span>
+    <div id="layer-toggle">
+      <button class="layer-pill on" data-layer="structural">구조</button>
+      <button class="layer-pill" data-layer="semantic">의미</button>
+      <button class="layer-pill" data-layer="activity">활동</button>
+      <button id="trail-toggle" class="layer-pill" data-trail>자취</button>
     </div>
-  </footer>
+  </div>
 
+  <div id="empty-state" hidden>
+    <p>Build the map first.</p>
+    <pre><code>/crib-hood:build-map</code></pre>
+  </div>
+
+  <div id="stage">
+    <div id="cy"></div>
+    <div id="creatures"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
   <script src="characters.js"></script>
+  <script src="map/animal-renderer.js"></script>
+  <script src="map/trail.js"></script>
+  <script src="map/map.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

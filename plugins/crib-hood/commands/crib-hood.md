@@ -6,6 +6,15 @@ user_invocable: true
 
 Launch the Crib Hood dashboard to visualize OMC agent states in real-time.
 
+## Prerequisites
+
+The dashboard's Map view requires a built graph. Before opening:
+
+1. (Optional, recommended) Run `/code-crib:analyze` to populate the code-crib stash for semantic edges.
+2. Run `/crib-hood:build-map` to produce `~/.claude/crib-hood/<repoHash>/graph.json`.
+
+Without these, the dashboard shows an empty state with a `/crib-hood:build-map` CTA.
+
 ## Steps
 
 1. Start the Node.js SSE server in the background:
