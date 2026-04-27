@@ -1,3 +1,5 @@
+@import url('map/map.css');
+
 /* ============================================================
    The Crib Board — Dark Mode Dashboard Stylesheet
    ============================================================ */
@@ -400,5 +402,3 @@ footer {
     grid-template-columns: 1fr;
   }
 }
-
-@import url('map/map.css');
