@@ -320,8 +320,14 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const url = new URL(req.url, `http://localhost:${PORT}`);
-  const pathname = url.pathname;
+  let pathname;
+  try {
+    pathname = new URL(req.url, `http://localhost:${PORT}`).pathname;
+  } catch (_) {
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end('Bad Request');
+    return;
+  }
 
   // GET /health
   if (req.method === 'GET' && pathname === '/health') {
