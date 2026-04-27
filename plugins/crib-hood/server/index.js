@@ -50,6 +50,41 @@ const STATE_DIR = findOmcStateDir();
 const TASKS_DIR = path.join(os.homedir(), '.claude', 'tasks');
 const TEAMS_DIR = path.join(os.homedir(), '.claude', 'teams');
 
+const DEFAULT_GRAPH_DIR = path.join(os.homedir(), '.claude', 'crib-hood');
+const GRAPH_FILE = process.env.CRIB_HOOD_GRAPH_FILE || (() => {
+  // V1 simplification: if exactly one *.json exists in DEFAULT_GRAPH_DIR or its first subdir,
+  // use it; otherwise return path that may not exist (graph endpoint returns exists:false).
+  try {
+    if (!fs.existsSync(DEFAULT_GRAPH_DIR)) return path.join(DEFAULT_GRAPH_DIR, 'graph.json');
+    const direct = path.join(DEFAULT_GRAPH_DIR, 'graph.json');
+    if (fs.existsSync(direct)) return direct;
+    const subs = fs.readdirSync(DEFAULT_GRAPH_DIR, { withFileTypes: true })
+      .filter((e) => e.isDirectory()).map((e) => path.join(DEFAULT_GRAPH_DIR, e.name, 'graph.json'))
+      .filter((p) => fs.existsSync(p));
+    return subs[0] || direct;
+  } catch (_) {
+    return path.join(DEFAULT_GRAPH_DIR, 'graph.json');
+  }
+})();
+
+let graphCache = null;
+function loadGraph() {
+  try {
+    if (!fs.existsSync(GRAPH_FILE)) { graphCache = null; return null; }
+    const raw = fs.readFileSync(GRAPH_FILE, 'utf8');
+    graphCache = JSON.parse(raw);
+    return graphCache;
+  } catch (err) {
+    console.error('[crib-hood] Failed to load graph:', err.message);
+    graphCache = null;
+    return null;
+  }
+}
+loadGraph();
+
+const { createActivityMapper } = require('./graph/activity-mapper');
+let activityMapper = createActivityMapper({ graph: graphCache || { nodes: [] } });
+
 // ------------------------------------------------------------
 // Read all state
 // ------------------------------------------------------------
@@ -223,7 +258,19 @@ function scheduleUpdate() {
   if (debounceTimer) clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
     debounceTimer = null;
-    broadcast(readAllState());
+    const state = readAllState();
+    broadcast({ type: 'state-snapshot', state });
+
+    // Emit per-agent module mapping events
+    for (const agent of state.agents) {
+      if (!agent.task) continue;
+      const taskInfo = { workspaceFile: agent.task.path, lastEdit: { path: agent.task } };
+      // V1: agent.task is a string subject. Activity mapping requires a file path.
+      // Until task records carry currentFile, this loop is a no-op for string tasks.
+      // The mapper handles missing/orphan paths gracefully.
+      const events = activityMapper.map(agent.name, taskInfo);
+      for (const e of events) broadcast(e);
+    }
   }, 300);
 }
 
@@ -257,7 +304,7 @@ if (fs.existsSync(TEAMS_DIR)) {
 // ------------------------------------------------------------
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
@@ -299,6 +346,32 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // GET /api/graph
+  if (req.method === 'GET' && pathname === '/api/graph') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    if (!graphCache) {
+      res.end(JSON.stringify({ exists: false }));
+    } else {
+      res.end(JSON.stringify(graphCache));
+    }
+    return;
+  }
+
+  // POST /api/graph/rebuild
+  if (req.method === 'POST' && pathname === '/api/graph/rebuild') {
+    const g = loadGraph();
+    if (!g) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: 'graph file not found' }));
+      return;
+    }
+    activityMapper = createActivityMapper({ graph: g });
+    broadcast({ type: 'graph-rebuilt', source: g.source, ts: Date.now() });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // GET /events — SSE
   if (req.method === 'GET' && pathname === '/events') {
     res.writeHead(200, {
@@ -309,7 +382,10 @@ const server = http.createServer((req, res) => {
     res.write('\n'); // flush headers
 
     // Send initial state
-    res.write(`data: ${JSON.stringify(readAllState())}\n\n`);
+    res.write(`data: ${JSON.stringify({ type: 'state-snapshot', state: readAllState() })}\n\n`);
+    if (graphCache) {
+      res.write(`data: ${JSON.stringify({ type: 'graph-rebuilt', source: graphCache.source, ts: Date.now() })}\n\n`);
+    }
 
     clients.add(res);
 
