@@ -36,17 +36,32 @@ Stash your work session as a doc in the knowledge base.
    - Files modified
    - Key learnings
 
-4. **Save to Pinecone** using upsert-records:
+4. **Resolve identity** — never guess the project name:
+   ```bash
+   bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/crib-identity.sh
+   # → {"project": "claude-crib", "host": "macbook"}
    ```
-   Index: code-crib
-   Namespace: project name or provided
-   Record fields:
-   - id: namespace-timestamp-hash
-   - content: Full document text
-   - type, title, project, date, tags, files
-   ```
+   `--namespace`, if given, overrides `project`. `host` is always the script's value.
 
-5. **Confirm to user** with document title, type, tags, and record ID
+5. **Pick the target** from `code-crib.local.md`:
+   - `collection_mode: project` → collection `code-crib-{project}`
+   - `collection_mode: shared` → collection `code-crib`
+
+6. **Save the record**
+
+   Common fields:
+   - id: `{project}-{YYYYMMDDTHHMMSS}-{8-char hash}`
+   - content: Full document text
+   - metadata: `type, title, project, host, date, tags, files` (tags/files as comma-separated strings)
+
+   **For Chroma** (vector_db: chroma, or legacy chroma-docker / chroma-local):
+   - Create the collection with `chroma_create_collection` if `chroma_list_collections` doesn't list it
+   - `chroma_add_documents` with `collection_name`, `documents: [content]`, `ids: [id]`, `metadatas: [metadata]`
+
+   **For Pinecone** (vector_db: pinecone):
+   - upsert-records to index `code-crib`, namespace `{project}`, with the common fields
+
+7. **Confirm to user** with document title, type, tags, host, collection, and record ID
 
 ## Auto-detection Hints
 

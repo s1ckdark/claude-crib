@@ -26,22 +26,35 @@
 
 ## Setup
 
-### Vector DB Options
+### Chroma Connection Modes
 
-| Option | Pros | Setup |
-|--------|------|-------|
-| **Chroma** (recommended) | Free, local, privacy | Docker required |
-| **Pinecone** | Zero maintenance, scalable | `PINECONE_API_KEY` env var |
+`/code-crib:setup` asks how to reach Chroma and writes `CHROMA_*` vars into `~/.claude/settings.json` → `env`. Restart Claude Code afterwards — MCP servers read env only at startup.
 
-### Chroma Setup (Recommended)
+| Mode | Use when | Key vars |
+|------|----------|----------|
+| **Local server** (default) | Chroma in Docker / `chroma run` on this machine | `CHROMA_HOST=localhost`, `CHROMA_PORT` |
+| **Remote server** | Self-hosted Chroma on a home server, VPS, or Tailscale host | `CHROMA_HOST`, `CHROMA_PORT`, `CHROMA_SSL`, optional `CHROMA_CUSTOM_AUTH_CREDENTIALS` (`user:password`) |
+| **Local persistent** | No server at all; vectors stored in a directory | `CHROMA_DATA_DIR` |
+| **Chroma Cloud** | Hosted at api.trychroma.com | `CHROMA_TENANT`, `CHROMA_DATABASE`, `CHROMA_API_KEY` |
 
 ```bash
-# Start Chroma with Docker
-docker run -d -p 8000:8000 chromadb/chroma
-
-# Run setup wizard
+# Local: start Chroma with Docker, then run the wizard
+docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 /code-crib:setup
 ```
+
+**Remote example (Tailscale):** bind the server port only to `127.0.0.1` and the Tailscale IP, then pick *Remote server* with host `my-server`, port `8000`, SSL off, auth none. If the server is reachable from the public internet, put it behind HTTPS and enable Chroma basic auth.
+
+Check reachability anytime: `curl http://<host>:<port>/api/v2/heartbeat`
+
+### Using One DB from Several Machines
+
+Every saved document carries `project` and `host` metadata, resolved by `hooks/scripts/crib-identity.sh`:
+
+- **project**: one RAG collection per repo, named after the origin remote's repo (e.g. `code-crib-claude-crib`). Clones in different directories or on different machines share it. The owner is ignored, so if two repos share a name, pin one with `project_name:` in the repo's `.claude/code-crib.local.md`.
+- **host**: `hostname -s`, or `CODE_CRIB_HOST` if set (useful on macOS, where hostnames drift).
+
+Filter by machine with `/code-crib:grab "query" --host <name>`.
 
 ## Commands
 
@@ -128,22 +141,35 @@ docker run -d -p 8000:8000 chromadb/chroma
 
 ## 설정
 
-### 벡터 DB 옵션
+### Chroma 연결 방식
 
-| 옵션 | 장점 | 설정 |
-|------|------|------|
-| **Chroma** (권장) | 무료, 로컬, 프라이버시 | Docker 필요 |
-| **Pinecone** | 관리 불필요, 확장성 | `PINECONE_API_KEY` 환경변수 |
+`/code-crib:setup`이 연결 방식을 묻고 `~/.claude/settings.json`의 `env`에 `CHROMA_*` 변수를 기록합니다. MCP 서버는 시작 시에만 env를 읽으므로 설정 후 Claude Code를 재시작하세요.
 
-### Chroma 설정 (권장)
+| 방식 | 사용 시점 | 주요 변수 |
+|------|----------|----------|
+| **로컬 서버** (기본) | 이 머신의 Docker / `chroma run` | `CHROMA_HOST=localhost`, `CHROMA_PORT` |
+| **원격 서버** | 홈서버, VPS, Tailscale 호스트에 직접 띄운 Chroma | `CHROMA_HOST`, `CHROMA_PORT`, `CHROMA_SSL`, 선택 `CHROMA_CUSTOM_AUTH_CREDENTIALS` (`user:password`) |
+| **로컬 persistent** | 서버 없이 디렉터리에 저장 | `CHROMA_DATA_DIR` |
+| **Chroma Cloud** | api.trychroma.com 호스팅 | `CHROMA_TENANT`, `CHROMA_DATABASE`, `CHROMA_API_KEY` |
 
 ```bash
-# Docker로 Chroma 시작
-docker run -d -p 8000:8000 chromadb/chroma
-
-# 설정 마법사 실행
+# 로컬: Docker로 Chroma 시작 후 마법사 실행
+docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 /code-crib:setup
 ```
+
+**원격 예시 (Tailscale):** 서버 포트를 `127.0.0.1`과 Tailscale IP에만 바인딩한 뒤, *원격 서버* → host `my-server`, port `8000`, SSL 끔, 인증 없음. 공인 인터넷에 노출된다면 HTTPS 뒤에 두고 Chroma basic auth를 켜세요.
+
+연결 확인: `curl http://<host>:<port>/api/v2/heartbeat`
+
+### 여러 기기에서 하나의 DB 쓰기
+
+저장되는 모든 문서에는 `hooks/scripts/crib-identity.sh`가 정한 `project`와 `host` 메타데이터가 붙습니다.
+
+- **project**: repo마다 RAG 컬렉션 하나. origin remote의 repo 이름을 씁니다 (예: `code-crib-claude-crib`). 클론 경로나 기기가 달라도 같은 컬렉션을 씁니다. owner는 무시하므로 이름이 같은 repo가 둘이면 한쪽을 repo의 `.claude/code-crib.local.md`에 `project_name:`으로 고정하세요.
+- **host**: `hostname -s`, 또는 `CODE_CRIB_HOST`가 설정되어 있으면 그 값 (호스트명이 자주 바뀌는 macOS에서 유용).
+
+특정 기기의 기록만 보려면 `/code-crib:grab "검색어" --host <이름>`.
 
 ## 명령어
 

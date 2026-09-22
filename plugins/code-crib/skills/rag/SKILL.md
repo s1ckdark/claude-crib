@@ -160,10 +160,11 @@ This is the key feature - RAG search without enabling persistent mode.
 
 ## Vector Search Details
 
-### For Chroma (chroma-docker/chroma-local)
+### For Chroma (chroma, or legacy chroma-docker/chroma-local)
 
 ```
-collection_name: code-crib-{project-name} (project mode) or code-crib (shared mode)
+collection_name: code-crib-{project} (project mode) or code-crib (shared mode)
+# {project} comes from: bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/crib-identity.sh
 query_texts: [user query]
 n_results: 5
 ```

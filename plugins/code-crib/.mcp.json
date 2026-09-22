@@ -4,8 +4,15 @@
       "command": "uvx",
       "args": ["chroma-mcp"],
       "env": {
+        "CHROMA_CLIENT_TYPE": "${CHROMA_CLIENT_TYPE:-http}",
+        "CHROMA_SSL": "${CHROMA_SSL:-false}",
         "CHROMA_HOST": "${CHROMA_HOST:-localhost}",
-        "CHROMA_PORT": "${CHROMA_PORT:-8000}"
+        "CHROMA_PORT": "${CHROMA_PORT:-8000}",
+        "CHROMA_CUSTOM_AUTH_CREDENTIALS": "${CHROMA_CUSTOM_AUTH_CREDENTIALS:-}",
+        "CHROMA_DATA_DIR": "${CHROMA_DATA_DIR:-}",
+        "CHROMA_TENANT": "${CHROMA_TENANT:-}",
+        "CHROMA_DATABASE": "${CHROMA_DATABASE:-}",
+        "CHROMA_API_KEY": "${CHROMA_API_KEY:-}"
       },
       "disabled": false
     }
