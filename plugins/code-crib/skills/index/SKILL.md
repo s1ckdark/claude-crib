@@ -28,30 +28,31 @@ Read `code-crib.local.md` in the plugin directory to get configuration:
 
 ```yaml
 collection_mode: project | shared
-project_name: (optional, defaults to current directory name)
+project_name: (optional pin; put it in the repo's .claude/code-crib.local.md)
 ```
 
 **Collection Name Logic**:
-- **project mode**: `code-crib-{project-name}`
-  - Example: Working in `claude-crib` → collection: `code-crib-claude-crib`
+- **project mode**: `code-crib-{project}` (one collection per repo)
+  - Example: origin `s1ckdark/claude-crib` → collection: `code-crib-claude-crib`
 - **shared mode**: `code-crib`
   - All documents get `project` metadata field
 
-**Get Project Name**:
+**Get Project Name and Host** — never guess; every machine must agree:
 ```bash
-# If project_name not set in config:
-basename $(pwd)  # e.g., "claude-crib"
+bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/crib-identity.sh
+# → {"project": "claude-crib", "host": "macbook"}
 ```
+Use `project` for the collection name and metadata, `host` for metadata.
 
 ### Step 2: Determine Vector DB Backend
 
 Read `code-crib.local.md` to get `vector_db` setting:
-- `chroma-docker` or `chroma-local` → Use Chroma MCP tools
+- `chroma` (or legacy `chroma-docker` / `chroma-local`) → Use Chroma MCP tools
 - `pinecone` → Use Pinecone MCP tools
 
 ### Step 3: Ensure Collection/Index Exists
 
-**For Chroma** (vector_db: chroma-docker or chroma-local):
+**For Chroma** (vector_db: chroma, or legacy chroma-docker / chroma-local):
 ```
 1. List collections with chroma_list_collections
 2. If collection doesn't exist, create with chroma_create_collection:
@@ -99,6 +100,7 @@ Example: `claude-crib-plugins-code-crib-abc123`
 ```json
 {
   "project": "claude-crib",
+  "host": "macbook",
   "type": "...",
   "date": "...",
   "tags": "...",
@@ -116,7 +118,7 @@ This ensures documents work in both modes:
 
 **IMPORTANT: Maximize batch size to minimize tool calls and avoid confirmation prompts.**
 
-**For Chroma** (vector_db: chroma-docker or chroma-local):
+**For Chroma** (vector_db: chroma, or legacy chroma-docker / chroma-local):
 ```
 Use chroma_add_documents with:
 - collection_name: determined from Step 1

@@ -13,6 +13,7 @@ Grab relevant docs from your knowledge stash.
 /code-crib:grab "session timeout handling"   # (grab command)
 /code-crib:grab "authentication" --type bugfix --limit 3
 /code-crib:grab "auth bug" --project other-app  # (shared mode only)
+/code-crib:grab "chroma setup" --host macbook   # only docs written on that machine
 ```
 
 ## Parameters
@@ -21,6 +22,7 @@ Grab relevant docs from your knowledge stash.
 - `limit`: Maximum number of results (default 5)
 - `type`: Filter by work type (bugfix, feature, refactor, analysis)
 - `project`: Filter by project name (shared mode only)
+- `host`: Filter by the machine that wrote the document
 - `tags`: Filter by tags (comma-separated)
 
 ## Instructions
@@ -33,9 +35,15 @@ Read `code-crib.local.md` in the plugin directory to get configuration:
 collection_mode: project | shared
 ```
 
+Resolve the current project — never guess from the directory name:
+```bash
+bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/crib-identity.sh
+# → {"project": "claude-crib", "host": "macbook"}
+```
+
 **Collection Name Logic**:
-- **project mode**: `code-crib-{current-directory-name}`
-  - Example: Working in `/Users/dave/my-app` → collection: `code-crib-my-app`
+- **project mode**: `code-crib-{project}`
+  - Example: origin `git@github.com:s1ckdark/claude-crib.git` → collection: `code-crib-claude-crib`
 - **shared mode**: `code-crib`
   - All projects share this collection
   - Filter by `project` metadata field
@@ -43,12 +51,12 @@ collection_mode: project | shared
 ### Step 2: Determine Vector DB Backend
 
 Read `code-crib.local.md` to get `vector_db` setting:
-- `chroma-docker` or `chroma-local` → Use Chroma MCP tools
+- `chroma` (or legacy `chroma-docker` / `chroma-local`) → Use Chroma MCP tools
 - `pinecone` → Use Pinecone MCP tools
 
 ### Step 3: Execute Vector Search
 
-**For Chroma** (vector_db: chroma-docker or chroma-local):
+**For Chroma** (vector_db: chroma, or legacy chroma-docker / chroma-local):
 ```
 Use chroma_query_documents tool with:
 - collection_name: determined from Step 1
@@ -81,6 +89,14 @@ if type_arg:
 # Project filter (shared mode only)
 if collection_mode == "shared" and project_arg:
     where_filter["project"] = project_arg
+
+# Host filter (docs saved before host tracking have no host field and won't match)
+if host_arg:
+    where_filter["host"] = host_arg
+
+# Chroma needs an explicit $and when filtering on more than one field
+if len(where_filter) > 1:
+    where_filter = {"$and": [{k: v} for k, v in where_filter.items()]}
 ```
 
 ### Step 5: Format Results
@@ -89,7 +105,7 @@ if collection_mode == "shared" and project_arg:
 ## Found {{count}} relevant documents
 
 ### 1. {{title}} ({{type}}, {{date}})
-**Project**: {{project}}
+**Project**: {{project}} · **Host**: {{host or "unknown"}}
 **Tags**: {{tags}}
 **Path**: {{path}}
 
@@ -122,4 +138,5 @@ For top 3 results, find related documents by shared tags:
 - Use specific technical terms for precise results
 - Include error messages or function names when searching for bugs
 - In shared mode, use `--project` to focus on specific project
+- Use `--host` to find what you did on a particular machine
 - Combine with type filter for focused results
