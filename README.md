@@ -50,6 +50,7 @@ code-crib:grab "session timeout"  # boom, instant recall with related docs
 | `code-crib:grab` | Grab docs from your stash |
 | `code-crib:rack` | Rack up local docs into the stash |
 | `code-crib:status` | 로컬 인덱스 상태와 미반영 변경 확인 |
+| `code-crib:sessions` | Claude·Codex 개인 작업일지 수집·검색·재개 명령 (`--enable`로 활성화) |
 | `code-crib:list` | Check what's in your stash |
 | `code-crib:remove` | Remove docs from your stash |
 | `code-crib:analyze` | Analyze codebase structure |

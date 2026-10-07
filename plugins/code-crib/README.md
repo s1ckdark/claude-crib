@@ -87,12 +87,49 @@ python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" search "timeout" --
 
 ## Commands
 
+### Claude·Codex 세션 작업일지 (2.3+)
+
+```text
+/code-crib:sessions --enable
+/code-crib:sessions
+/code-crib:sessions --provider codex --query "인증 timeout"
+/code-crib:sessions --show SESSION_ID --provider claude
+/code-crib:sessions --resume SESSION_ID
+/code-crib:sessions --refresh
+/code-crib:grab "인증 timeout" --sessions
+```
+
+**기본 수집은 꺼짐**입니다. 켜면 이 기기의 연결된 모든 프로젝트에서 이후 훅으로 관측한 세션을 수집합니다. 과거의 전체 홈 디렉터리나 Codex state DB를 훑어 자동 가져오지는 않습니다. 목록은 현재 Git 체크아웃 기준이며 다른 체크아웃/프로젝트까지 보려면 `--all`을 지정합니다. 원격 DB나 FTS5 없이 Python 3.9+ 표준 라이브러리로 동작합니다.
+
+- **빠른 훅**: `SessionStart`에 참조를 등록하고 이전 참조의 남은 로그를 최대 0.5초/1 MiB 처리합니다. `Stop`은 응답 완료 체크포인트(가능하면 마지막 AI 응답 발췌도 저장), `SessionEnd`는 종료 메타데이터 기록만 합니다. 종료 시 원본 파싱/LLM 호출/네트워크 전송은 없습니다. 잠금 대기는 최대 150ms이며 실패가 CLI 종료를 막지 않습니다.
+- **증분 후처리**: 목록·상세·검색 전에 등록된 JSONL의 커서 이후를 읽습니다. 한 번에 최대 2초/8 MiB를 처리하고 미완성 마지막 줄은 다음 번으로 남깁니다. 처리 예산이 남지 않으면 `sync.pending`, 읽기 실패/지원하지 않는 형식은 `sync.errors`로 표시하며 이전 요약을 유지합니다. 다음 세션 시작 또는 `--refresh`로 누락 로그를 보완하지만 종료 시각을 추정하지는 않습니다. 첫 레코드 지문·inode·크기로 로그 교체/축소를 감지합니다(동일 크기의 중간 줄 덮어쓰기까지 감지하는 문서 인덱스와는 다릅니다).
+- **요약 근거**: 첫 사용자 요청을 제목으로, 마지막 AI 응답을 1,000자 이내 발췌로 저장합니다. 별도 LLM 요약이나 검증된 완료 판정이 아닙니다. 도구 호출/결과에서 파일과 명령을 추출하고, 테스트 후보는 명령명으로 분류합니다. 명시적 종료 코드 0은 `exit_ok`, 결과가 없으면 `unverified`입니다. `unfinished`는 Codex `update_plan`에서 관측한 항목만 표시하며 없으면 미확인입니다. 각 목록은 최대 200항목, 로그 한 줄/훅 입력은 최대 1 MiB입니다. 명령 본문·전체 출력·추론은 복사하지 않습니다.
+- **재개**: 명령만 제시하며 자동 실행하지 않습니다. Claude는 `claude --resume ID`, Codex는 `codex resume ID`(`source=exec`이면 `codex exec resume ID`)입니다. Codex는 rollout의 thread ID를 우선 사용합니다. 원본이 있으면 `available_unverified`, 사라지거나 `--ephemeral` 등으로 없으면 `unavailable`입니다. 실제 재개 성공이나 Claude 비대화형 세션의 picker 노출은 보장하지 않습니다. 파일/프로세스 복원 기능이 아닙니다.
+- **별도 영속 저장소**: `${XDG_DATA_HOME:-~/.local/share}/code-crib/sessions.sqlite3`에 저장합니다. 문서 검색의 재생성 가능한 캐시와 다르며, 원본이 만료돼도 이미 추출한 요약은 남습니다. 기본 자동 만료는 없습니다. 디렉터리 0700/DB 0600 권한의 평문 저장소이므로 디스크 암호화·백업 정책은 사용자가 관리해야 합니다. API 키/Bearer/비밀번호/코드 블록 등의 패턴을 가리지만 민감정보 제거를 보장하지 않습니다. 민감한 세션 전에는 수집을 끄세요. 저장소 안으로 `XDG_DATA_HOME`을 지정하거나 Git에 추가하지 마세요.
+- **끄기/삭제**: `--disable` 또는 실행 환경의 `CODE_CRIB_SESSION_HISTORY=0`으로 자동 수집·갱신을 끕니다. 기존 요약은 그대로이며 명시적 `--refresh`는 여전히 읽습니다. `--forget ID --provider claude`는 해당 추출 레코드만 삭제하고 원본은 건드리지 않습니다. SQLite의 보안 삭제를 보장하지 않습니다. 재개 중인 세션은 이후 훅으로 다시 등록될 수 있습니다.
+- **원격 전송 없음**: `/stash`의 선택적 지식 문서와 자동 작업일지는 별개입니다. 원본 transcript/작업일지를 `.rag-docs`에 자동 복사하거나 Chroma/Pinecone에 보내지 않습니다. 사용자가 검토하고 요청한 요약만 기존 `/stash`로 따로 저장하세요. `/grab --sessions`는 작업일지만, 기존 `/grab`은 문서를 검색합니다.
+
+#### Codex 훅 연결
+
+Claude 플러그인의 훅이 Codex에 자동 적용되지는 않습니다. 공식 lifecycle hook을 지원하는 Codex에서 다음으로 JSON을 생성합니다.
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py" codex-config
+```
+
+출력의 `SessionStart`/`Stop`/`SessionEnd` 설정을 `${CODEX_HOME:-~/.codex}/hooks.json`의 기존 목록에 **중복 없이 병합**하고 Codex의 신뢰 검토를 완료하세요. 기존 파일을 출력으로 덮어쓰지 마세요. 일반 셸에는 `CLAUDE_PLUGIN_ROOT`가 자동 설정되지 않으므로 설치된 code-crib 경로를 지정해야 합니다. Codex도 동일한 OS 사용자와 `XDG_DATA_HOME`을 사용해야 같은 작업일지를 봅니다. 생성 명령에는 현재 절대 경로가 들어가므로 플러그인 업데이트 후 다시 생성해야 합니다. 이 기능은 기존 codex 플러그인의 tmux 작업자와 독립적입니다.
+
+어댑터는 Claude 메시지/도구 JSONL과 Codex legacy `response_item`/`event_msg`, paginated `item_completed`의 주요 항목을 지원합니다. 로그 포맷은 안정 API가 아니며 알려지지 않은 이벤트는 건너뜁니다. **`.jsonl.zst`는 원본 존재/재개 참조만 지원**하고 직접 해제·색인하지 않습니다(기존 발췌는 유지, 갱신 경고 표시). Codex의 기본 `archived_sessions/<동일 파일명>` 이동은 찾지만 임의 이동·state DB·원격/클라우드 전용 thread는 탐색하지 않습니다. `history.jsonl`은 resume 원본이 아닙니다. 전체 상태 접근에는 공식 app-server `thread/list`/`thread/read`가 더 적합하지만, 이 버전은 별도 서버/인증 없이 짧은 로컬 훅과 참조된 로그만 사용합니다.
+
+근거: [Claude 훅](https://code.claude.com/docs/en/hooks#sessionend), [Codex 훅](https://learn.chatgpt.com/docs/hooks#sessionend), [Codex app-server](https://learn.chatgpt.com/docs/app-server). 실제 설치 버전에서 훅 지원·신뢰 검토·resume를 확인하세요.
+
 | Command | Description |
 |---------|-------------|
 | `/code-crib:stash` | Save your work session to knowledge stash |
 | `/code-crib:grab` | Search docs from your stash |
 | `/code-crib:rack` | Bulk index local markdown files |
 | `/code-crib:status` | 로컬 인덱스의 갱신 시각·미반영 변경·실패 확인 |
+| `/code-crib:sessions` | Claude·Codex 작업일지 목록·검색·상세·재개 명령 |
 | `/code-crib:list` | List documents in your stash |
 | `/code-crib:remove` | Delete documents from stash |
 | `/code-crib:analyze` | Analyze and document codebase structure |
@@ -209,6 +246,7 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 | `/code-crib:grab` | 저장된 문서 검색 |
 | `/code-crib:rack` | 로컬 마크다운 파일 일괄 인덱싱 |
 | `/code-crib:status` | 로컬 인덱스의 갱신 시각·미반영 변경·실패 확인 |
+| `/code-crib:sessions` | Claude·Codex 작업일지 목록·검색·상세·재개 명령 |
 | `/code-crib:list` | 저장된 문서 목록 |
 | `/code-crib:remove` | 저장된 문서 삭제 |
 | `/code-crib:analyze` | 코드베이스 구조 분석 및 문서화 |

@@ -26,8 +26,20 @@ Grab relevant docs from your knowledge stash.
 - `host`: Filter by the machine that wrote the document
 - `tags`: Filter by tags (comma-separated)
 - `local`: 로컬 문서만 검색 (MCP/벡터 DB 설정 불필요)
+- `sessions`: 문서 대신 개인 로컬 작업일지 검색 (원격 검색하지 않음)
+- `provider`: `--sessions`와 함께 `claude` 또는 `codex`로 필터
 
 ## Instructions
+
+### 세션 작업일지 전용 검색
+
+`--sessions`이면 아래 명령만 실행하고 문서/원격 검색 단계는 건너뛴다. `--provider`와 `--limit`도 안전하게 인용한 인자로 전달한다. `--type/--tags/--host/--project`는 세션 검색에서 지원하지 않으므로 조용히 무시하지 말고 안내한다. 다른 체크아웃의 기록은 `/code-crib:sessions --all --query ...`로 검색한다.
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py" list --query "세션 타임아웃" --limit 5
+```
+
+결과의 `kind=session`을 보존하고 출처를 **로컬 작업일지**로 표시한다. 문서 FTS/벡터 검색 점수와 합치지 않는다. 세션 검색은 발췌·경로·명령에 대한 공백 분리 AND 부분 일치이며 의미 검색이 아니다. `commands/sessions.md`의 수집 동의·미확인 표시·오류 처리·resume 지침을 따른다. 수집이 꺼져 있으면 자동으로 켜지 않는다. 원본 로그와 작업일지를 원격 DB에 전송하지 않는다.
 
 ### Step 0: 로컬 인덱스 최신화 및 검색
 
