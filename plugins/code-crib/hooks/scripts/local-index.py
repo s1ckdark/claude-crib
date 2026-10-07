@@ -188,8 +188,9 @@ class LocalIndex:
 
     def ensure_default(self):
         root = self.project / ".rag-docs"
-        if root.is_dir() and not any(self.project / source in (root, *root.parents)
-                                     for source in self.sources()):
+        registered = [self.project / source for source in self.sources()]
+        overlaps = any(other == root or other in root.parents or root in other.parents for other in registered)
+        if root.is_dir() and not overlaps:
             self.register(".rag-docs")
 
     def sync(self, force=False):
@@ -348,7 +349,9 @@ def main():
                           + ". 원격 벡터 DB 동기화 상태는 별도입니다. 오류는 /code-crib:status로 확인하세요."}})
                 return 0
             if args.command == "search":
-                emit({"query": args.query, "sync": changes, "results": index.search(
+                indexed = index.db.execute("SELECT count(*) FROM documents").fetchone()[0]
+                emit({"query": args.query, "indexed": indexed, "sources": index.sources(),
+                      "sync": changes, "results": index.search(
                     args.query, args.limit, args.kind, args.host,
                     [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else None)})
             else:

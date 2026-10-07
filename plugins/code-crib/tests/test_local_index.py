@@ -13,6 +13,7 @@ from unittest.mock import patch
 PLUGIN = Path(__file__).resolve().parents[1]
 SCRIPT = PLUGIN / "hooks/scripts/local-index.py"
 spec = importlib.util.spec_from_file_location("local_index", SCRIPT)
+assert spec is not None and spec.loader is not None
 local_index = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(local_index)
 
@@ -176,6 +177,17 @@ class LocalIndexTest(unittest.TestCase):
         self.index.register("docs")
         self.index.ensure_default()
         self.assertEqual(self.index.sources(), [".rag-docs", "docs"])
+
+    def test_explicit_default_subdirectory_does_not_break_future_sync(self):
+        self.index.db.execute("DELETE FROM sources")
+        self.index.db.commit()
+        nested = self.docs / "sessions"
+        nested.mkdir()
+        self.index.register(".rag-docs/sessions")
+        self.index.ensure_default()
+        self.assertEqual(self.index.sources(), [".rag-docs/sessions"])
+        self.write("sessions/auth.md")
+        self.assertEqual(self.index.sync()["added"], 1)
 
     def test_search_filters_tags_type_and_host(self):
         self.write("a.md", '---\ntitle: "Redis #timeout"\ntype: bugfix\nhost: macbook\ntags: [redis, auth]\n---\nconnection failed')
