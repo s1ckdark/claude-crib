@@ -56,6 +56,34 @@ Every saved document carries `project` and `host` metadata, resolved by `hooks/s
 
 Filter by machine with `/code-crib:grab "query" --host <name>`.
 
+### 로컬 자동 인덱싱 (2.2+)
+
+Python 3.9+와 FTS5/JSON1이 포함된 SQLite만 있으면 벡터 DB 없이도 문서를 검색할 수 있습니다. 추가 Python 패키지는 필요 없습니다.
+
+```bash
+/code-crib:rack --path ./docs/knowledge --local
+/code-crib:grab "세션 타임아웃" --local
+/code-crib:status
+```
+
+- **자동 갱신**: 세션 시작과 `/grab` 실행 직전에 `.rag-docs/` 및 `--path`로 등록한 경로를 확인합니다. 내용 해시가 바뀐 문서만 저장하고 삭제된 파일은 로컬 인덱스에서 제거합니다. 실시간 파일 감시 데몬은 실행하지 않습니다.
+- **검색 미리보기**: 문서 앞부분 대신 검색어가 일치하는 구절과 원본 줄 번호를 보여줍니다. 제목에 가중치를 둔 FTS5 검색 후, 부족한 결과는 부분 일치로 보완합니다. 한국어 형태소 분석은 하지 않습니다.
+- **상태 확인**: 등록 경로별 문서 수·마지막 갱신·미반영 추가/변경/삭제·오류를 표시합니다. 읽기 실패는 이전 레코드를 유지하고 경고합니다. 디렉터리 전체가 사라진 경우에도 일괄 삭제하지 않습니다.
+- **저장**: 새 `/stash` 문서는 원격 업로드 전에 로컬 사본도 저장하도록 안내합니다. 기존 원격 전용 문서는 자동 다운로드하지 않으며, 원격 DB 삭제와 로컬 원본 삭제는 별개입니다.
+- **범위**: 기본 대상은 `.rag-docs/`의 UTF-8 Markdown입니다. 사용자 지정 경로는 저장소 루트 기준이며 저장소 밖 경로·심볼릭 링크·숨김 하위 경로·`node_modules`/`vendor`는 제외합니다. 문서당 최대 2 MiB입니다.
+- **캐시**: `${XDG_CACHE_HOME:-~/.cache}/code-crib/<프로젝트 절대경로 해시>/index.sqlite3`에 원문 사본을 저장합니다. 기기·체크아웃별 로컬 캐시이며 원격 전송하지 않습니다. 삭제하면 재생성되지만 사용자 지정 경로는 다시 등록해야 합니다. 민감한 문서는 대상 경로에 넣지 마세요.
+- **자동 갱신 끄기**: Claude Code 실행 환경에 `CODE_CRIB_AUTO_INDEX=0`을 설정하면 세션 시작 훅만 끕니다. 명시적인 `/rack`, `/grab`은 계속 최신화합니다. 훅은 최대 10초이며 실패해도 세션을 막지 않습니다. Python이 없으면 훅을 건너뛰고 기존 벡터 검색을 사용할 수 있습니다.
+
+`--local` 없이 `/grab`을 사용하면 기존 Chroma/Pinecone 의미 검색을 함께 활용합니다. **로컬 인덱싱 성공은 원격 동기화 성공을 뜻하지 않습니다.** 원격 업로드는 기존 `/rack` 절차로 수행하고, 로컬 삭제를 원격에 자동 전파하지 않습니다.
+
+CLI를 직접 실행하려면 프로젝트 디렉터리에서 다음을 사용하세요. 하위 디렉터리에서도 Git 저장소 루트를 찾습니다.
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" sync
+python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" status
+python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" search "timeout" --type bugfix --limit 3
+```
+
 ## Commands
 
 | Command | Description |
@@ -63,6 +91,7 @@ Filter by machine with `/code-crib:grab "query" --host <name>`.
 | `/code-crib:stash` | Save your work session to knowledge stash |
 | `/code-crib:grab` | Search docs from your stash |
 | `/code-crib:rack` | Bulk index local markdown files |
+| `/code-crib:status` | 로컬 인덱스의 갱신 시각·미반영 변경·실패 확인 |
 | `/code-crib:list` | List documents in your stash |
 | `/code-crib:remove` | Delete documents from stash |
 | `/code-crib:analyze` | Analyze and document codebase structure |
@@ -178,6 +207,7 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 | `/code-crib:stash` | 작업 세션을 지식 창고에 저장 |
 | `/code-crib:grab` | 저장된 문서 검색 |
 | `/code-crib:rack` | 로컬 마크다운 파일 일괄 인덱싱 |
+| `/code-crib:status` | 로컬 인덱스의 갱신 시각·미반영 변경·실패 확인 |
 | `/code-crib:list` | 저장된 문서 목록 |
 | `/code-crib:remove` | 저장된 문서 삭제 |
 | `/code-crib:analyze` | 코드베이스 구조 분석 및 문서화 |
@@ -213,6 +243,8 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 ```bash
 /code-crib:rack
 /code-crib:rack --path ./docs/knowledge
+/code-crib:rack --local
+/code-crib:status
 ```
 
 ### `/code-crib:analyze` - 코드베이스 분석
@@ -270,6 +302,16 @@ plugins/code-crib/
 ├── templates/
 │   └── bugfix.md, feature.md, ...
 └── code-crib.local.md
+```
+
+## 개발 검증
+
+저장소 루트에서 실행합니다. 테스트는 임시 프로젝트와 임시 캐시만 사용하며 외부 DB에 연결하지 않습니다.
+
+```bash
+python3 -m unittest discover -s plugins/code-crib/tests -v
+python3 -m py_compile plugins/code-crib/hooks/scripts/local-index.py
+bash -n plugins/code-crib/hooks/scripts/sync-local-index.sh
 ```
 
 ## License

@@ -39,6 +39,7 @@ code-crib:grab "session timeout"  # boom, instant recall with related docs
 - 🏷️ **Smart Tagging** — Enhanced auto-tagging by domain, tech, pattern, and issue type
 - 📊 **Codebase Analysis** — Scope out any codebase structure
 - 🔀 **Collection Modes** — Project isolation or cross-project shared search
+- **로컬 자동 인덱싱** — 변경·삭제 자동 반영, `/code-crib:status` 상태 확인, 관련 구절 미리보기. `/code-crib:grab "검색어" --local`은 벡터 DB 없이 동작합니다.
 
 **Skills (code-crib: prefix):**
 | Skill | What it does |
@@ -48,6 +49,7 @@ code-crib:grab "session timeout"  # boom, instant recall with related docs
 | `code-crib:stash` | Stash your work to the knowledge crib |
 | `code-crib:grab` | Grab docs from your stash |
 | `code-crib:rack` | Rack up local docs into the stash |
+| `code-crib:status` | 로컬 인덱스 상태와 미반영 변경 확인 |
 | `code-crib:list` | Check what's in your stash |
 | `code-crib:remove` | Remove docs from your stash |
 | `code-crib:analyze` | Analyze codebase structure |
