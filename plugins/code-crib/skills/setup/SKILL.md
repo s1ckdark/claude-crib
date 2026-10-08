@@ -263,5 +263,9 @@ Then the mode-specific part:
 
 ## Configuration File Location
 
+### 선택 사항: 개인 로컬 작업일지
+
+벡터 DB 설정과 무관하게 `/code-crib:sessions --enable`로 Claude·Codex 세션 작업일지를 사용할 수 있음을 안내한다. 기본값은 꺼짐이며 설정 마법사가 자동으로 켜지 않는다. 활성화하면 이 기기에 연결한 모든 프로젝트의 요청 제목, 마지막 AI 응답 발췌, 도구가 관측한 파일과 명령 첫 줄을 개인 SQLite에 평문 보관한다. 자동 마스킹이 완전한 비밀 제거를 보장하지 않으며 원격 업로드는 하지 않는다. 동의 후 `commands/sessions.md`의 활성화 절차를 따른다. Codex에는 별도로 생성한 훅 설정과 신뢰 검토가 필요하다.
+
 - Connection: `~/.claude/settings.json` → `env.CHROMA_*`
 - Preferences: `${CLAUDE_PLUGIN_ROOT}/code-crib.local.md` (git-ignored)

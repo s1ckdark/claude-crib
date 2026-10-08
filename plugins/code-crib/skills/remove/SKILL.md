@@ -50,6 +50,8 @@ code-crib:remove
 - Requires confirmation unless `--confirm` is passed
 - Logs deleted document IDs for recovery reference
 
+로컬 인덱스는 파일을 원본으로 사용한다. 원격 문서를 지워도 로컬 사본은 자동 삭제되지 않는다. `local_path`가 있거나 사용자가 로컬 검색 결과를 선택한 경우, 원격 레코드와 로컬 원본 중 무엇을 삭제할지 명확히 확인한다. 로컬 원본은 현재 프로젝트 내부의 실제 파일인지 확인하고, 삭제 승인을 받은 경우에만 제거한다. 다른 기기의 `local_path`나 제목만으로 로컬 파일을 추측하여 삭제하지 않는다. 이후 `local-index.py sync`로 로컬 검색에서도 반영한다. 원본을 남겼다면 로컬 검색에는 계속 표시됨을 알린다.
+
 ## Examples
 
 ```bash
