@@ -117,6 +117,8 @@ class SessionHistoryTest(unittest.TestCase):
         self.assertEqual(len(self.store.rows()), 1)
         self.assertEqual(self.view()["ended_at"], first_end)
         self.assertEqual(self.view()["end_reason"], "prompt_input_exit")
+        self.record(reason="other")
+        self.assertEqual(self.view()["end_reason"], "prompt_input_exit")
         self.record(kind="SessionStart")
         self.assertIsNone(self.view()["ended_at"])
 
