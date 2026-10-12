@@ -9,9 +9,8 @@ Google Antigravity `agy` CLI integration for Claude Code (the renamed Gemini CLI
 # https://antigravity.google
 # After install, verify: agy --version
 
-# Authenticate (choose one)
-agy auth login                    # OAuth (recommended)
-export GOOGLE_API_KEY="AIza..."      # API Key
+# Sign in with your Google account (run once, browser OAuth)
+agy
 
 # Run setup wizard
 /agy:setup

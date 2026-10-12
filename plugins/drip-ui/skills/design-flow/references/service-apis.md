@@ -79,17 +79,14 @@ curl -X POST https://api.v0.dev/v1/chat \
 
 ### Authentication Methods
 
-#### OAuth (Recommended)
+#### Google Sign-in via `agy` (Recommended)
 
 ```bash
-# Install CLI
-pip install google-generativeai
-
-# Login
-agy auth login
+# Sign in once with your Google account (browser OAuth)
+agy
 
 # Check status
-agy auth status
+agy models
 
 # Use in code - automatic token management
 import google.generativeai as genai

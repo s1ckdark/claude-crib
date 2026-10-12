@@ -50,8 +50,8 @@ Antigravity Flow helps you choose the right Antigravity command for your task an
 - One task at a time: Break complex work into steps for `/agy:code`, use `/agy:worker` for multi-step tasks
 
 ### Authentication
-- OAuth (recommended): `agy auth login` — higher rate limits
-- API Key: `export GOOGLE_API_KEY="AIza..."` — simpler but lower limits
+- Google OAuth: run `agy` once and sign in in the browser — `agy -p` prompts for sign-in when needed
+- Headless/CI: Application Default Credentials (`AGY_ADC_AUTH`)
 
 ### Safety
 - `/agy:ask` and `/agy:review` never modify files

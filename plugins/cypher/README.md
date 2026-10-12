@@ -159,7 +159,7 @@ cypher/
   - Claude CLI (`claude`) - 이미 설치됨
   - OpenAI CLI (`openai`) + `OPENAI_API_KEY`
   - Ollama (`ollama serve`) 로컬 서버
-  - Antigravity CLI (`agy`) + `GOOGLE_API_KEY`
+  - Antigravity CLI (`agy`) + Google sign-in (run `agy`)
   - Codex CLI (`npm i -g @openai/codex`) + `OPENAI_API_KEY`
   - Z.ai (`Z_AI_API_KEY`) - Coding Plan: `api.z.ai/api/coding/paas/v4`, 무료: `api.z.ai/api/paas/v4`
 

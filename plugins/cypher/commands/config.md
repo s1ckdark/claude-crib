@@ -81,7 +81,7 @@ version: 1.0
 Add any API-specific notes or environment variable requirements here.
 - OPENAI_API_KEY required for GPT
 - Ollama must be running locally
-- GOOGLE_API_KEY for Antigravity (agy)
+- `agy` requires an interactive Google sign-in - run `agy` once
 - Z_AI_API_KEY for Z.ai (both zai and zai-free)
 ```
 

@@ -54,14 +54,15 @@ check_ollama() {
 }
 
 check_agy() {
-    if [[ -n "${GOOGLE_API_KEY:-}" ]]; then
-        echo "  agy: available (API key configured)"
-        return 0
-    elif command -v agy &>/dev/null; then
-        echo "  agy: available (CLI installed; OAuth may be configured)"
+    if ! command -v agy &>/dev/null; then
+        echo "  agy: NOT AVAILABLE - install Antigravity (https://antigravity.google)"
+        return 1
+    fi
+    if agy models &>/dev/null; then
+        echo "  agy: available (signed in)"
         return 0
     else
-        echo "  agy: NOT AVAILABLE - install Antigravity or set GOOGLE_API_KEY"
+        echo "  agy: installed but signed out (run 'agy' to sign in)"
         return 1
     fi
 }

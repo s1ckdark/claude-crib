@@ -36,7 +36,7 @@ which openai || echo "NOT_FOUND: openai"
 # Check API keys (only show if set, don't expose values)
 [ -n "$OPENAI_API_KEY" ] && echo "✓ OPENAI_API_KEY set" || echo "✗ OPENAI_API_KEY not set"
 [ -n "$ANTHROPIC_API_KEY" ] && echo "✓ ANTHROPIC_API_KEY set" || echo "✗ ANTHROPIC_API_KEY not set"
-[ -n "$GOOGLE_API_KEY" ] && echo "✓ GOOGLE_API_KEY set" || echo "✗ GOOGLE_API_KEY not set"
+command -v agy >/dev/null && agy models >/dev/null 2>&1 && echo "✓ agy signed in" || echo "✗ agy not signed in"
 [ -n "$Z_AI_API_KEY" ] && echo "✓ Z_AI_API_KEY set" || echo "✗ Z_AI_API_KEY not set"
 ```
 
@@ -55,7 +55,7 @@ Model Status:
 
 API Keys:
   ✓ OPENAI_API_KEY
-  ✗ GOOGLE_API_KEY
+  ✗ agy sign-in
   ✗ Z_AI_API_KEY
 ```
 
@@ -86,10 +86,8 @@ ollama pull llama3.2
 
 **Google Antigravity (`agy` CLI)**
 ```bash
-export GOOGLE_API_KEY="AIza..."
-
-# Or use OAuth (recommended)
-agy auth login
+# Sign in with your Google account (browser OAuth)
+agy
 ```
 
 **OpenAI CLI (for GPT)**

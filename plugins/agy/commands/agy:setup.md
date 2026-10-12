@@ -28,15 +28,14 @@ which agy && agy --version 2>/dev/null || echo "NOT_FOUND: agy"
 Antigravity `agy` CLI is not installed.
   Install Google Antigravity from https://antigravity.google - the `agy` CLI ships with it.
 
-Then authenticate:
-  agy auth login
-  # Or set API key: export GOOGLE_API_KEY="AIza..."
+Then sign in with your Google account:
+  agy
 ```
 
 ### 2. Check Authentication
 
 ```bash
-[ -n "$GOOGLE_API_KEY" ] && echo "✓ GOOGLE_API_KEY set (${GOOGLE_API_KEY:0:8}...)" || echo "✗ GOOGLE_API_KEY not set (OAuth may be configured)"
+agy models >/dev/null 2>&1 && echo "✓ Signed in (Google)" || echo "✗ Not signed in - run 'agy' to sign in"
 ```
 
 ### 3. Check tmux (optional, for worker mode)
@@ -77,8 +76,8 @@ timeout: 120000
 # Antigravity Plugin Configuration
 
 ## Authentication
-- OAuth (recommended): `agy auth login`
-- API Key: `export GOOGLE_API_KEY="AIza..."`
+- Google OAuth (recommended): run `agy` once and sign in in the browser; `agy -p` also prompts for sign-in when needed
+- Headless/CI: Application Default Credentials (`AGY_ADC_AUTH`)
 
 ## Notes
 - `agy` CLI: ships with Google Antigravity (https://antigravity.google), the renamed Gemini CLI
@@ -92,7 +91,7 @@ timeout: 120000
 
 Status:
   ✓ Antigravity `agy` CLI   - vX.X.X
-  ✓ Auth         - OAuth / API Key
+  ✓ Auth         - Google sign-in
   ✓ tmux         - available (worker mode enabled)
   ✓ Connection   - verified
 
@@ -108,6 +107,6 @@ Available commands:
 ## Error Handling
 
 - Missing CLI: Provide Antigravity install link (https://antigravity.google)
-- Missing auth: Provide `agy auth login` and API key options
+- Missing auth: Tell the user to run `agy` and complete browser sign-in
 - Connection failure: Show error, suggest checking authentication
 - tmux missing: Warn but don't block (only affects /agy:worker)

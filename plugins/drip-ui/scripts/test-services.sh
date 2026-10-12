@@ -50,8 +50,8 @@ test_gemini() {
 
     # Try OAuth first
     if command -v agy &>/dev/null; then
-        if agy auth status &>/dev/null 2>&1; then
-            echo -e "${GREEN}✅ OAuth logged in${NC}"
+        if agy models &>/dev/null; then
+            echo -e "${GREEN}✅ Signed in via agy${NC}"
             return 0
         fi
     fi
@@ -59,7 +59,7 @@ test_gemini() {
     # Fall back to API key
     if [ -z "${GOOGLE_API_KEY:-}" ]; then
         echo -e "${RED}❌ Not configured${NC}"
-        echo "   Run 'agy auth login' or set GOOGLE_API_KEY"
+        echo "   Run 'agy' to sign in, or set GOOGLE_API_KEY"
         echo "   Get key from: https://aistudio.google.com/apikey"
         return 1
     fi
@@ -109,9 +109,9 @@ FAIL=0
 
 case "$SERVICE" in
     all)
-        test_v0 && ((PASS++)) || ((FAIL++))
-        test_gemini && ((PASS++)) || ((FAIL++))
-        test_zai && ((PASS++)) || ((FAIL++))
+        test_v0 && PASS=$((PASS+1)) || FAIL=$((FAIL+1))
+        test_gemini && PASS=$((PASS+1)) || FAIL=$((FAIL+1))
+        test_zai && PASS=$((PASS+1)) || FAIL=$((FAIL+1))
         echo ""
         echo "Summary: $PASS passed, $FAIL failed"
         ;;
