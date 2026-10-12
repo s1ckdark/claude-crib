@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/codex/commands/codex:ask.md
