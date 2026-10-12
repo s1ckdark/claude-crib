@@ -177,13 +177,13 @@ fi
 
 ### Gemini (OAuth preferred)
 ```bash
-# Try OAuth first, fall back to API key
-if gemini auth status &>/dev/null; then
-  # Use OAuth token
+# Prefer agy sign-in, fall back to API key
+if agy models &>/dev/null; then
+  # Signed in via agy
 elif [ -n "$GOOGLE_API_KEY" ]; then
   # Use API key
 else
-  echo "Run 'gemini auth login' or set GOOGLE_API_KEY"
+  echo "Run 'agy' to sign in, or set GOOGLE_API_KEY"
 fi
 ```
 

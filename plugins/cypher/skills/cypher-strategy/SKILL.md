@@ -110,7 +110,7 @@ Base round count on topic complexity:
 |------------|----------------|-----------|
 | Code/Technical | Claude or GPT | Strong reasoning |
 | Creative/Design | Claude | Nuanced perspective |
-| Research/Facts | Gemini or GPT | Knowledge breadth |
+| Research/Facts | Antigravity (agy) or GPT | Knowledge breadth |
 | Philosophy/Ethics | Claude | Careful reasoning |
 | Business/Strategy | GPT | Practical focus |
 | Local/Custom | Ollama | Privacy/speed |

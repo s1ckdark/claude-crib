@@ -36,7 +36,7 @@ If file doesn't exist and user wants to modify settings, create it with template
 
 **add-model**:
 - Use AskUserQuestion to gather:
-  - Model identifier (e.g., "gpt", "claude", "ollama-llama3", "gemini")
+  - Model identifier (e.g., "gpt", "claude", "ollama-llama3", "agy")
   - CLI command template (e.g., `ollama run llama3 "$PROMPT"`)
   - Description (optional)
 - Add to configuration file
@@ -65,7 +65,7 @@ version: 1.0
 | claude | `claude --print -p "$PROMPT"` | Anthropic Claude |
 | gpt | `openai api chat.completions.create -m gpt-4o -g user "$PROMPT"` | OpenAI GPT-4 |
 | ollama | `ollama run llama3.2 "$PROMPT"` | Local Ollama model |
-| gemini | `# API call via curl` | Google Gemini |
+| agy | `agy -p "$PROMPT"` | Google Antigravity |
 | zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
 | zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"$PROMPT"}]}' \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (Free) |
 
@@ -81,7 +81,7 @@ version: 1.0
 Add any API-specific notes or environment variable requirements here.
 - OPENAI_API_KEY required for GPT
 - Ollama must be running locally
-- GOOGLE_API_KEY for Gemini
+- `agy` requires an interactive Google sign-in - run `agy` once
 - Z_AI_API_KEY for Z.ai (both zai and zai-free)
 ```
 

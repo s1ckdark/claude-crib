@@ -7,7 +7,7 @@ Usage:
 
 Services:
     v0      - Vercel v0.dev (requires V0_API_KEY)
-    gemini  - Google Gemini (OAuth or GOOGLE_API_KEY)
+    gemini  - Google Gemini (requires GOOGLE_API_KEY)
     zai     - Z.ai GLM (requires Z_AI_API_KEY)
 
 Examples:
@@ -64,7 +64,7 @@ async def invoke_gemini(prompt: str, image_path: str = None) -> dict:
     """Invoke Google Gemini API."""
     api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-        return {"error": "GOOGLE_API_KEY not set (or use OAuth)", "service": "gemini"}
+        return {"error": "GOOGLE_API_KEY not set (https://aistudio.google.com/apikey)", "service": "gemini"}
 
     parts = [{"text": prompt}]
 

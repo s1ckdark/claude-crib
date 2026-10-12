@@ -48,7 +48,7 @@ Design Flow orchestrates v0.dev, Google Gemini, and Z.ai to generate high-qualit
 - Learning and customization
 - Complex reasoning about design
 
-**Auth:** OAuth (recommended) or `GOOGLE_API_KEY`
+**Auth:** Google sign-in via `agy` (recommended) or `GOOGLE_API_KEY`
 
 ### Z.ai (GLM)
 
@@ -177,7 +177,7 @@ Only Gemini supports multimodal input:
 | Error | Service | Solution |
 |-------|---------|----------|
 | 401 Unauthorized | v0 | Check V0_API_KEY, verify subscription |
-| Token expired | Gemini | Run `gemini auth login` |
+| Token expired | Gemini | Run `agy` to sign in again |
 | Invalid API key | Z.ai | Verify key at z.ai dashboard |
 
 ### Rate Limits

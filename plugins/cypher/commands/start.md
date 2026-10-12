@@ -9,7 +9,7 @@ allowed-tools: Bash, Read, Write, Task
 Usage examples:
   /cypher:start "REST vs GraphQL for mobile apps"
   /cypher:start "Best testing strategy for microservices" --crew claude,gpt,ollama
-  /cypher:start "Database choice for real-time app" --mc claude --crew gpt,gemini,ollama
+  /cypher:start "Database choice for real-time app" --mc claude --crew gpt,agy,ollama
 -->
 
 # AI Cypher Session
@@ -42,7 +42,7 @@ Before starting, verify setup is complete:
 which claude >/dev/null 2>&1 && echo "claude:OK" || echo "claude:MISSING"
 which ollama >/dev/null 2>&1 && echo "ollama:OK" || echo "ollama:MISSING"
 which codex >/dev/null 2>&1 && echo "codex:OK" || echo "codex:MISSING"
-which gemini >/dev/null 2>&1 && echo "gemini:OK" || echo "gemini:MISSING"
+which agy >/dev/null 2>&1 && echo "agy:OK" || echo "agy:MISSING"
 which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
 # zai uses API, check for key
 [ -n "$Z_AI_API_KEY" ] && echo "zai:OK" || echo "zai:MISSING (no Z_AI_API_KEY)"
@@ -78,7 +78,7 @@ which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
    If --mc not specified, select based on topic:
    - Technical/code topics -> Claude or GPT
    - Creative/open topics -> Claude
-   - Research/factual -> Gemini or GPT
+   - Research/factual -> Antigravity(agy) or GPT
 
    MC responsibilities:
    - Moderate the cypher
@@ -158,7 +158,7 @@ Use these CLI patterns to invoke models (actual commands from config):
 | **claude** | `claude --print -p "prompt"` |
 | **gpt** | `openai api chat.completions.create -m gpt-4o -g user "prompt"` |
 | **ollama** | `ollama run llama3.2 "prompt"` |
-| **gemini** | `gemini -p "prompt"` |
+| **agy** | `agy -p "prompt"` |
 | **codex** | `codex exec "prompt"` |
 | **zai** | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |
 | **zai-free** | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |

@@ -53,12 +53,16 @@ check_ollama() {
     fi
 }
 
-check_gemini() {
-    if [[ -n "${GOOGLE_API_KEY:-}" ]]; then
-        echo "  gemini: available (API key configured)"
+check_agy() {
+    if ! command -v agy &>/dev/null; then
+        echo "  agy: NOT AVAILABLE - install Antigravity (https://antigravity.google)"
+        return 1
+    fi
+    if agy models &>/dev/null; then
+        echo "  agy: available (signed in)"
         return 0
     else
-        echo "  gemini: NOT AVAILABLE - set GOOGLE_API_KEY"
+        echo "  agy: installed but signed out (run 'agy' to sign in)"
         return 1
     fi
 }
@@ -87,7 +91,7 @@ case "$MODEL" in
         check_claude || true
         check_openai || true
         check_ollama || true
-        check_gemini || true
+        check_agy || true
         check_zai || true
         ;;
     claude)
@@ -99,15 +103,15 @@ case "$MODEL" in
     ollama)
         check_ollama
         ;;
-    gemini)
-        check_gemini
+    agy|gemini)
+        check_agy
         ;;
     zai|zai-free)
         check_zai
         ;;
     *)
         echo "Unknown model: $MODEL"
-        echo "Known models: claude, openai/gpt, ollama, gemini, zai, zai-free"
+        echo "Known models: claude, openai/gpt, ollama, agy(gemini), zai, zai-free"
         exit 1
         ;;
 esac

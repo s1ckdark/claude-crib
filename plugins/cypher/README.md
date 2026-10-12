@@ -6,7 +6,7 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 
 ## Features
 
-- **Multi-Model Orchestration**: Claude, GPT, Ollama, Gemini, Codex, Z.ai 등 다양한 AI 모델 간 토론 조율
+- **Multi-Model Orchestration**: Claude, GPT, Ollama, Antigravity(agy), Codex, Z.ai 등 다양한 AI 모델 간 토론 조율
 - **Format Flexibility**: 주제에 따라 라운드 기반 또는 프리스타일 형식 자동 선택
 - **Fair Moderation**: MC(호스트)가 공정한 참여를 보장
 - **Ralph Loop Validation**: 합의 품질 자동 검증
@@ -25,7 +25,7 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 /cypher:start "Best database for real-time app" --crew claude,codex,zai
 
 # 4. MC 지정
-/cypher:start "Microservices vs Monolith" --mc claude --crew gpt,gemini,ollama
+/cypher:start "Microservices vs Monolith" --mc claude --crew gpt,agy,ollama
 ```
 
 ## Commands
@@ -47,18 +47,18 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 |  AI CYPHER: Should we use microservices?                          |
 +===================================================================+
 |  Format: Round-based  |  Rounds: 3  |  MC: Claude                 |
-|  Crew: GPT-4, Ollama-Llama3, Gemini                               |
+|  Crew: GPT-4, Ollama-Llama3, agy                               |
 +===================================================================+
 
 === Round 1: Opening Bars ===
 [GPT-4]: For a startup, I recommend starting with a monolith...
 [Ollama]: Microservices offer better scalability from day one...
-[Gemini]: It depends on team size and complexity...
+[agy]: It depends on team size and complexity...
 
 === Round 2: Call and Response ===
 [GPT-4]: While Ollama makes a good point about scalability...
 [Ollama]: GPT raises valid concerns about initial complexity...
-[Gemini]: Both approaches have merit, but the team factor...
+[agy]: Both approaches have merit, but the team factor...
 
 === Round 3: Final Verse ===
 ...
@@ -79,14 +79,14 @@ Consensus reached: Start with modular monolith, plan for microservices.
 | claude | `claude --print -p "$PROMPT"` | Anthropic Claude |
 | gpt | `openai api chat.completions.create -m gpt-4o -g user "$PROMPT"` | OpenAI GPT-4 |
 | ollama | `ollama run llama3.2 "$PROMPT"` | Local Ollama |
-| gemini | `gemini -p "$PROMPT"` | Google Gemini |
+| agy | `agy -p "$PROMPT"` | Google Antigravity |
 | codex | `codex exec "$PROMPT"` | OpenAI Codex CLI |
 | zai | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7 (Coding Plan) |
 | zai-free | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $Z_AI_API_KEY" ... \| jq -r '.choices[0].message.content'` | Z.ai GLM-4.7-flash (무료) |
 
 ## Defaults
 
-- **Default Crew**: claude, codex, gemini, ollama
+- **Default Crew**: claude, codex, agy, ollama
 - **Default MC**: auto
 - **Default Format**: auto
 - **Default Rounds**: auto
@@ -159,7 +159,7 @@ cypher/
   - Claude CLI (`claude`) - 이미 설치됨
   - OpenAI CLI (`openai`) + `OPENAI_API_KEY`
   - Ollama (`ollama serve`) 로컬 서버
-  - Gemini CLI (`gemini`) + `GOOGLE_API_KEY`
+  - Antigravity CLI (`agy`) + Google sign-in (run `agy`)
   - Codex CLI (`npm i -g @openai/codex`) + `OPENAI_API_KEY`
   - Z.ai (`Z_AI_API_KEY`) - Coding Plan: `api.z.ai/api/coding/paas/v4`, 무료: `api.z.ai/api/paas/v4`
 
