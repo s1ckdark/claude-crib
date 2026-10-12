@@ -293,7 +293,9 @@ class History:
                     THEN sessions.updated_at ELSE excluded.updated_at END,
                 last_event=excluded.last_event,
                 ended_at=CASE WHEN sessions.last_event='SessionEnd' AND excluded.last_event='SessionEnd'
-                    THEN sessions.ended_at ELSE excluded.ended_at END, end_reason=excluded.end_reason
+                    THEN sessions.ended_at ELSE excluded.ended_at END,
+                end_reason=CASE WHEN sessions.last_event='SessionEnd' AND excluded.last_event='SessionEnd'
+                    THEN sessions.end_reason ELSE excluded.end_reason END
                 """, (provider, sid, cwd, project_root(cwd), transcript, stamp, kind,
                       stamp if kind == "SessionEnd" else None, clean(event.get("reason"), 80) or None))
             if isinstance(event.get("last_assistant_message"), str):
