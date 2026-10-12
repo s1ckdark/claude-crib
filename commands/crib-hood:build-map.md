@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/crib-hood/commands/build-map.md

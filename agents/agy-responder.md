@@ -1,0 +1,1 @@
+/Users/dave/iWorks/claude-crib/plugins/agy/agents/agy-responder.md
