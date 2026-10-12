@@ -1,31 +1,31 @@
 ---
-name: gemini:review
-description: Send code to Gemini for review (bugs, performance, security, readability)
+name: agy:review
+description: Send code to Antigravity for review (bugs, performance, security, readability)
 argument-hint: [file-path] [--staged]
 allowed-tools: Bash, Read, Grep
 ---
 
 <!--
 Usage:
-  /gemini:review                  # Review unstaged changes (git diff)
-  /gemini:review --staged         # Review staged changes
-  /gemini:review src/auth.ts      # Review specific file
+  /agy:review                  # Review unstaged changes (git diff)
+  /agy:review --staged         # Review staged changes
+  /agy:review src/auth.ts      # Review specific file
 -->
 
-# Gemini Review
+# Antigravity Review
 
 Target: $ARGUMENTS
 
 ## Instructions
 
 1. **Load Config**
-   Read `~/.claude/gemini.local.md`. Defaults:
-   - gemini_path: `gemini`
+   Read `~/.claude/agy.local.md` (없으면 기존 `~/.claude/gemini.local.md` 값 사용). Defaults:
+   - agy_path: `agy`
    - timeout: `120000`
 
 2. **Pre-flight Check**
    ```bash
-   which gemini || echo "NOT_FOUND"
+   which agy || echo "NOT_FOUND"
    ```
 
 3. **Gather Code**
@@ -54,15 +54,15 @@ Target: $ARGUMENTS
 
 6. **Execute**
    ```bash
-   gemini -p "{review_prompt}" 2>&1
+   agy -p "{review_prompt}" 2>&1
    ```
 
 7. **Display Feedback**
-   Present Gemini's review feedback. Do not modify any files.
+   Present Antigravity's review feedback. Do not modify any files.
 
 ## Error Handling
 
-- CLI missing: Direct to `/gemini:setup`
+- CLI missing: Direct to `/agy:setup`
 - Empty diff: Suggest staging changes or specifying a file
 - File not found: Show error, suggest checking the path
 - Large content (>10000 chars): Warn about token limits

@@ -25,7 +25,7 @@ Run these checks in parallel to verify which CLIs are installed:
 which claude && claude --version 2>/dev/null || echo "NOT_FOUND: claude"
 which codex && codex --version 2>/dev/null || echo "NOT_FOUND: codex"
 which ollama && ollama --version 2>/dev/null || echo "NOT_FOUND: ollama"
-which gemini && gemini --version 2>/dev/null || echo "NOT_FOUND: gemini"
+which agy && agy --version 2>/dev/null || echo "NOT_FOUND: agy"
 [ -n "$Z_AI_API_KEY" ] && echo "zai:OK (API key set)" || echo "NOT_FOUND: zai (Z_AI_API_KEY not set)"
 which openai || echo "NOT_FOUND: openai"
 ```
@@ -49,7 +49,7 @@ Model Status:
   ✓ claude    - Claude Code CLI installed
   ✓ ollama    - Ollama installed (run: ollama serve)
   ✗ codex     - Not installed
-  ✗ gemini    - Not installed
+  ✗ agy       - Not installed
   ✓ zai       - Z.ai API key set (Coding Plan + Free)
   ✗ gpt       - OpenAI CLI not installed
 
@@ -84,13 +84,12 @@ ollama serve &
 ollama pull llama3.2
 ```
 
-**Google Gemini CLI**
+**Google Antigravity (`agy` CLI)**
 ```bash
-pip install google-generativeai
-# Then: export GOOGLE_API_KEY="AIza..."
+export GOOGLE_API_KEY="AIza..."
 
 # Or use OAuth (recommended)
-gemini auth login
+agy auth login
 ```
 
 **OpenAI CLI (for GPT)**
@@ -124,7 +123,7 @@ Which models should be in your default cypher crew?
 ☑ claude   - Anthropic Claude (installed)
 ☑ ollama   - Local Ollama (installed)
 ☐ codex    - OpenAI Codex (not installed)
-☐ gemini   - Google Gemini (not installed)
+☐ agy      - Google Antigravity (not installed)
 ☑ zai      - Z.ai Coding Plan (API key set)
 ☑ zai-free - Z.ai Free (glm-4.7-flash)
 ☐ gpt      - OpenAI GPT (not installed)
@@ -145,7 +144,7 @@ ollama run llama3.2 "Say 'ready' if you can hear me"
 ```
 === Setup Complete ===
 
-Your default crew: claude, codex, gemini, ollama
+Your default crew: claude, codex, agy, ollama
 
 To start a cypher:
   /cypher:start "Your topic here"

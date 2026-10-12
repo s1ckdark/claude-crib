@@ -54,10 +54,10 @@ export V0_API_KEY="v0_key_..."
 # Get from: https://v0.dev/chat/settings/keys
 ```
 
-### Google Gemini (OAuth - Recommended)
+### Google Gemini API (OAuth via `agy` - Recommended)
 ```bash
 # Higher rate limits (1,000/day free)
-gemini auth login
+agy auth login
 ```
 
 ### Google Gemini (API Key)

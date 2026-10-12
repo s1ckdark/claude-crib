@@ -86,10 +86,10 @@ curl -X POST https://api.v0.dev/v1/chat \
 pip install google-generativeai
 
 # Login
-gemini auth login
+agy auth login
 
 # Check status
-gemini auth status
+agy auth status
 
 # Use in code - automatic token management
 import google.generativeai as genai

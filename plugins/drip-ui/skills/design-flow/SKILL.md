@@ -177,7 +177,7 @@ Only Gemini supports multimodal input:
 | Error | Service | Solution |
 |-------|---------|----------|
 | 401 Unauthorized | v0 | Check V0_API_KEY, verify subscription |
-| Token expired | Gemini | Run `gemini auth login` |
+| Token expired | Gemini | Run `agy auth login` |
 | Invalid API key | Z.ai | Verify key at z.ai dashboard |
 
 ### Rate Limits

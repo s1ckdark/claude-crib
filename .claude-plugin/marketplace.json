@@ -3,7 +3,7 @@
   "name": "claude-crib",
   "metadata": {
     "description": "Plugin suite for Claude Code - Knowledge stash, codebase analysis, and more",
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "owner": {
     "name": "s1ckdark",
@@ -19,7 +19,14 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["rag", "vector-db", "knowledge-stash", "pinecone", "productivity", "code-crib"],
+      "keywords": [
+        "rag",
+        "vector-db",
+        "knowledge-stash",
+        "pinecone",
+        "productivity",
+        "code-crib"
+      ],
       "category": "productivity"
     },
     {
@@ -31,7 +38,15 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["cypher", "debate", "ai-models", "consensus", "freestyle", "crew-talk", "ralph-loop"],
+      "keywords": [
+        "cypher",
+        "debate",
+        "ai-models",
+        "consensus",
+        "freestyle",
+        "crew-talk",
+        "ralph-loop"
+      ],
       "category": "ai-tools"
     },
     {
@@ -43,7 +58,18 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["frontend", "ui", "design", "v0", "gemini", "zai", "react", "nextjs", "code-generation", "drip"],
+      "keywords": [
+        "frontend",
+        "ui",
+        "design",
+        "v0",
+        "gemini",
+        "zai",
+        "react",
+        "nextjs",
+        "code-generation",
+        "drip"
+      ],
       "category": "design-tools"
     },
     {
@@ -55,7 +81,13 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["zai", "glm", "mcp", "ai-delegation", "thinking-mode"],
+      "keywords": [
+        "zai",
+        "glm",
+        "mcp",
+        "ai-delegation",
+        "thinking-mode"
+      ],
       "category": "ai-tools"
     },
     {
@@ -67,7 +99,13 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["session", "recap", "memory", "productivity", "the-plug"],
+      "keywords": [
+        "session",
+        "recap",
+        "memory",
+        "productivity",
+        "the-plug"
+      ],
       "category": "productivity"
     },
     {
@@ -79,7 +117,13 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["dashboard", "agent-status", "visualization", "omc", "crib-hood"],
+      "keywords": [
+        "dashboard",
+        "agent-status",
+        "visualization",
+        "omc",
+        "crib-hood"
+      ],
       "category": "dev-tools"
     },
     {
@@ -91,19 +135,34 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["codex", "openai", "code-generation", "code-review", "worker", "tmux"],
+      "keywords": [
+        "codex",
+        "openai",
+        "code-generation",
+        "code-review",
+        "worker",
+        "tmux"
+      ],
       "category": "ai-tools"
     },
     {
-      "name": "gemini",
-      "source": "./plugins/gemini",
-      "description": "Gemini CLI integration for Claude Code - ask questions, generate code, review, and run parallel workers via Google Gemini",
+      "name": "agy",
+      "source": "./plugins/agy",
+      "description": "Antigravity `agy` CLI integration for Claude Code - ask questions, generate code, review, and run parallel workers via Google Antigravity (the renamed Gemini CLI)",
       "version": "0.1.0",
       "author": {
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["gemini", "google", "code-generation", "code-review", "worker", "tmux"],
+      "keywords": [
+        "agy",
+        "antigravity",
+        "google",
+        "code-generation",
+        "code-review",
+        "worker",
+        "tmux"
+      ],
       "category": "ai-tools"
     },
     {
@@ -115,7 +174,12 @@
         "name": "dave",
         "url": "https://github.com/s1ckdark"
       },
-      "keywords": ["tts", "voice", "say", "accessibility"],
+      "keywords": [
+        "tts",
+        "voice",
+        "say",
+        "accessibility"
+      ],
       "category": "accessibility"
     }
   ]

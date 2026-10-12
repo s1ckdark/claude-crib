@@ -1,0 +1,19 @@
+{
+  "name": "agy",
+  "version": "0.1.0",
+  "description": "Antigravity `agy` CLI integration for Claude Code - ask questions, generate code, review, and run parallel workers via Google Antigravity (the renamed Gemini CLI)",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": [
+    "agy",
+    "antigravity",
+    "google",
+    "code-generation",
+    "code-review",
+    "worker",
+    "tmux"
+  ],
+  "commands": "./commands",
+  "skills": "./skills"
+}

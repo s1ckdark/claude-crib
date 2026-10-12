@@ -1,31 +1,31 @@
 ---
-name: gemini:worker
-description: Launch Gemini as a long-running tmux worker for complex autonomous tasks
+name: agy:worker
+description: Launch Antigravity as a long-running tmux worker for complex autonomous tasks
 argument-hint: "<task-description>" [--stop] [--status]
 allowed-tools: Bash, Read
 ---
 
 <!--
 Usage:
-  /gemini:worker "Fix all failing tests and update snapshots"
-  /gemini:worker --stop           # Stop active worker
-  /gemini:worker --status         # Check worker status
+  /agy:worker "Fix all failing tests and update snapshots"
+  /agy:worker --stop           # Stop active worker
+  /agy:worker --status         # Check worker status
 -->
 
-# Gemini Worker
+# Antigravity Worker
 
 Task: $ARGUMENTS
 
 ## Instructions
 
 1. **Load Config**
-   Read `~/.claude/gemini.local.md`. Defaults:
-   - gemini_path: `gemini`
-   - worker_session_prefix: `gemini-worker`
+   Read `~/.claude/agy.local.md` (없으면 기존 `~/.claude/gemini.local.md` 값 사용). Defaults:
+   - agy_path: `agy`
+   - worker_session_prefix: `agy-worker`
 
 2. **Pre-flight Checks**
    ```bash
-   which gemini || echo "NOT_FOUND: gemini"
+   which agy || echo "NOT_FOUND: agy"
    which tmux || echo "NOT_FOUND: tmux"
    ```
    If either missing, show install instructions and stop.
@@ -37,26 +37,26 @@ Task: $ARGUMENTS
 
 4. **Handle --stop**
    ```bash
-   tmux ls 2>/dev/null | grep "gemini-worker"
+   tmux ls 2>/dev/null | grep "agy-worker"
    ```
    If sessions found, kill them:
    ```bash
    tmux kill-session -t {session_name}
    ```
-   If none found: "No active Gemini worker sessions."
+   If none found: "No active Antigravity worker sessions."
 
 5. **Handle --status**
    ```bash
-   tmux ls 2>/dev/null | grep "gemini-worker"
+   tmux ls 2>/dev/null | grep "agy-worker"
    tmux capture-pane -t {session_name} -p -S -30
    ```
    Show recent output from active session.
 
 6. **Start Worker**
    ```bash
-   SESSION="gemini-worker-$(date +%Y%m%d-%H%M%S)"
+   SESSION="agy-worker-$(date +%Y%m%d-%H%M%S)"
    tmux new-session -d -s "$SESSION"
-   tmux send-keys -t "$SESSION" 'gemini' Enter
+   tmux send-keys -t "$SESSION" 'agy' Enter
    sleep 3
    tmux send-keys -t "$SESSION" '{task_description}' Enter
    ```
@@ -73,5 +73,5 @@ Task: $ARGUMENTS
 ## Error Handling
 
 - tmux missing: "Install tmux: `brew install tmux`"
-- Gemini missing: Direct to `/gemini:setup`
+- Antigravity missing: Direct to `/agy:setup`
 - Session conflict: Show existing sessions, ask user to --stop first or create parallel

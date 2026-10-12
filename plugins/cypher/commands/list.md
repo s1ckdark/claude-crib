@@ -166,7 +166,7 @@ Model emoji mapping:
 - claude → 🔵
 - gpt → 🟢
 - ollama → 🟠
-- gemini → 🟣
+- agy → 🟣
 - codex → 🟡
 - zai → ⚪
 - zai-free → ⚪

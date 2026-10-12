@@ -49,8 +49,8 @@ test_gemini() {
     echo -n "Testing Gemini... "
 
     # Try OAuth first
-    if command -v gemini &>/dev/null; then
-        if gemini auth status &>/dev/null 2>&1; then
+    if command -v agy &>/dev/null; then
+        if agy auth status &>/dev/null 2>&1; then
             echo -e "${GREEN}✅ OAuth logged in${NC}"
             return 0
         fi
@@ -59,7 +59,7 @@ test_gemini() {
     # Fall back to API key
     if [ -z "${GOOGLE_API_KEY:-}" ]; then
         echo -e "${RED}❌ Not configured${NC}"
-        echo "   Run 'gemini auth login' or set GOOGLE_API_KEY"
+        echo "   Run 'agy auth login' or set GOOGLE_API_KEY"
         echo "   Get key from: https://aistudio.google.com/apikey"
         return 1
     fi

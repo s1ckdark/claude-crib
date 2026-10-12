@@ -61,10 +61,10 @@ echo 'export V0_API_KEY="your-api-key"' >> ~/.bashrc
 #### Google Gemini (OAuth - Recommended)
 ```bash
 # Login with Google account (higher rate limits)
-gemini auth login
+agy auth login
 
 # Check status
-gemini auth status
+agy auth status
 
 # Alternative: API key (lower rate limits)
 export GOOGLE_API_KEY="your-api-key"
@@ -149,7 +149,7 @@ When running `setup`:
    Gemini supports two authentication methods:
 
    [1] OAuth (Recommended - 1,000 req/day free)
-       Run: gemini auth login
+       Run: agy auth login
 
    [2] API Key (100 req/day free)
        Get from: https://aistudio.google.com/apikey
@@ -175,7 +175,7 @@ curl -s -H "Authorization: Bearer $V0_API_KEY" \
   https://api.v0.dev/v1/projects
 
 # Test Gemini (OAuth)
-gemini models list
+agy models list
 
 # Test Gemini (API Key)
 curl -s "https://generativelanguage.googleapis.com/v1/models?key=$GOOGLE_API_KEY"
@@ -242,7 +242,7 @@ Summary: 2/3 services available
 - Key may have expired - regenerate at v0.dev
 
 ### Gemini "Token expired"
-- Run `gemini auth login` to refresh
+- Run `agy auth login` to refresh
 - Or set GOOGLE_API_KEY as fallback
 
 ### Z.ai "Invalid API key"
