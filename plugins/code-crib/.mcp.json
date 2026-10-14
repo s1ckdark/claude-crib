@@ -2,7 +2,7 @@
   "mcpServers": {
     "chroma": {
       "command": "uvx",
-      "args": ["chroma-mcp"],
+      "args": ["--with", "pydantic<2.12", "chroma-mcp"],
       "env": {
         "CHROMA_CLIENT_TYPE": "${CHROMA_CLIENT_TYPE:-http}",
         "CHROMA_SSL": "${CHROMA_SSL:-false}",

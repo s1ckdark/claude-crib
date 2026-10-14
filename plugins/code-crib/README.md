@@ -47,6 +47,12 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 
 Check reachability anytime: `curl http://<host>:<port>/api/v2/heartbeat`
 
+### MCP startup troubleshooting
+
+The bundled MCP config uses `uvx --with 'pydantic<2.12' chroma-mcp`. Chroma MCP 0.2.6 pins MCP SDK 1.6.0, which fails to import with newer Pydantic versions (`ImportError: cannot import name 'eval_type_backport'`). Keep this compatibility constraint when customizing `.mcp.json`.
+
+After updating the plugin, restart Claude Code or reconnect `plugin:code-crib:chroma` from `/mcp`. Verify the connection with `claude mcp get plugin:code-crib:chroma` and `/code-crib:list`.
+
 ### Using One DB from Several Machines
 
 Every saved document carries `project` and `host` metadata, resolved by `hooks/scripts/crib-identity.sh`:
@@ -228,6 +234,12 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 **원격 예시 (Tailscale):** 서버 포트를 `127.0.0.1`과 Tailscale IP에만 바인딩한 뒤, *원격 서버* → host `my-server`, port `8000`, SSL 끔, 인증 없음. 공인 인터넷에 노출된다면 HTTPS 뒤에 두고 Chroma basic auth를 켜세요.
 
 연결 확인: `curl http://<host>:<port>/api/v2/heartbeat`
+
+### MCP 시작 오류 해결
+
+기본 MCP 설정은 `uvx --with 'pydantic<2.12' chroma-mcp`를 사용합니다. Chroma MCP 0.2.6이 고정한 MCP SDK 1.6.0은 최신 Pydantic에서 `ImportError: cannot import name 'eval_type_backport'`로 시작에 실패합니다. `.mcp.json`을 수정할 때도 이 호환성 제한을 유지하세요.
+
+플러그인 업데이트 후 Claude Code를 재시작하거나 `/mcp`에서 `plugin:code-crib:chroma`를 다시 연결하세요. `claude mcp get plugin:code-crib:chroma`와 `/code-crib:list`로 연결을 확인할 수 있습니다.
 
 ### 여러 기기에서 하나의 DB 쓰기
 
