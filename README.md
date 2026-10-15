@@ -94,6 +94,8 @@ collection_mode: project  # or "shared"
 code-crib:setup
 ```
 
+Codex CLI: `codex plugin marketplace add s1ckdark/claude-crib && codex plugin add code-crib@claude-crib` — see the [code-crib README](./plugins/code-crib/README.md#codex-cli) for hook trust and `CHROMA_*` env.
+
 The setup wizard will guide you through:
 1. **Vector DB** — Chroma (Docker/Local) or Pinecone (Cloud)
 2. **Collection Mode** — Project isolation or shared search
