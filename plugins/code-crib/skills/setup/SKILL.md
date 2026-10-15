@@ -7,6 +7,10 @@ description: Interactive setup wizard for code-crib - choose how to connect to C
 
 Interactive setup for first-time configuration, or for re-pointing code-crib at a different Chroma instance.
 
+> **Plugin root:** `${CLAUDE_PLUGIN_ROOT}`. If it is empty or shown unexpanded (Codex), use the nearest ancestor of this file's directory that contains `hooks/scripts/` (`skills/<name>/SKILL.md` → 2 levels up, `.codex-plugin/migrated-command-skills/<name>/SKILL.md` → 3 levels up) and write that absolute path wherever `${CLAUDE_PLUGIN_ROOT}` appears.
+>
+> **Config:** `code-crib.local.md` is the first existing file among `<plugin root>/code-crib.local.md`, `./.claude/code-crib.local.md`, `~/.claude/code-crib.local.md` (same order as `hooks/scripts/check-rag-config.sh`).
+
 ## Usage
 
 ```
@@ -198,7 +202,7 @@ write ~/.claude/settings.json
 
 ### Step 6: Write `code-crib.local.md`
 
-Create/update `${CLAUDE_PLUGIN_ROOT}/code-crib.local.md`. Record the mode and non-secret connection details for reference only:
+Update the existing `code-crib.local.md` (see **Config** above); if none exists, create `${CLAUDE_PLUGIN_ROOT}/code-crib.local.md` (Claude Code) or `~/.claude/code-crib.local.md` (Codex, whose plugin cache is replaced on update). Record the mode and non-secret connection details for reference only:
 
 ```yaml
 ---
@@ -268,4 +272,4 @@ Then the mode-specific part:
 벡터 DB 설정과 무관하게 `/code-crib:sessions --enable`로 Claude·Codex 세션 작업일지를 사용할 수 있음을 안내한다. 기본값은 꺼짐이며 설정 마법사가 자동으로 켜지 않는다. 활성화하면 이 기기에 연결한 모든 프로젝트의 요청 제목, 마지막 AI 응답 발췌, 도구가 관측한 파일과 명령 첫 줄을 개인 SQLite에 평문 보관한다. 자동 마스킹이 완전한 비밀 제거를 보장하지 않으며 원격 업로드는 하지 않는다. 동의 후 `skills/session-history/SKILL.md`의 활성화 절차를 따른다. Codex에 플러그인으로 설치했다면 플러그인 훅의 신뢰 검토만, 플러그인 없이 연결한다면 별도로 생성한 훅 설정과 신뢰 검토가 필요하다.
 
 - Connection: `~/.claude/settings.json` → `env.CHROMA_*`
-- Preferences: `${CLAUDE_PLUGIN_ROOT}/code-crib.local.md` (git-ignored)
+- Preferences: `code-crib.local.md` (see **Config** above; git-ignored)

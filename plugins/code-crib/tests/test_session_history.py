@@ -271,6 +271,49 @@ class SessionHistoryTest(unittest.TestCase):
         self.assertEqual(self.view()["tests"][0]["outcome"], "failed")
         self.assertEqual(self.view()["files"][0]["path"], "new.py")
 
+    def codex_injected_rollout(self):
+        def user(*texts):
+            return codex("response_item", {"type": "message", "role": "user",
+                                           "content": [{"type": "input_text", "text": text} for text in texts]})
+        return [codex("session_meta", {"id": "thread-1", "source": "cli"}),
+                user("# AGENTS.md instructions for /work/app\n\n<INSTRUCTIONS>\nAGENTS_RULE\n</INSTRUCTIONS>",
+                     "<environment_context>\n  <cwd>/work/app</cwd>\n  <shell>zsh</shell>\n</environment_context>"),
+                user("<user_shell_command>\n<command>ls</command>\n<result>SHELL_OUTPUT</result>\n</user_shell_command>"),
+                user("로그인 버그 고쳐줘"),
+                codex("event_msg", {"type": "item_completed", "item": {
+                    "type": "UserMessage", "content": [{"type": "text", "text": "로그인 버그 고쳐줘"}]}}),
+                user("<turn_aborted>\nTURN_ABORTED\n</turn_aborted>"),
+                codex("event_msg", {"type": "agent_message", "message": "수정 완료"})]
+
+    def test_codex_injected_context_is_not_title(self):
+        self.write(self.codex_injected_rollout())
+        self.record(provider="codex")
+        self.store.refresh()
+        self.assertEqual(self.view()["title"], "로그인 버그 고쳐줘")
+        search_text = self.store.rows()[0]["search_text"]
+        for injected in ("environment_context", "/work/app", "agents_rule", "shell_output", "turn_aborted"):
+            self.assertNotIn(injected, search_text)
+        self.assertEqual(self.store.listing(query="environment_context"), [])
+
+    def test_codex_injected_only_messages_leave_title_unset(self):
+        self.write([codex("event_msg", {"type": "user_message",
+                                        "message": "<environment_context>\n<cwd>/x</cwd>\n</environment_context>"})])
+        self.record(provider="codex")
+        self.store.refresh()
+        self.assertEqual(self.view()["title"], "제목 미확인")
+
+    def test_parser_upgrade_rederives_existing_rows(self):
+        self.write(self.codex_injected_rollout())
+        self.record(provider="codex")
+        self.store.refresh()
+        # 이전 버전이 저장한 행: 주입 컨텍스트가 제목이고 커서는 이미 파일 끝이다.
+        stale = {"title": "<environment_context> <cwd>/work/app</cwd>", "summary": "수정 완료"}
+        with self.store.db:
+            self.store.db.execute("UPDATE sessions SET state=?, search_text=?", (json.dumps(stale), "environment_context"))
+        self.store.refresh()
+        self.assertEqual(self.view()["title"], "로그인 버그 고쳐줘")
+        self.assertNotIn("environment_context", self.store.rows()[0]["search_text"])
+
     def test_first_codex_metadata_wins_over_inherited_history(self):
         self.write([codex("session_meta", {"id": "fork", "source": "cli"}),
                     codex("session_meta", {"id": "parent", "source": "exec"})])

@@ -7,6 +7,8 @@ description: Toggle Auto-RAG on or off. Use when user wants to enable, disable, 
 
 Quickly enable or disable Auto-RAG without running full setup.
 
+> **Config:** `code-crib.local.md` is the first existing file among `<plugin root>/code-crib.local.md`, `./.claude/code-crib.local.md`, `~/.claude/code-crib.local.md` (same order as `hooks/scripts/check-rag-config.sh`).
+
 ## Usage
 
 ```
@@ -19,7 +21,7 @@ Quickly enable or disable Auto-RAG without running full setup.
 
 ### Step 1: Read Current Config
 
-Read `code-crib.local.md` in the plugin directory.
+Read `code-crib.local.md` (see **Config** above).
 
 If file doesn't exist:
 ```
