@@ -428,6 +428,28 @@ class SessionHistoryTest(unittest.TestCase):
         self.assertEqual(proc.returncode, 0)
         self.assertEqual(len(self.store.rows()), 2)
 
+    def test_hook_detects_provider_from_claude_and_codex_payloads(self):
+        rollout = self.root / "codex/sessions/2026/10/15/rollout-2026-10-15T14-30-37-01a13e0a-7eee.jsonl"
+        claude_log = self.root / "claude/projects/-tmp-project/61101d7c-d13c-4934.jsonl"
+        # Codex 0.162.1 플러그인 훅이 실제로 전달한 필드 구성
+        codex_start = {"session_id": "c1", "transcript_path": str(rollout), "cwd": str(self.project),
+                       "hook_event_name": "SessionStart", "model": "gpt-5.5",
+                       "permission_mode": "bypassPermissions", "source": "startup"}
+        codex_stop = {"session_id": "c2", "turn_id": "01a13e0a-7f20", "transcript_path": None,
+                      "cwd": str(self.project), "hook_event_name": "Stop", "model": "gpt-5.5",
+                      "permission_mode": "default", "stop_hook_active": False, "last_assistant_message": "done"}
+        claude_end = {"session_id": "a1", "transcript_path": str(claude_log), "cwd": str(self.project),
+                      "hook_event_name": "SessionEnd", "reason": "prompt_input_exit", "permission_mode": "default"}
+        for payload in (codex_start, codex_stop, claude_end):
+            proc = subprocess.run(["bash", str(PLUGIN / "hooks/scripts/record-session.sh")],
+                                  input=json.dumps(payload), text=True, capture_output=True, timeout=3)
+            self.assertEqual((proc.returncode, proc.stdout, proc.stderr), (0, "", ""))
+        providers = {row["session_id"]: row["provider"] for row in self.store.rows()}
+        self.assertEqual(providers, {"c1": "codex", "c2": "codex", "a1": "claude"})
+        proc = self.cli("hook", "--provider", "claude", input_text=json.dumps({**codex_start, "session_id": "c3"}))
+        self.assertEqual(proc.returncode, 0)
+        self.assertEqual(self.store.rows(provider="claude")[0]["session_id"], "c3")
+
     def test_hooks_config_contains_all_lifecycle_events(self):
         config = json.loads((PLUGIN / "hooks/hooks.json").read_text())
         for event in ("SessionStart", "Stop", "SessionEnd"):

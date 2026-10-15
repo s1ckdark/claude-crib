@@ -39,7 +39,7 @@ Grab relevant docs from your knowledge stash.
 python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py" list --query "세션 타임아웃" --limit 5
 ```
 
-결과의 `kind=session`을 보존하고 출처를 **로컬 작업일지**로 표시한다. 문서 FTS/벡터 검색 점수와 합치지 않는다. 세션 검색은 발췌·경로·명령에 대한 공백 분리 AND 부분 일치이며 의미 검색이 아니다. `commands/sessions.md`의 수집 동의·미확인 표시·오류 처리·resume 지침을 따른다. 수집이 꺼져 있으면 자동으로 켜지 않는다. 원본 로그와 작업일지를 원격 DB에 전송하지 않는다.
+결과의 `kind=session`을 보존하고 출처를 **로컬 작업일지**로 표시한다. 문서 FTS/벡터 검색 점수와 합치지 않는다. 세션 검색은 발췌·경로·명령에 대한 공백 분리 AND 부분 일치이며 의미 검색이 아니다. `skills/session-history/SKILL.md`의 수집 동의·미확인 표시·오류 처리·resume 지침을 따른다. 수집이 꺼져 있으면 자동으로 켜지 않는다. 원본 로그와 작업일지를 원격 DB에 전송하지 않는다.
 
 ### Step 0: 로컬 인덱스 최신화 및 검색
 

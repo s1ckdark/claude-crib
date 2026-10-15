@@ -402,6 +402,16 @@ class History:
                 and all(term in row["search_text"] for term in terms)][:limit]
 
 
+def detect_provider(event):
+    """같은 hooks.json을 Claude Code와 Codex가 함께 읽으므로 페이로드로 호출자를 구분한다."""
+    transcript = event.get("transcript_path")
+    if isinstance(transcript, str) and transcript:
+        # Codex: $CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl, Claude: ~/.claude/projects/*/<id>.jsonl
+        return "codex" if Path(transcript).name.startswith("rollout-") else "claude"
+    # transcript가 없으면 Codex 전용 필드(turn_id)만 신호로 쓰고 나머지는 기존 기본값을 유지한다.
+    return "codex" if "turn_id" in event else "claude"
+
+
 def codex_config(script):
     command_line = shlex.join(["python3", str(script), "hook", "--provider", "codex"])
     return {"hooks": {event: [{"hooks": [{"type": "command", "command": command_line,
@@ -436,7 +446,7 @@ def main():
     for action in ("enable", "disable", "status", "codex-config"):
         sub.add_parser(action)
     hook = sub.add_parser("hook")
-    hook.add_argument("--provider", choices=["claude", "codex"], required=True)
+    hook.add_argument("--provider", choices=["claude", "codex"], help="생략하면 훅 입력으로 판별")
     for action in ("list", "show", "resume", "refresh", "forget"):
         cmd = sub.add_parser(action)
         cmd.add_argument("--provider", choices=["claude", "codex"])
@@ -464,7 +474,7 @@ def main():
                 event = json.loads(sys.stdin.read(MAX_LINE))
                 if not isinstance(event, dict):
                     raise ValueError("훅 입력은 JSON 객체여야 합니다")
-                history.record(args.provider, event)
+                history.record(args.provider or detect_provider(event), event)
                 if history.enabled() and event.get("hook_event_name") == "SessionStart":
                     history.refresh(project_root(event["cwd"]), budget=0.5, max_bytes=MAX_LINE)
             else:

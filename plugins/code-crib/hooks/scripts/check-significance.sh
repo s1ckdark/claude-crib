@@ -14,6 +14,9 @@ command -v jq >/dev/null 2>&1 || exit 0
 INPUT=$(timeout 1 cat 2>/dev/null) || exit 0
 TRANSCRIPT=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
 [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ] || exit 0
+# Codex (rollout-*.jsonl) reports non-JSON Stop output as a failed hook, and the
+# counter below only understands Claude transcripts, so stay silent there.
+case "$(basename "$TRANSCRIPT")" in rollout-*) exit 0 ;; esac
 
 EDITS=$(python3 - "$TRANSCRIPT" <<'PY' 2>/dev/null || echo 0
 import json, sys

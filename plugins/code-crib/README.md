@@ -24,6 +24,19 @@
 /code-crib:setup
 ```
 
+### Codex CLI
+
+Codex (0.162+) can install this plugin from the same marketplace:
+
+```bash
+codex plugin marketplace add s1ckdark/claude-crib
+codex plugin add code-crib@claude-crib
+```
+
+- **Commands** are migrated to Codex skills (`source-command-*`); full instructions live in `skills/`.
+- **Hooks** need `[features] plugin_hooks = true` and Codex hook trust review (approve the `code-crib@claude-crib` hooks once, and again after each update). The session-history hook detects Claude vs Codex from the hook payload, so no manual `hooks.json` entry is needed.
+- **Chroma MCP** reads `CHROMA_*` from the environment Codex was started in (Codex does not read `~/.claude/settings.json`). Export them in your shell profile; the plugin forwards them via `env_vars`. Check with `bash <plugin-root>/hooks/scripts/chroma-mcp.sh --dry-run`.
+
 ## Setup
 
 ### Chroma Connection Modes
@@ -49,7 +62,7 @@ Check reachability anytime: `curl http://<host>:<port>/api/v2/heartbeat`
 
 ### MCP startup troubleshooting
 
-The bundled MCP config uses `uvx --with 'pydantic<2.12' chroma-mcp`. Chroma MCP 0.2.6 pins MCP SDK 1.6.0, which fails to import with newer Pydantic versions (`ImportError: cannot import name 'eval_type_backport'`). Keep this compatibility constraint when customizing `.mcp.json`.
+The bundled MCP config uses `uvx --with 'pydantic<2.12' chroma-mcp`. Chroma MCP 0.2.6 pins MCP SDK 1.6.0, which fails to import with newer Pydantic versions (`ImportError: cannot import name 'eval_type_backport'`). Keep this compatibility constraint when customizing `hooks/scripts/chroma-mcp.sh`, the launcher `.mcp.json` runs in both Claude Code and Codex. It applies the `CHROMA_*` defaults (`http`, `localhost`, `8000`, SSL off) because Codex does not expand `${VAR:-default}` in plugin MCP config.
 
 After updating the plugin, restart Claude Code or reconnect `plugin:code-crib:chroma` from `/mcp`. Verify the connection with `claude mcp get plugin:code-crib:chroma` and `/code-crib:list`.
 
@@ -117,7 +130,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" search "timeout" --
 
 #### Codex 훅 연결
 
-Claude 플러그인의 훅이 Codex에 자동 적용되지는 않습니다. 공식 lifecycle hook을 지원하는 Codex에서 다음으로 JSON을 생성합니다.
+Codex에 플러그인으로 설치했다면(위 **Codex CLI** 절) 플러그인 훅이 훅 입력(`transcript_path`의 `rollout-*.jsonl`, `turn_id`)으로 Codex 세션을 구분해 기록하므로 이 절차가 필요 없습니다. 예전에 추가한 code-crib 훅이 `hooks.json`에 있으면 제거하세요. 플러그인 없이 연결할 때만 다음으로 JSON을 생성합니다.
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py" codex-config
@@ -212,6 +225,19 @@ python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py" codex-config
 /code-crib:setup
 ```
 
+### Codex CLI
+
+Codex(0.162+)도 같은 마켓플레이스에서 설치할 수 있습니다.
+
+```bash
+codex plugin marketplace add s1ckdark/claude-crib
+codex plugin add code-crib@claude-crib
+```
+
+- **명령**은 Codex 스킬(`source-command-*`)로 변환되며 상세 지침은 `skills/`에 있습니다.
+- **훅**은 `[features] plugin_hooks = true`와 Codex 훅 신뢰 검토가 필요합니다(`code-crib@claude-crib` 훅을 한 번 승인, 업데이트마다 다시 승인). 작업일지 훅이 훅 입력으로 Claude/Codex를 구분하므로 `hooks.json`에 수동 항목을 추가하지 않습니다.
+- **Chroma MCP**는 Codex를 실행한 환경의 `CHROMA_*`를 읽습니다(Codex는 `~/.claude/settings.json`을 읽지 않음). 셸 프로필에서 export하면 플러그인이 `env_vars`로 전달합니다. `bash <플러그인 루트>/hooks/scripts/chroma-mcp.sh --dry-run`으로 확인하세요.
+
 ## 설정
 
 ### Chroma 연결 방식
@@ -237,7 +263,7 @@ docker run -d -p 8000:8000 -v chroma-data:/data chromadb/chroma
 
 ### MCP 시작 오류 해결
 
-기본 MCP 설정은 `uvx --with 'pydantic<2.12' chroma-mcp`를 사용합니다. Chroma MCP 0.2.6이 고정한 MCP SDK 1.6.0은 최신 Pydantic에서 `ImportError: cannot import name 'eval_type_backport'`로 시작에 실패합니다. `.mcp.json`을 수정할 때도 이 호환성 제한을 유지하세요.
+기본 MCP 설정은 `uvx --with 'pydantic<2.12' chroma-mcp`를 사용합니다. Chroma MCP 0.2.6이 고정한 MCP SDK 1.6.0은 최신 Pydantic에서 `ImportError: cannot import name 'eval_type_backport'`로 시작에 실패합니다. `.mcp.json`이 Claude Code와 Codex 양쪽에서 실행하는 `hooks/scripts/chroma-mcp.sh`를 수정할 때도 이 호환성 제한을 유지하세요. Codex는 플러그인 MCP 설정의 `${VAR:-default}`를 해석하지 않으므로 `CHROMA_*` 기본값(`http`, `localhost`, `8000`, SSL 끔)은 이 런처가 채웁니다.
 
 플러그인 업데이트 후 Claude Code를 재시작하거나 `/mcp`에서 `plugin:code-crib:chroma`를 다시 연결하세요. `claude mcp get plugin:code-crib:chroma`와 `/code-crib:list`로 연결을 확인할 수 있습니다.
 
