@@ -7,9 +7,11 @@ description: Claude·Codex 로컬 작업일지의 수집 설정, 목록, 검색,
 
 원격 DB 및 문서 인덱스와 분리된 개인용 로컬 작업일지다. 기본값은 수집 꺼짐이다.
 
+> **Plugin root:** `${CLAUDE_PLUGIN_ROOT}`. If it is empty or shown unexpanded (Codex), use the nearest ancestor of this file's directory that contains `hooks/scripts/` (`skills/<name>/SKILL.md` → 2 levels up, `.codex-plugin/migrated-command-skills/<name>/SKILL.md` → 3 levels up) and write that absolute path wherever `${CLAUDE_PLUGIN_ROOT}` appears.
+
 ## 명령 변환
 
-현재 프로젝트에서 `python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py"` 뒤에 다음 인자를 전달한다. `CLAUDE_PLUGIN_ROOT`가 비어 있으면(Codex 등) 이 SKILL.md가 있는 디렉터리의 두 단계 위가 플러그인 루트다.
+현재 프로젝트에서 `python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-history.py"` 뒤에 다음 인자를 전달한다.
 
 | 사용자 인자 | 스크립트 인자 |
 |---|---|

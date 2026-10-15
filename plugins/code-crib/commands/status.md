@@ -3,6 +3,8 @@ name: code-crib:status
 description: 로컬 문서 인덱스의 갱신 시각, 미반영 변경, 실패 확인
 ---
 
+> **Plugin root:** `${CLAUDE_PLUGIN_ROOT}`. If it is empty or shown unexpanded (Codex), use the nearest ancestor of this file's directory that contains `hooks/scripts/` (`skills/<name>/SKILL.md` → 2 levels up, `.codex-plugin/migrated-command-skills/<name>/SKILL.md` → 3 levels up) and write that absolute path wherever `${CLAUDE_PLUGIN_ROOT}` appears.
+
 다음 명령을 현재 프로젝트에서 실행한다. 상태 확인은 문서를 갱신하지 않는다.
 
 ```bash

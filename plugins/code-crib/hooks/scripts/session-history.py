@@ -19,6 +19,10 @@ import time
 LIMIT = 200
 MAX_LINE = 1024 * 1024
 EVENTS = {"SessionStart", "Stop", "SessionEnd"}
+# 추출 규칙이 바뀌면 올린다. 값이 다른 기존 행은 다음 갱신 때 원본 처음부터 다시 추출한다.
+PARSER = 2
+# Codex가 사용자 역할로 끼워 넣는 컨텍스트(<environment_context>, <user_shell_command>, AGENTS.md 등)
+CODEX_INJECTED = re.compile(r"\s*(?:<([A-Za-z_][\w-]*)>[\s\S]*</\1>|# AGENTS\.md instructions for [\s\S]*)\s*")
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS sessions (
@@ -61,6 +65,13 @@ def text_content(value):
                          if isinstance(item, dict) and isinstance(item.get("text"), str)
                          and item.get("type") in {"text", "Text", "input_text", "output_text"})
     return ""
+
+
+def codex_user_text(value):
+    """Codex가 주입한 컨텍스트 블록을 빼고 사용자가 직접 입력한 텍스트만 남긴다."""
+    parts = value if isinstance(value, list) else [{"type": "text", "text": value}]
+    return text_content([item for item in parts if not (isinstance(item, dict) and isinstance(item.get("text"), str)
+                                                       and CODEX_INJECTED.fullmatch(item["text"]))])
 
 
 def project_root(cwd):
@@ -205,21 +216,27 @@ def parse_codex(state, event):
         return
     kind = payload.get("type")
     if event.get("type") == "response_item":
-        if kind == "message" and payload.get("role") in {"user", "assistant"}:
-            message(state, payload["role"], text_content(payload.get("content")))
+        if kind == "message" and payload.get("role") == "user":
+            message(state, "user", codex_user_text(payload.get("content")))
+        elif kind == "message" and payload.get("role") == "assistant":
+            message(state, "assistant", text_content(payload.get("content")))
         elif kind in {"function_call", "custom_tool_call"}:
             tool_call(state, payload.get("call_id"), payload.get("name"),
                       payload.get("arguments", payload.get("input")))
         elif kind in {"function_call_output", "custom_tool_call_output"}:
             tool_result(state, payload.get("call_id"), payload.get("output"))
     elif event.get("type") == "event_msg":
-        if kind in {"user_message", "agent_message"}:
-            message(state, "user" if kind == "user_message" else "assistant", payload.get("message"))
+        if kind == "user_message":
+            message(state, "user", codex_user_text(payload.get("message")))
+        elif kind == "agent_message":
+            message(state, "assistant", payload.get("message"))
         elif kind == "item_completed" and isinstance(payload.get("item"), dict):
             item = payload["item"]
             kind = item.get("type")
-            if kind in {"UserMessage", "AgentMessage"}:
-                message(state, "user" if kind == "UserMessage" else "assistant", text_content(item.get("content")))
+            if kind == "UserMessage":
+                message(state, "user", codex_user_text(item.get("content")))
+            elif kind == "AgentMessage":
+                message(state, "assistant", text_content(item.get("content")))
             elif kind == "CommandExecution":
                 command(state, item.get("id"), item.get("command"), item.get("exit_code"),
                         item.get("status") in {"failed", "declined"})
@@ -338,9 +355,10 @@ class History:
                         raise ValueError("첫 로그 레코드가 미완성이거나 1 MiB를 초과합니다")
                     signature = str(info.st_ino) + ":" + hashlib.sha256(prefix).hexdigest()
                     offset = row["offset"]
-                    if row["signature"] != signature or info.st_size < offset:
+                    if row["signature"] != signature or info.st_size < offset or state.get("parser") != PARSER:
                         offset = 0
                         state = {"summary": state["summary"]} if state.get("summary") else {}
+                        state["parser"] = PARSER
                     stream.seek(offset)
                     while time.monotonic() < deadline and max_bytes > 0:
                         raw = stream.readline(MAX_LINE + 1)

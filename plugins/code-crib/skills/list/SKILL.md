@@ -7,6 +7,10 @@ description: List docs in your stash - see what knowledge you have stored. Use w
 
 See what you got in your knowledge stash.
 
+> **Plugin root:** `${CLAUDE_PLUGIN_ROOT}`. If it is empty or shown unexpanded (Codex), use the nearest ancestor of this file's directory that contains `hooks/scripts/` (`skills/<name>/SKILL.md` → 2 levels up, `.codex-plugin/migrated-command-skills/<name>/SKILL.md` → 3 levels up) and write that absolute path wherever `${CLAUDE_PLUGIN_ROOT}` appears.
+>
+> **Config:** `code-crib.local.md` is the first existing file among `<plugin root>/code-crib.local.md`, `./.claude/code-crib.local.md`, `~/.claude/code-crib.local.md` (same order as `hooks/scripts/check-rag-config.sh`).
+
 ## Usage
 
 ```
@@ -17,7 +21,7 @@ code-crib:list
 
 ### List Documents
 
-1. Read configuration from `${CLAUDE_PLUGIN_ROOT}/code-crib.local.md`
+1. Read configuration from `code-crib.local.md` (see **Config** above)
 2. Query vector DB for all documents in namespace
 3. Sort by date (newest first)
 4. Display in clean format:

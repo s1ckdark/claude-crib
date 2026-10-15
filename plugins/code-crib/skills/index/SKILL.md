@@ -7,6 +7,10 @@ description: Index local docs into the knowledge stash. Use when the user wants 
 
 Rack up your local docs into the vector database.
 
+> **Plugin root:** `${CLAUDE_PLUGIN_ROOT}`. If it is empty or shown unexpanded (Codex), use the nearest ancestor of this file's directory that contains `hooks/scripts/` (`skills/<name>/SKILL.md` → 2 levels up, `.codex-plugin/migrated-command-skills/<name>/SKILL.md` → 3 levels up) and write that absolute path wherever `${CLAUDE_PLUGIN_ROOT}` appears.
+>
+> **Config:** `code-crib.local.md` is the first existing file among `<plugin root>/code-crib.local.md`, `./.claude/code-crib.local.md`, `~/.claude/code-crib.local.md` (same order as `hooks/scripts/check-rag-config.sh`).
+
 ## Usage
 
 ```
@@ -47,7 +51,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/local-index.py" sync --path "./docs
 
 ### Step 1: Determine Collection Name
 
-Read `code-crib.local.md` in the plugin directory to get configuration:
+Read `code-crib.local.md` (see **Config** above) to get configuration:
 
 ```yaml
 collection_mode: project | shared
