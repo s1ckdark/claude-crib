@@ -24,22 +24,27 @@ You are the Z.AI Reviewer. Your job is to send code to Z.AI for review and relay
 
 ## Your Job
 
-1. Gather code to review:
-   - **No args**: Run `git diff` to get unstaged changes
-   - **`--staged`**: Run `git diff --staged`
-   - **File path**: Read the file content
-2. If diff/content is empty, tell user: "No changes to review."
-3. Construct review prompt and call Z.AI API:
+1. Parse the review target: no args for unstaged changes, `--staged` for staged
+   changes, or a file path. The CLI reads the source and skips empty diffs.
+2. Run the bundled CLI from the user's working directory. It requires only
+   Python 3.10+ and `Z_AI_API_KEY` (or `ZAI_API_KEY`) in the environment:
    ```bash
-   curl -s -X POST "https://api.z.ai/api/coding/paas/v4/chat/completions" \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer $Z_AI_API_KEY" \
-     -d '{"model":"glm-5-turbo","messages":[{"role":"system","content":"You are an expert code reviewer. Review for: 1) Bugs and logic errors, 2) Performance issues, 3) Security vulnerabilities, 4) Readability and maintainability. Provide specific, actionable feedback with line references."},{"role":"user","content":"{code_content}"}],"max_tokens":4096}'
+   # Choose one: unstaged changes, staged changes, or a specific file
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py"
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py" --staged
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py" -- 'src/auth.ts'
    ```
-4. Parse JSON response and present the review feedback
+   Pass the actual file path as one safely shell-quoted argument, including
+   embedded single quotes. Never insert code content or raw user arguments into
+   shell commands. Never print the API key. Do not use npm/npx or `ask_zai` MCP.
+   The CLI gathers the source, handles JSON encoding and API errors, and
+   prints the review text. Allow at least 300 seconds for the Bash invocation.
+3. Present stdout as review feedback only when the CLI succeeds. Report a nonzero
+   exit as a failed review, using its stderr message.
 
 ## Error Handling
 
 - Empty diff: "No changes to review. Stage changes or specify a file path."
 - File not found: Show error, suggest checking the path
-- Large content (>10000 chars): Warn about token limits
+- Missing key: Ask the user to set `Z_AI_API_KEY` without sharing its value
+- API, timeout, or truncated-response error: Show the CLI error and suggest a smaller scope if needed

@@ -35,6 +35,11 @@ Use this decision tree to pick the right command:
 2. `/zai:review --staged` — review staged changes before commit
 3. `/zai:review src/critical-module.ts` — review specific files
 
+Reviews run through the bundled `scripts/zai-review.py` CLI using Python 3.10+
+and `Z_AI_API_KEY` (or `ZAI_API_KEY`). They do not require npm/npx, an MCP
+connection, or the plugin virtualenv. Use `/zai:review` or the CLI directly for
+code reviews; do not route them through `ask_zai`.
+
 ### Refactoring Workflow
 1. `/zai:review src/module.ts` — identify improvement areas
 2. `/zai:code "Refactor {module} to {improvement}"` — apply refactoring
@@ -47,18 +52,15 @@ Use this decision tree to pick the right command:
 
 ## MCP-Direct Pattern
 
-For agent-level integration, call `ask_zai` MCP tool directly:
+For other agent-level tasks, call `ask_zai` MCP tool directly:
 
 | Task | agent_role | model |
 |------|-----------|-------|
 | Architecture analysis | `architect` | `glm-5-turbo` |
-| Code review | `code-reviewer` | `glm-5-turbo` |
-| Quick code check | `code-reviewer` | `glm-4.7-flash` |
 | Requirements analysis | `analyst` | `glm-5-turbo` |
 | Implementation planning | `planner` | `glm-5-turbo` |
 | Plan critique | `critic` | `glm-5` |
 | Documentation | `writer` | `glm-5-turbo` |
-| Security review | `security-reviewer` | `glm-5` |
 | Simple questions | `default` | `glm-4.7-flash` |
 
 ## Tips

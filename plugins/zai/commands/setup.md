@@ -17,7 +17,7 @@ Interactive setup for the Z.AI plugin. Bootstraps the per-plugin Python virtuale
 
 ### 1. Check Python & Bootstrap venv
 
-The Z.AI MCP server runs in a per-plugin Python virtualenv at `${CLAUDE_PLUGIN_ROOT}/scripts/.venv`. The path is referenced by `.mcp.json`, so this venv must exist before any other `/zai:*` command will work. Create it if missing and (re)install requirements.
+The Z.AI MCP server runs in a per-plugin Python virtualenv at `${CLAUDE_PLUGIN_ROOT}/scripts/.venv`. The path is referenced by `.mcp.json`, so this venv must exist before MCP-backed commands will work. Create it if missing and (re)install requirements. `/zai:review` uses the standalone `scripts/zai-review.py` CLI and needs only Python 3.10+ and the API key; it does not require this venv or an MCP connection.
 
 ```bash
 PLUGIN_DIR="$CLAUDE_PLUGIN_ROOT"

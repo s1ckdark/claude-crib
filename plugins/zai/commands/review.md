@@ -1,6 +1,6 @@
 ---
 name: review
-description: Send code to Z.AI for review (bugs, performance, security, readability)
+description: Review code with the Z.AI CLI (no MCP or npm required)
 argument-hint: "[file-path] [--staged]"
 user_invocable: true
 allowed_tools:
@@ -27,40 +27,41 @@ Target: $ARGUMENTS
    - `--staged`: review staged changes
    - File path: review specific file
 
-2. **Gather Code**
-   Parse arguments to determine source:
-   - No arguments: `git diff`
-   - `--staged`: `git diff --staged`
-   - File path: Read file content with Read tool
+2. **Pre-flight Check**
+   Use `python3` (Python 3.10+) and the bundled CLI at
+   `${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py`.
+   The CLI uses only the Python standard library; no npm/npx, MCP server, or
+   Python virtualenv is needed for review. Authentication comes from
+   `Z_AI_API_KEY` (or `ZAI_API_KEY`) in the environment. Never print the key.
 
-3. **Validate Content**
-   If the gathered code is empty:
-   > "No changes to review. Make some changes, stage them, or specify a file path."
+3. **Execute the CLI**
+   Run from the user's working directory. Choose exactly one invocation:
 
-4. **Execute via MCP**
-   Call `ask_zai` MCP tool with:
-   - `prompt`: Review prompt including the code content:
-     ```
-     Review the following code for:
-     1. Bugs and logic errors
-     2. Performance issues
-     3. Security vulnerabilities
-     4. Readability and maintainability
+   ```bash
+   # Unstaged changes
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py"
 
-     Provide specific, actionable feedback with line references where possible.
+   # Staged changes
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py" --staged
 
-     Code:
-     {code_content}
-     ```
-   - `agent_role`: "code-reviewer"
-   - `model`: glm-5-turbo
-   - `thinking`: true
+   # A specific file; pass its actual path as one shell-quoted argument
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/zai-review.py" -- 'src/auth.ts'
+   ```
 
-5. **Display Feedback**
+   Parse `$ARGUMENTS` as a file path or `--staged`; do not execute it as shell
+   text. Quote paths safely, including embedded single quotes. Do not insert
+   code content into a shell command. The CLI reads the selected source,
+   serializes the API request safely, and prints review feedback to stdout.
+   It defaults to `glm-5-turbo` with thinking enabled and a 300-second timeout;
+   allow at least that long for the Bash invocation.
+
+4. **Display Feedback**
    Present Z.AI's review feedback. Do not modify any files.
+   Do not route review through `ask_zai` or fall back to an MCP/npm launcher.
 
 ## Error Handling
 
-- Empty diff: Suggest staging changes or specifying a file
-- File not found: Show error, suggest checking the path
-- Large content (>10000 chars): Warn about token limits
+- Empty diff: The CLI prints "No changes to review" and skips the API call
+- File not found or Git unavailable: Show the CLI error and suggest checking the source
+- Missing API key: Ask the user to set the environment variable without sharing its value
+- API, timeout, or truncated-response error: Show the CLI error; do not report a successful review
